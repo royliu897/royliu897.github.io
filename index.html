@@ -31,9 +31,9 @@ const ctx = canvas.getContext('2d');
 // --- CONFIGURATION ---
 const DOG_W = 32; const DOG_H = 40;
 const HORIZON_RATIO = 0.5; 
-const DEAD_ZONE = 60;   // Dog won't move if mouse is this close
-const LEASH_RADIUS = 280; // Dog walks until mouse exceeds this
-const LEAF_COUNT = 450;
+const DEAD_ZONE = 90;     // Bigger dead zone
+const RUN_THRESHOLD = 200; // Shorter leash for running
+const LEAF_COUNT = 1200;   // Massive increase for "pile" effect
 
 let mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
 let dog = { 
@@ -53,15 +53,12 @@ const assets = {
     stock: { src: 'assets/stock.png', img: new Image(), path: 'finance.html' }
 };
 
-// --- INITIALIZATION ---
 function init() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-
     window.addEventListener('resize', () => {
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
     });
-
     window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
     window.addEventListener('mousedown', handleInteraction);
 
@@ -74,11 +71,12 @@ function init() {
             y: groundTop + Math.random() * (canvas.height - groundTop),
             z: 0, vz: 0, vx: 0, vy: 0, 
             rotX: Math.random() * 6, rotY: Math.random() * 6,
-            vrX: (Math.random()-0.5)*0.03, vrY: (Math.random()-0.5)*0.03,
+            vrX: (Math.random()-0.5)*0.02, vrY: (Math.random()-0.5)*0.02,
             type: Math.random() > 0.5 ? 'fallLeaf' : 'springLeaf',
             frame: Math.floor(Math.random()*5),
-            baseSize: 35 + Math.random()*20,
-            waftOffset: Math.random() * 100
+            baseSize: 30 + Math.random()*20,
+            waftOffset: Math.random() * 100,
+            layer: Math.random() // 0 to 1 (0 is buried, 1 is top of pile)
         });
     }
 
@@ -93,73 +91,65 @@ function init() {
 
 function handleInteraction() {
     let clickedIcon = icons.find(i => Math.hypot(mouse.x - i.x, mouse.y - i.y) < 120);
-
     if (clickedIcon && clickedIcon.revealed) {
-        window.location.href = clickedIcon.path; // Instant transition
+        window.location.href = clickedIcon.path;
         return;
     }
 
-    // Floomph Physics (Click)
     dog.sitLock = true;
-    setTimeout(() => { dog.sitLock = false; }, 1000);
+    setTimeout(() => { dog.sitLock = false; }, 1200);
 
+    // Click Floomph: Disperse everything with higher randomness
     leaves.forEach(l => {
         let d = Math.hypot(l.x - mouse.x, l.y - mouse.y);
-        if (d < 300) {
-            let angle = Math.atan2(l.y - mouse.y, l.x - mouse.x);
-            let force = (300 - d) * 0.2;
+        if (d < 350) {
+            let angle = Math.atan2(l.y - mouse.y, l.x - mouse.x) + (Math.random() - 0.5);
+            let force = (350 - d) * 0.15;
             l.vx = Math.cos(angle) * force;
             l.vy = Math.sin(angle) * force;
-            l.vz = 12 + Math.random() * 8; // High vertical pop only on click
-            l.vrX = (Math.random()-0.5) * 0.6;
+            l.vz = 8 + Math.random() * 12;
+            l.vrX = (Math.random()-0.5) * 0.8;
         }
     });
-
     if (clickedIcon) clickedIcon.revealed = true;
 }
 
 function loop() {
     const horizonY = canvas.height * HORIZON_RATIO;
+    
+    // BG
+    ctx.fillStyle = '#0d110a'; ctx.fillRect(0, 0, canvas.width, horizonY);
+    let gGrad = ctx.createLinearGradient(0, horizonY, 0, canvas.height);
+    gGrad.addColorStop(0, '#1a1f16'); gGrad.addColorStop(1, '#2d3628');
+    ctx.fillStyle = gGrad; ctx.fillRect(0, horizonY, canvas.width, canvas.height - horizonY);
 
-    // --- DRAW BACKGROUND ---
-    let skyGrad = ctx.createLinearGradient(0, 0, 0, horizonY);
-    skyGrad.addColorStop(0, '#020302'); skyGrad.addColorStop(1, '#0d110a');
-    ctx.fillStyle = skyGrad; ctx.fillRect(0, 0, canvas.width, horizonY);
-
-    let groundGrad = ctx.createLinearGradient(0, horizonY, 0, canvas.height);
-    groundGrad.addColorStop(0, '#1a1f16'); groundGrad.addColorStop(1, '#2d3628');
-    ctx.fillStyle = groundGrad; ctx.fillRect(0, horizonY, canvas.width, canvas.height - horizonY);
-
-    // --- DOG PHYSICS (LEASH RADII) ---
+    // Dog Logic
     let dx = mouse.x - dog.x;
-    let targetY = Math.max(horizonY + 50, mouse.y);
+    let targetY = Math.max(horizonY + 60, mouse.y);
     let dy = targetY - dog.y;
     let dist = Math.hypot(dx, dy);
     
     if (!dog.sitLock) {
         if (dist < DEAD_ZONE) {
-            // Idle
             dog.vx *= 0.8; dog.vy *= 0.8;
         } else {
-            // Move: Walk speed if inside leash, Run speed if outside
-            let moveSpeed = dist > LEASH_RADIUS ? 0.06 : 0.03;
+            // Slower dog speed (0.02 walk, 0.045 run)
+            let moveSpeed = dist > RUN_THRESHOLD ? 0.045 : 0.02;
             dog.vx = dx * moveSpeed; dog.vy = dy * moveSpeed;
             dog.facing = dog.vx > 0 ? 'right' : 'left';
         }
     } else {
-        dog.vx *= 0.8; dog.vy *= 0.8;
+        dog.vx *= 0.7; dog.vy *= 0.7;
     }
     dog.x += dog.vx; dog.y += dog.vy;
 
-    // --- SPRITE SELECTION ---
-    let isMoving = Math.abs(dog.vx) > 0.3 || Math.abs(dog.vy) > 0.3;
+    let isMoving = Math.abs(dog.vx) > 0.2 || Math.abs(dog.vy) > 0.2;
     if (dog.sitLock || !isMoving) {
         dog.row = 3; dog.col = dog.facing === 'right' ? 0 : 2; 
     } else {
-        dog.row = 1; dog.col = (dog.facing === 'right' ? 0 : 2) + (Math.floor(Date.now()/120)%2);
+        dog.row = 1; dog.col = (dog.facing === 'right' ? 0 : 2) + (Math.floor(Date.now()/130)%2);
     }
 
-    // --- Y-SORTED RENDERING ---
     let scene = [
         ...icons.map(i => ({ type: 'icon', y: i.y, d: i })),
         ...leaves.map(l => ({ type: 'leaf', y: l.y, d: l })),
@@ -167,7 +157,6 @@ function loop() {
     ].sort((a,b) => a.y - b.y);
 
     let dogSpeed = Math.hypot(dog.vx, dog.vy);
-    let disturbMult = dogSpeed > 4 ? 0.5 : 0.2; // Scaling force
 
     scene.forEach(ent => {
         let pScale = 0.5 + (ent.y / canvas.height) * 1.1;
@@ -176,23 +165,27 @@ function loop() {
             let l = ent.d;
             let dDog = Math.hypot(l.x - dog.x, l.y - dog.y);
             
-            // Walking disturbance: Realistic side-push, almost no vertical pop
-            if (dDog < 60 * pScale && !dog.sitLock && isMoving) {
-                l.vx += dog.vx * disturbMult;
-                l.vy += dog.vy * disturbMult;
-                l.vz += disturbMult * 0.2; // Very minimal pop for walking
+            // Interaction: Only top layers (layer > 0.6) get pushed by walking
+            if (dDog < 50 * pScale && isMoving && !dog.sitLock && l.layer > 0.6) {
+                l.vx += dog.vx * 0.25;
+                l.vy += dog.vy * 0.25;
             }
 
-            // Physics Update
-            l.x += l.vx; l.y += l.vy; l.z += l.vz;
-            l.rotX += l.vrX; l.rotY += l.vrY;
-            
-            if (l.z > 0) { 
-                l.vz -= 0.3; // Gravity
-                l.vx *= 0.95; l.vy *= 0.95; 
-                l.vx += Math.sin(Date.now() * 0.004 + l.waftOffset) * 0.45; // Wafting
-            } else { 
-                l.z = 0; l.vz = 0; l.vx *= 0.75; l.vy *= 0.75; l.vrX *= 0.8;
+            // Gravity & Wafting
+            if (l.z > 0 || Math.abs(l.vx) > 0.1) {
+                l.x += l.vx; l.y += l.vy; l.z += l.vz;
+                l.rotX += l.vrX; l.rotY += l.vrY;
+                
+                if (l.z > 0) {
+                    l.vz -= 0.5; // Stronger Gravity
+                    l.vx *= 0.94; l.vy *= 0.94; // Air Resistance
+                    // Wafting: Combined rotation and horizontal movement
+                    let waft = Math.sin(Date.now() * 0.006 + l.waftOffset);
+                    l.vx += waft * 0.5; 
+                    l.rotY += waft * 0.1;
+                } else {
+                    l.z = 0; l.vz = 0; l.vx *= 0.7; l.vy *= 0.7; l.vrX *= 0.7;
+                }
             }
 
             if (assets[l.type].img.complete) {
@@ -200,7 +193,7 @@ function loop() {
                 ctx.translate(l.x, l.y - l.z);
                 ctx.scale(pScale * Math.sin(l.rotX), pScale * Math.cos(l.rotY));
                 ctx.rotate(l.rotX);
-                ctx.globalAlpha = 0.4 + (ent.y / canvas.height) * 0.6;
+                ctx.globalAlpha = 0.3 + (l.layer * 0.7); // Buried leaves are dimmer
                 ctx.drawImage(assets[l.type].img, l.frame*16, 0, 16, 16, -l.baseSize/2, -l.baseSize/2, l.baseSize, l.baseSize);
                 ctx.restore();
             }
@@ -208,6 +201,7 @@ function loop() {
             let i = ent.d;
             if (assets[i.id].img.complete) {
                 ctx.save(); ctx.translate(i.x, i.y); ctx.rotate(i.rot); ctx.scale(pScale, pScale);
+                // Icons appear slightly "buried" by rendering them under the leaf sort
                 ctx.drawImage(assets[i.id].img, -60, -60, 120, 120);
                 ctx.restore();
                 if (i.revealed) {
