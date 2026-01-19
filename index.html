@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roy R. Liu | Portfolio</title>
     <style>
-        body, html { margin: 0; padding: 0; overflow: hidden; background: #0d110a; }
+        body, html { margin: 0; padding: 0; overflow: hidden; background: #050704; }
         canvas { display: block; cursor: crosshair; }
         #header {
             position: absolute;
@@ -15,13 +15,12 @@
             text-shadow: 0 0 20px rgba(0,0,0,0.9);
             z-index: 100;
         }
-        .page-transition {
+        /* Ripple Mask Layer */
+        #ripple-mask {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #0d110a; transform: scaleY(0); transform-origin: top;
-            transition: transform 0.8s cubic-bezier(0.8, 0, 0.2, 1);
-            z-index: 999;
+            pointer-events: none; z-index: 999;
+            background: radial-gradient(circle 0px at center, transparent 0%, #050704 0%);
         }
-        .page-transition.active { transform: scaleY(1); }
     </style>
 </head>
 <body>
@@ -29,7 +28,7 @@
 <div id="header">
     <h1>Welcome to my webpage, click on something.</h1>
 </div>
-<div id="transition-layer" class="page-transition"></div>
+<div id="ripple-mask"></div>
 <canvas id="gameCanvas"></canvas>
 
 <script>
@@ -37,20 +36,22 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
 const DOG_W = 32; const DOG_H = 40;
-const HORIZON = window.innerHeight * 0.4; // Side-view horizon line
+const HORIZON = window.innerHeight * 0.5; // Sky/Ground split
+const LEASH_RADIUS = 220; // Longer leash for more walking
 
 let mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
 let dog = { 
-    x: 100, y: window.innerHeight * 0.7, vx: 0, vy: 0, 
+    x: 200, y: window.innerHeight * 0.75, vx: 0, vy: 0, 
     row: 3, col: 0, facing: 'right', sitLock: false 
 };
 let leaves = [];
 let icons = [];
+let transitionState = { active: false, x: 0, y: 0, radius: 0 };
 
 const assets = {
-    dog: { src: 'assets/dog.png', img: new Image(), loaded: false },
-    fallLeaf: { src: 'assets/fall_leaf.png', img: new Image(), loaded: false },
-    springLeaf: { src: 'assets/spring_leaf.png', img: new Image(), loaded: false },
+    dog: { src: 'assets/dog.png', img: new Image() },
+    fallLeaf: { src: 'assets/fall_leaf.png', img: new Image() },
+    springLeaf: { src: 'assets/spring_leaf.png', img: new Image() },
     car: { src: 'assets/car.png', img: new Image(), path: 'racing.html' },
     gamma: { src: 'assets/gamma.png', img: new Image(), path: 'research.html' },
     racket: { src: 'assets/racket.png', img: new Image(), path: 'tennis.html' },
@@ -63,164 +64,170 @@ function init() {
     });
     window.dispatchEvent(new Event('resize'));
     window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-    window.addEventListener('mousedown', floomph);
+    window.addEventListener('mousedown', handleInteraction);
 
-    Object.keys(assets).forEach(key => {
-        assets[key].img.onload = () => { assets[key].loaded = true; };
-        assets[key].img.src = assets[key].src;
-    });
+    Object.keys(assets).forEach(key => assets[key].img.src = assets[key].src);
 
-    // Perspective-based leaf spawning
-    for(let i=0; i<400; i++) {
+    // Leaves restricted to bottom half for concentration
+    for(let i=0; i<450; i++) {
         leaves.push(createLeaf());
     }
 
     const ids = ['car', 'gamma', 'racket', 'stock'];
     icons = ids.map((id, i) => ({
-        id, x: (i+1) * (canvas.width/5), y: HORIZON + (Math.random()*(canvas.height - HORIZON - 100)),
-        rot: (Math.random()-0.5)*0.5, revealed: false, path: assets[id].path
+        id, x: (i+1) * (canvas.width/5), y: HORIZON + 100 + Math.random()*(canvas.height - HORIZON - 200),
+        rot: (Math.random()-0.5)*0.6, revealed: false, path: assets[id].path
     }));
 
     requestAnimationFrame(loop);
 }
 
 function createLeaf() {
-    let yPos = HORIZON + Math.random() * (canvas.height - HORIZON);
     return {
         x: Math.random() * canvas.width, 
-        y: yPos,
-        z: 0, vz: 0,
-        vx: 0, vy: 0, 
-        rotX: Math.random() * Math.PI, // 3D rotation simulations
-        rotY: Math.random() * Math.PI,
-        vrX: (Math.random()-0.5)*0.05,
-        vrY: (Math.random()-0.5)*0.05,
+        y: HORIZON + Math.random() * (canvas.height - HORIZON),
+        z: 0, vz: 0, vx: 0, vy: 0, 
+        rotX: Math.random() * 6, rotY: Math.random() * 6,
+        vrX: (Math.random()-0.5)*0.02, vrY: (Math.random()-0.5)*0.02,
         type: Math.random() > 0.5 ? 'fallLeaf' : 'springLeaf',
         frame: Math.floor(Math.random()*5),
-        baseSize: 30 + Math.random()*20
+        baseSize: 35 + Math.random()*20,
+        sway: Math.random() * Math.PI * 2 // Seed for air wafting
     };
 }
 
-function floomph() {
-    let clickedIcon = icons.find(i => Math.hypot(mouse.x - i.x, mouse.y - i.y) < 120);
+function handleInteraction() {
+    let clickedIcon = icons.find(i => Math.hypot(mouse.x - i.x, mouse.y - i.y) < 130);
 
     if (clickedIcon && clickedIcon.revealed) {
-        document.getElementById('transition-layer').classList.add('active');
-        setTimeout(() => { window.location.href = clickedIcon.path; }, 800);
+        startTransition(clickedIcon.x, clickedIcon.y, clickedIcon.path);
         return;
     }
 
+    // "Floomph" Blast
     dog.sitLock = true;
     setTimeout(() => { dog.sitLock = false; }, 1200);
 
-    // Radial Blast with Atmospheric Flutter
     leaves.forEach(l => {
         let d = Math.hypot(l.x - mouse.x, l.y - mouse.y);
         if (d < 300) {
             let angle = Math.atan2(l.y - mouse.y, l.x - mouse.x);
-            let force = (300 - d) * 0.15;
+            let force = (300 - d) * 0.18;
             l.vx = Math.cos(angle) * force;
             l.vy = Math.sin(angle) * force;
-            l.vz = 8 + Math.random() * 12; // Big "Floomph" jump
-            l.vrX = (Math.random()-0.5) * 0.3;
-            l.vrY = (Math.random()-0.5) * 0.3;
+            l.vz = 10 + Math.random() * 10;
+            l.vrX = (Math.random()-0.5)*0.4; l.vrY = (Math.random()-0.5)*0.4;
         }
     });
 
     if (clickedIcon) clickedIcon.revealed = true;
 }
 
-function loop() {
-    // Gradient background for Forest Clearing atmosphere
-    let grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    grad.addColorStop(0, '#050704');
-    grad.addColorStop(HORIZON/canvas.height, '#1a1f16');
-    grad.addColorStop(1, '#2d3628');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+function startTransition(x, y, path) {
+    transitionState = { active: true, x, y, radius: 0 };
+    const mask = document.getElementById('ripple-mask');
+    let grow = setInterval(() => {
+        transitionState.radius += 35;
+        mask.style.background = `radial-gradient(circle ${transitionState.radius}px at ${x}px ${y}px, transparent 95%, #050704 100%)`;
+        if (transitionState.radius > canvas.width * 1.5) {
+            clearInterval(grow);
+            window.location.href = path;
+        }
+    }, 16);
+}
 
-    // Dog movement
+function loop() {
+    // 1. SKY & GROUND GRADIENT
+    let skyGrad = ctx.createLinearGradient(0, 0, 0, HORIZON);
+    skyGrad.addColorStop(0, '#020302'); skyGrad.addColorStop(1, '#0d110a');
+    ctx.fillStyle = skyGrad; ctx.fillRect(0, 0, canvas.width, HORIZON);
+
+    let groundGrad = ctx.createLinearGradient(0, HORIZON, 0, canvas.height);
+    groundGrad.addColorStop(0, '#1a1f16'); groundGrad.addColorStop(1, '#2d3628');
+    ctx.fillStyle = groundGrad; ctx.fillRect(0, HORIZON, canvas.width, canvas.height - HORIZON);
+
+    // 2. DOG PHYSICS
     let dx = mouse.x - dog.x;
-    let dy = (mouse.y < HORIZON + 50 ? HORIZON + 50 : mouse.y) - dog.y;
+    let dy = (mouse.y < HORIZON + 40 ? HORIZON + 40 : mouse.y) - dog.y;
     let dist = Math.hypot(dx, dy);
     
-    if (!dog.sitLock && dist > 100) {
-        dog.vx = dx * 0.04;
-        dog.vy = dy * 0.04;
+    if (!dog.sitLock && dist > 80) {
+        let speedMult = dist > LEASH_RADIUS * 1.5 ? 0.07 : 0.035;
+        dog.vx = dx * speedMult; dog.vy = dy * speedMult;
         dog.facing = dog.vx > 0 ? 'right' : 'left';
     } else {
         dog.vx *= 0.85; dog.vy *= 0.85;
     }
     dog.x += dog.vx; dog.y += dog.vy;
 
-    // Sprite Logic (Side View Only)
+    // 3. SPRITE
     if (dog.sitLock || (Math.abs(dog.vx) < 0.2 && Math.abs(dog.vy) < 0.2)) {
         dog.row = 3; dog.col = dog.facing === 'right' ? 0 : 2; 
     } else {
         dog.row = 1; dog.col = (dog.facing === 'right' ? 0 : 2) + (Math.floor(Date.now()/120)%2);
     }
 
-    // Perspective Rendering List
+    // 4. PERSPECTIVE RENDERING
     let scene = [
         ...icons.map(i => ({ type: 'icon', y: i.y, d: i })),
         ...leaves.map(l => ({ type: 'leaf', y: l.y, d: l })),
         { type: 'dog', y: dog.y, d: dog }
     ].sort((a,b) => a.y - b.y);
 
+    let speed = Math.hypot(dog.vx, dog.vy);
+    let disturbanceForce = speed > 4 ? 0.7 : 0.3; // Disturbance based on run/walk
+
     scene.forEach(ent => {
-        // Perspective Scaling Factor (objects lower on screen are bigger)
         let pScale = 0.5 + (ent.y / canvas.height) * 1.2;
 
         if (ent.type === 'leaf') {
             let l = ent.d;
-            // Leaf Physics
             let dDog = Math.hypot(l.x - dog.x, l.y - dog.y);
-            if (dDog < 70 * pScale) {
-                l.vx += dog.vx * 0.3; l.vy += dog.vy * 0.3;
-                l.vz += 2;
+            
+            // Interaction - Only minor disturb unless sitting
+            if (dDog < 60 * pScale && !dog.sitLock) {
+                l.vx += dog.vx * disturbanceForce;
+                l.vy += dog.vy * disturbanceForce;
+                l.vz += disturbanceForce * 1.5;
             }
 
+            // AIR RESISTANCE PHYSICS (The "Waft")
             l.x += l.vx; l.y += l.vy; l.z += l.vz;
             l.rotX += l.vrX; l.rotY += l.vrY;
             
             if (l.z > 0) { 
-                l.vz -= 0.3; // Gravity
-                l.vx *= 0.98; l.vy *= 0.98; // Air resistance
-                // Leaf "Flutter" effect
-                l.vx += Math.sin(Date.now()*0.01 + l.y) * 0.2;
+                l.vz -= 0.25; // Gentler gravity
+                l.vx *= 0.96; l.vy *= 0.96; // Higher air resistance
+                // Wafting side-to-side
+                l.sway += 0.05;
+                l.vx += Math.sin(l.sway) * 0.3;
             } else { 
-                l.z = 0; l.vz = 0; 
-                l.vx *= 0.8; l.vy *= 0.8; l.vrX *= 0.8; l.vrY *= 0.8;
+                l.z = 0; l.vz = 0; l.vx *= 0.7; l.vy *= 0.7;
             }
 
-            if (assets[l.type].loaded) {
-                ctx.save();
-                ctx.translate(l.x, l.y - l.z);
-                // 3D tumble simulation
-                ctx.scale(pScale * Math.sin(l.rotX), pScale * Math.cos(l.rotY));
-                ctx.rotate(l.rotX);
-                // Tint based on depth
-                ctx.globalAlpha = 0.4 + (ent.y / canvas.height) * 0.6;
+            ctx.save();
+            ctx.translate(l.x, l.y - l.z);
+            ctx.scale(pScale * Math.sin(l.rotX), pScale * Math.cos(l.rotY));
+            ctx.rotate(l.rotX);
+            ctx.globalAlpha = 0.5 + (ent.y / canvas.height) * 0.5;
+            if (assets[l.type].img.complete) {
                 ctx.drawImage(assets[l.type].img, l.frame*16, 0, 16, 16, -l.baseSize/2, -l.baseSize/2, l.baseSize, l.baseSize);
-                ctx.restore();
-                ctx.globalAlpha = 1;
             }
+            ctx.restore();
         } else if (ent.type === 'icon') {
             let i = ent.d;
-            if (assets[i.id].loaded) {
-                ctx.save(); ctx.translate(i.x, i.y); ctx.rotate(i.rot); ctx.scale(pScale, pScale);
-                ctx.drawImage(assets[i.id].img, -60, -60, 120, 120);
-                ctx.restore();
-                if (i.revealed) {
-                    ctx.fillStyle = "rgba(255,255,255,0.9)"; ctx.font = "italic 16px Georgia"; ctx.textAlign = "center";
-                    ctx.fillText(i.id.toUpperCase(), i.x, i.y + (80 * pScale));
-                }
+            ctx.save(); ctx.translate(i.x, i.y); ctx.rotate(i.rot); ctx.scale(pScale, pScale);
+            if (assets[i.id].img.complete) ctx.drawImage(assets[i.id].img, -60, -60, 120, 120);
+            ctx.restore();
+            if (i.revealed) {
+                ctx.fillStyle = "rgba(255,255,255,0.8)"; ctx.font = "italic 16px Georgia"; ctx.textAlign = "center";
+                ctx.fillText(i.id.toUpperCase(), i.x, i.y + (85 * pScale));
             }
         } else {
-            if (assets.dog.loaded) {
-                let dSize = 140 * pScale;
-                ctx.fillStyle = 'rgba(0,0,0,0.25)';
-                ctx.beginPath(); ctx.ellipse(dog.x, dog.y + (30*pScale), 40*pScale, 12*pScale, 0, 0, Math.PI*2); ctx.fill();
+            let dSize = 130 * pScale;
+            ctx.fillStyle = 'rgba(0,0,0,0.3)';
+            ctx.beginPath(); ctx.ellipse(dog.x, dog.y + (30*pScale), 40*pScale, 10*pScale, 0, 0, Math.PI*2); ctx.fill();
+            if (assets.dog.img.complete) {
                 ctx.drawImage(assets.dog.img, dog.col*DOG_W, dog.row*DOG_H, DOG_W, DOG_H, dog.x - dSize/2, dog.y - dSize*0.6, dSize, dSize*1.2);
             }
         }
