@@ -3,244 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roy R. Liu | Portfolio</title>
+    <title>Roy R. Liu</title>
     <style>
-        :root { --bg: #242b20; --accent: #ffffff; }
-        body, html { margin: 0; padding: 0; overflow: hidden; background: var(--bg); font-family: 'Helvetica Neue', Helvetica, sans-serif; }
+        body, html { margin: 0; padding: 0; overflow: hidden; background: #1a1f16; }
         canvas { display: block; cursor: crosshair; }
-        
-        /* UI Layer */
         #header {
-            position: absolute; top: 40px; width: 100%; text-align: center;
-            color: var(--accent); pointer-events: none; z-index: 100;
-            text-shadow: 0 4px 12px rgba(0,0,0,0.5); transition: opacity 0.5s;
+            position: absolute;
+            top: 40px; width: 100%; text-align: center;
+            color: white; font-family: 'Courier New', Courier, monospace;
+            pointer-events: none; text-shadow: 0 0 15px rgba(0,0,0,0.8);
+            z-index: 100;
         }
-
-        /* Project Page Transition Overlay */
-        #project-page {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: #1a1a1a; color: white; display: none;
-            flex-direction: column; align-items: center; justify-content: center;
-            z-index: 1000; clip-path: circle(0% at 50% 50%);
-            transition: clip-path 0.8s cubic-bezier(0.86, 0, 0.07, 1);
+        .page-transition {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #1a1f16; transform: translateY(100%);
+            transition: transform 0.6s cubic-bezier(0.7, 0, 0.3, 1);
+            z-index: 999;
         }
-        #project-page.active { display: flex; clip-path: circle(150% at 50% 50%); }
-        .back-btn { margin-top: 20px; padding: 10px 20px; cursor: pointer; background: white; color: black; border: none; font-weight: bold; }
-        
-        /* Loading Screen */
-        #loader {
-            position: fixed; inset: 0; background: var(--bg);
-            display: flex; align-items: center; justify-content: center;
-            color: white; z-index: 2000;
-        }
+        .page-transition.active { transform: translateY(0); }
     </style>
 </head>
 <body>
 
-<div id="loader">Loading Environment...</div>
-
 <div id="header">
-    <h1 id="title-text">Welcome to my webpage, click on something.</h1>
+    <h1>Welcome to my webpage, click on something.</h1>
 </div>
-
-<div id="project-page">
-    <h1 id="project-title">Project Name</h1>
-    <p>Details about this experience will go here.</p>
-    <button class="back-btn" onclick="closeProject()">← Back to the Forest</button>
-</div>
-
+<div id="transition-layer" class="page-transition"></div>
 <canvas id="gameCanvas"></canvas>
 
 <script>
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-// --- TECHNICAL CONFIG ---
-const DOG_W = 32, DOG_H = 40;
-const LEASH_RADIUS = 150;
-let isProjectOpen = false;
+// Sprite Specs
+const DOG_W = 32; const DOG_H = 40;
+const LEASH_RADIUS = 180;
+
+let mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
+let dog = { 
+    x: 100, y: 100, vx: 0, vy: 0, 
+    row: 3, col: 0, facing: 'right', 
+    sitLock: false 
+};
+let leaves = [];
+let icons = [];
 
 const assets = {
-    dog: 'assets/dog.png', fallLeaf: 'assets/fall_leaf.png', springLeaf: 'assets/spring_leaf.png',
-    car: 'assets/car.png', gamma: 'assets/gamma.png', racket: 'assets/racket.png', stock: 'assets/stock.png'
+    dog: { src: 'assets/dog.png', img: new Image(), loaded: false },
+    fallLeaf: { src: 'assets/fall_leaf.png', img: new Image(), loaded: false },
+    springLeaf: { src: 'assets/spring_leaf.png', img: new Image(), loaded: false },
+    car: { src: 'assets/car.png', img: new Image(), path: 'racing.html' },
+    gamma: { src: 'assets/gamma.png', img: new Image(), path: 'research.html' },
+    racket: { src: 'assets/racket.png', img: new Image(), path: 'tennis.html' },
+    stock: { src: 'assets/stock.png', img: new Image(), path: 'finance.html' }
 };
-const assetImgs = {};
-
-const projectIcons = [
-    { id: 'car', x: 300, y: 450, rot: Math.random()*Math.PI, label: 'Longhorn Racing' },
-    { id: 'gamma', x: 850, y: 350, rot: Math.random()*Math.PI, label: 'Research Project' },
-    { id: 'racket', x: 500, y: 750, rot: Math.random()*Math.PI, label: 'Tennis' },
-    { id: 'stock', x: 1100, y: 600, rot: Math.random()*Math.PI, label: 'Finance Modeling' }
-];
-
-let leaves = [], particles = [], mouse = { x: 0, y: 0 };
-let dog = { x: 100, y: 100, vx: 0, vy: 0, row: 2, col: 0, forceSit: false };
-
-// --- SMART PRELOADING ---
-async function preload() {
-    const promises = Object.keys(assets).map(key => {
-        return new Promise(resolve => {
-            const img = new Image();
-            img.src = assets[key];
-            img.onload = () => { assetImgs[key] = img; resolve(); };
-        });
-    });
-    await Promise.all(promises);
-    document.getElementById('loader').style.display = 'none';
-    init();
-}
 
 function init() {
     window.addEventListener('resize', () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
     });
     window.dispatchEvent(new Event('resize'));
-    
-    window.addEventListener('mousemove', e => { 
-        if(!isProjectOpen) { mouse.x = e.clientX; mouse.y = e.clientY; }
+    window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+    window.addEventListener('mousedown', floomph);
+
+    Object.keys(assets).forEach(key => {
+        assets[key].img.onload = () => { assets[key].loaded = true; };
+        assets[key].img.src = assets[key].src;
     });
 
-    window.addEventListener('mousedown', e => {
-        if(isProjectOpen) return;
-
-        // 1. Check if we clicked a revealed icon to enter project
-        for (let icon of projectIcons) {
-            let d = Math.hypot(e.clientX - icon.x, e.clientY - icon.y);
-            if (d < 60) {
-                openProject(icon, e.clientX, e.clientY);
-                return;
-            }
-        }
-
-        // 2. Trigger the "FLOOMPH"
-        dog.forceSit = true;
-        triggerShockwave(e.clientX, e.clientY);
-        setTimeout(() => { dog.forceSit = false; }, 1000);
-    });
-
-    // Generate 600 physics-enabled leaves
-    for(let i=0; i<600; i++) {
+    // Populate Leaves: Clumped for "Pile" effect
+    for(let i=0; i<450; i++) {
         leaves.push({
-            x: Math.random()*window.innerWidth, y: Math.random()*window.innerHeight,
-            rot: Math.random()*Math.PI*2, type: Math.random()>0.5?'fallLeaf':'springLeaf',
-            frame: Math.floor(Math.random()*5), size: 45+Math.random()*30,
-            vx: 0, vy: 0, vr: 0
+            x: Math.random()*canvas.width, 
+            y: Math.random()*canvas.height,
+            z: 0, vz: 0, // 2.5D Height
+            vx: 0, vy: 0, 
+            rot: Math.random()*Math.PI*2, vr: 0,
+            type: Math.random() > 0.5 ? 'fallLeaf' : 'springLeaf',
+            frame: Math.floor(Math.random()*5),
+            size: 50 + Math.random()*30
         });
     }
+
+    const ids = ['car', 'gamma', 'racket', 'stock'];
+    icons = ids.map((id, i) => ({
+        id, x: (i+1) * (canvas.width/5), y: 300 + Math.random()*(canvas.height-450),
+        rot: (Math.random()-0.5)*1.2, revealed: false, path: assets[id].path
+    }));
+
     requestAnimationFrame(loop);
 }
 
-function triggerShockwave(cx, cy) {
+function floomph() {
+    let clickedIcon = icons.find(i => Math.hypot(mouse.x - i.x, mouse.y - i.y) < 120);
+
+    if (clickedIcon && clickedIcon.revealed) {
+        document.getElementById('transition-layer').classList.add('active');
+        setTimeout(() => { window.location.href = clickedIcon.path; }, 600);
+        return;
+    }
+
+    // Trigger Dog Sit
+    dog.sitLock = true;
+    setTimeout(() => { dog.sitLock = false; }, 1200);
+
+    // Radial Leaf Displacement (The "Floomph")
     leaves.forEach(l => {
-        let d = Math.hypot(l.x - cx, l.y - cy);
-        if (d < 220) {
-            let angle = Math.atan2(l.y - cy, l.x - cx);
-            let force = (220 - d) * 0.15;
+        let d = Math.hypot(l.x - mouse.x, l.y - mouse.y);
+        if (d < 280) {
+            let angle = Math.atan2(l.y - mouse.y, l.x - mouse.x);
+            let force = (280 - d) * 0.12;
             l.vx = Math.cos(angle) * force;
             l.vy = Math.sin(angle) * force;
-            l.vr = (Math.random()-0.5) * 0.5;
+            l.vz = 5 + Math.random() * 8; // Throw into air
+            l.vr = (Math.random()-0.5) * 0.4;
         }
     });
-    // Particle Burst
-    for(let i=0; i<30; i++) {
-        particles.push({
-            x: cx, y: cy, vx: (Math.random()-0.5)*20, vy: (Math.random()-0.5)*20 - 5,
-            life: 1.0, color: Math.random()>0.5?'#d35400':'#27ae60', rot: Math.random()*5
-        });
-    }
-}
 
-function openProject(icon, x, y) {
-    isProjectOpen = true;
-    const page = document.getElementById('project-page');
-    document.getElementById('project-title').innerText = icon.label;
-    page.style.clipPath = `circle(0% at ${x}px ${y}px)`;
-    page.style.display = 'flex';
-    setTimeout(() => { page.classList.add('active'); }, 10);
-    document.getElementById('header').style.opacity = '0';
-}
-
-function closeProject() {
-    const page = document.getElementById('project-page');
-    page.classList.remove('active');
-    setTimeout(() => { 
-        page.style.display = 'none'; 
-        isProjectOpen = false;
-        document.getElementById('header').style.opacity = '1';
-    }, 800);
+    if (clickedIcon) clickedIcon.revealed = true;
 }
 
 function loop() {
-    ctx.fillStyle = '#242b20';
+    ctx.fillStyle = '#1e241a';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Dog Logic
-    let dx = mouse.x - dog.x, dy = mouse.y - dog.y;
+    // Dog movement
+    let dx = mouse.x - dog.x;
+    let dy = mouse.y - dog.y;
     let dist = Math.hypot(dx, dy);
-    let oldX = dog.x;
-
-    if (!dog.forceSit && dist > LEASH_RADIUS) {
-        dog.x += dx * 0.05; dog.y += dy * 0.05;
-    }
-    let vx = dog.x - oldX;
-
-    // Sprite Pick
-    if (dog.forceSit || Math.abs(vx) < 0.2) {
-        dog.row = 2; dog.col = dog.forceSit ? (Math.floor(Date.now()/200)%2) : 0;
+    
+    if (!dog.sitLock && dist > LEASH_RADIUS) {
+        dog.vx = dx * 0.04;
+        dog.vy = dy * 0.04;
+        dog.facing = dog.vx > 0 ? 'right' : 'left';
     } else {
-        dog.row = vx > 0 ? 6 : 7;
-        dog.col = Math.floor(Date.now()/100)%4;
+        dog.vx *= 0.85; dog.vy *= 0.85;
+    }
+    dog.x += dog.vx; dog.y += dog.vy;
+
+    // Sprite Logic: Rows 2 (Running) and 4 (Sitting)
+    if (dog.sitLock || (Math.abs(dog.vx) < 0.2 && Math.abs(dog.vy) < 0.2)) {
+        dog.row = 3; // Row 4 index
+        dog.col = dog.facing === 'right' ? 0 : 2; // Standing/Sitting cols
+    } else {
+        dog.row = 1; // Row 2 index
+        dog.col = (dog.facing === 'right' ? 0 : 2) + (Math.floor(Date.now()/100)%2);
     }
 
-    // Combined Y-Sort Render
-    let items = [
-        ...projectIcons.map(i => ({ type:'icon', obj:i, y:i.y })),
-        ...leaves.map(l => ({ type:'leaf', obj:l, y:l.y })),
-        { type:'dog', obj:dog, y:dog.y }
+    // Combined Y-Sort for Side-View Depth
+    let scene = [
+        ...icons.map(i => ({ type: 'icon', y: i.y, d: i })),
+        ...leaves.map(l => ({ type: 'leaf', y: l.y, d: l })),
+        { type: 'dog', y: dog.y, d: dog }
     ].sort((a,b) => a.y - b.y);
 
-    items.forEach(item => {
-        if (item.type === 'leaf') {
-            let l = item.obj;
-            // Dog proximity push
-            if (Math.hypot(l.x - dog.x, l.y - dog.y) < 60) {
-                l.vx = (l.x-dog.x)*0.15; l.vy = (l.y-dog.y)*0.15; l.vr = 0.1;
+    scene.forEach(ent => {
+        if (ent.type === 'leaf') {
+            let l = ent.d;
+            // Physical Interaction
+            let dDog = Math.hypot(l.x - dog.x, l.y - dog.y);
+            if (dDog < 60) {
+                l.vx += dog.vx * 0.4; l.vy += dog.vy * 0.4;
+                l.vz += Math.hypot(dog.vx, dog.vy) * 0.2;
             }
-            l.x += l.vx; l.y += l.vy; l.rot += l.vr;
-            l.vx *= 0.92; l.vy *= 0.92; l.vr *= 0.92; // Friction
 
-            ctx.save();
-            ctx.translate(l.x, l.y); ctx.rotate(l.rot);
-            ctx.drawImage(assetImgs[l.type], l.frame*16, 0, 16, 16, -l.size/2, -l.size/2, l.size, l.size);
-            ctx.restore();
-        } else if (item.type === 'icon') {
-            let i = item.obj;
-            ctx.save();
-            ctx.translate(i.x, i.y); ctx.rotate(i.rot);
-            ctx.drawImage(assetImgs[i.id], -60, -60, 120, 120);
-            ctx.restore();
-            ctx.fillStyle = "white"; ctx.font = "bold 16px sans-serif"; ctx.textAlign = "center";
-            ctx.fillText(i.label, i.x, i.y + 85);
-        } else if (item.type === 'dog') {
-            ctx.fillStyle = 'rgba(0,0,0,0.3)';
-            ctx.beginPath(); ctx.ellipse(dog.x, dog.y+35, 45, 15, 0,0,Math.PI*2); ctx.fill();
-            ctx.drawImage(assetImgs.dog, dog.col*DOG_W, dog.row*DOG_H, DOG_W, DOG_H, dog.x-65, dog.y-85, 130, 160);
+            // Gravity & Air Resistance
+            l.x += l.vx; l.y += l.vy; l.z += l.vz;
+            l.rot += l.vr;
+            
+            if (l.z > 0) { 
+                l.vz -= 0.4; // Gravity
+                l.vr *= 0.98;
+            } else { 
+                l.z = 0; l.vz = 0; 
+                l.vx *= 0.85; l.vy *= 0.85; l.vr *= 0.8; // Friction
+            }
+
+            if (assets[l.type].loaded) {
+                ctx.save();
+                // Draw leaf slightly higher based on Z-axis for 2.5D
+                ctx.translate(l.x, l.y - l.z); 
+                ctx.rotate(l.rot);
+                // Shadow
+                if (l.z > 2) {
+                    ctx.fillStyle = 'rgba(0,0,0,0.15)';
+                    ctx.beginPath(); ctx.ellipse(0, l.z, l.size/2, l.size/4, 0, 0, Math.PI*2); ctx.fill();
+                }
+                ctx.drawImage(assets[l.type].img, l.frame*16, 0, 16, 16, -l.size/2, -l.size/2, l.size, l.size);
+                ctx.restore();
+            }
+        } else if (ent.type === 'icon') {
+            let i = ent.d;
+            if (assets[i.id].loaded) {
+                ctx.save(); ctx.translate(i.x, i.y); ctx.rotate(i.rot);
+                ctx.drawImage(assets[i.id].img, -60, -60, 120, 120);
+                ctx.restore();
+                if (i.revealed) {
+                    ctx.fillStyle = "white"; ctx.font = "bold 14px monospace"; ctx.textAlign = "center";
+                    ctx.fillText(`[ OPEN ${i.id.toUpperCase()} ]`, i.x, i.y + 85);
+                }
+            }
+        } else {
+            if (assets.dog.loaded) {
+                // Ground Shadow
+                ctx.fillStyle = 'rgba(0,0,0,0.2)';
+                ctx.beginPath(); ctx.ellipse(dog.x, dog.y + 30, 40, 12, 0, 0, Math.PI*2); ctx.fill();
+                ctx.drawImage(assets.dog.img, dog.col*DOG_W, dog.row*DOG_H, DOG_W, DOG_H, dog.x-70, dog.y-90, 140, 175);
+            }
         }
     });
 
-    particles.forEach((p, idx) => {
-        p.x += p.vx; p.y += p.vy; p.vy += 0.5; p.life -= 0.02;
-        ctx.fillStyle = p.color; ctx.globalAlpha = p.life;
-        ctx.fillRect(p.x, p.y, 15, 15);
-        if (p.life <= 0) particles.splice(idx, 1);
-    });
-    ctx.globalAlpha = 1.0;
-
     requestAnimationFrame(loop);
 }
-
-preload();
+init();
 </script>
 </body>
 </html>
