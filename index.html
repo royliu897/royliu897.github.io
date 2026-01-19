@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roy R. Liu | Portfolio</title>
     <style>
-        body, html { margin: 0; padding: 0; overflow: hidden; background: #3d4a35; }
-        canvas { display: block; }
+        body, html { margin: 0; padding: 0; overflow: hidden; background: #2d3628; }
+        canvas { display: block; cursor: crosshair; }
         #header {
             position: absolute;
-            top: 50px;
+            top: 40px;
             width: 100%;
             text-align: center;
             color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             pointer-events: none;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
-            z-index: 10;
+            text-shadow: 2px 2px 12px rgba(0,0,0,0.8);
+            z-index: 100;
         }
     </style>
 </head>
@@ -32,15 +32,19 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-// --- CONSTANTS FROM YOUR SPRITE SPECS ---
-const DOG_W = 32; // 128px / 4 columns
-const DOG_H = 40; // 320px / 8 rows
-const LEASH_RADIUS = 120; // The "Comfort Zone"
+const DOG_W = 32; 
+const DOG_H = 40;
+const LEASH_RADIUS = 200; 
 
 let mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
-let dog = { x: 100, y: 100, vx: 0, vy: 0, state: 'idle', row: 2, col: 0 };
+let dog = { 
+    x: 100, y: 100, vx: 0, vy: 0, 
+    state: 'idle', row: 0, col: 0, 
+    rowTimer: 0, forceSit: false 
+};
 let leaves = [];
 let particles = [];
+let windAngle = 0;
 
 const assets = {
     dog: { src: 'assets/dog.png', img: new Image(), loaded: false },
@@ -54,9 +58,9 @@ const assets = {
 
 const projectIcons = [
     { id: 'car', x: 250, y: 400, revealed: false, label: 'Longhorn Racing' },
-    { id: 'gamma', x: 650, y: 300, revealed: false, label: 'Research' },
-    { id: 'racket', x: 400, y: 650, revealed: false, label: 'Tennis' },
-    { id: 'stock', x: 850, y: 500, revealed: false, label: 'Finance Modeling' }
+    { id: 'gamma', x: 750, y: 300, revealed: false, label: 'Research Project' },
+    { id: 'racket', x: 450, y: 750, revealed: false, label: 'Tennis' },
+    { id: 'stock', x: 950, y: 550, revealed: false, label: 'Finance Modeling' }
 ];
 
 function init() {
@@ -68,15 +72,16 @@ function init() {
 
     window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
     window.addEventListener('mousedown', () => {
-        // Run to cursor and sit
-        dog.state = 'running_to_click';
+        dog.forceSit = true;
         projectIcons.forEach(icon => {
             let d = Math.hypot(mouse.x - icon.x, mouse.y - icon.y);
-            if (d < 80) {
+            if (d < 120) {
                 icon.revealed = true;
-                burstLeaves(icon.x, icon.y, 25); // Major disturbance on click
+                burstLeaves(icon.x, icon.y, 50);
             }
         });
+        // Release sit after 1 second
+        setTimeout(() => { dog.forceSit = false; }, 1200);
     });
 
     Object.keys(assets).forEach(key => {
@@ -84,13 +89,18 @@ function init() {
         assets[key].img.src = assets[key].src;
     });
 
-    for(let i=0; i<200; i++) {
+    // MASSIVE LEAF PILE (800 leaves)
+    for(let i=0; i<800; i++) {
         leaves.push({
             x: Math.random()*window.innerWidth, 
             y: Math.random()*window.innerHeight,
             rot: Math.random()*Math.PI*2,
+            vRot: 0,
             type: Math.random() > 0.5 ? 'fallLeaf' : 'springLeaf',
-            frame: Math.floor(Math.random()*5)
+            frame: Math.floor(Math.random()*5),
+            size: 20 + Math.random()*25,
+            driftX: (Math.random()-0.5) * 0.5,
+            driftY: (Math.random()-0.5) * 0.5
         });
     }
     requestAnimationFrame(gameLoop);
@@ -100,101 +110,135 @@ function burstLeaves(x, y, count) {
     for(let i=0; i<count; i++) {
         particles.push({
             x: x, y: y,
-            vx: (Math.random()-0.5)*15,
-            vy: (Math.random()-0.5)*15 - 5,
+            vx: (Math.random()-0.5)*25,
+            vy: (Math.random()-0.5)*25 - 8,
             life: 1.0,
-            color: Math.random() > 0.5 ? '#e67e22' : '#2ecc71'
+            rot: Math.random()*Math.PI,
+            vRot: (Math.random()-0.5)*0.4,
+            color: Math.random() > 0.5 ? '#d35400' : '#27ae60'
         });
     }
 }
 
 function gameLoop() {
-    ctx.fillStyle = '#3d4a35'; 
+    // 1. Background
+    ctx.fillStyle = '#2d3628'; 
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Wind calculation
+    windAngle += 0.02;
+    let currentWind = Math.sin(windAngle) * 0.5;
 
-    // 1. Physics - "Rubber Band" Leash Logic
+    // 2. Physics - Rubber Band & States
     let dx = mouse.x - dog.x;
     let dy = mouse.y - dog.y;
     let dist = Math.hypot(dx, dy);
     let oldX = dog.x;
     let oldY = dog.y;
 
-    if (dist > LEASH_RADIUS || dog.state === 'running_to_click') {
-        let speed = (dist > LEASH_RADIUS * 2 || dog.state === 'running_to_click') ? 0.08 : 0.03;
-        dog.x += dx * speed;
-        dog.y += dy * speed;
-        dog.state = speed > 0.05 ? 'running' : 'walking';
-        if (dist < 10 && dog.state === 'running_to_click') dog.state = 'idle';
+    if (!dog.forceSit) {
+        if (dist > LEASH_RADIUS) {
+            let speed = dist > LEASH_RADIUS * 1.6 ? 0.07 : 0.03;
+            dog.x += dx * speed;
+            dog.y += dy * speed;
+        }
     } else {
-        dog.state = 'idle';
+        // Move slightly to click point even while sitting
+        dog.x += dx * 0.1;
+        dog.y += dy * 0.1;
     }
 
     let vx = dog.x - oldX;
     let vy = dog.y - oldY;
-    let currentSpeed = Math.hypot(vx, vy);
+    let speed = Math.hypot(vx, vy);
 
-    // 2. Animation Logic (Row/Col picking)
-    if (currentSpeed < 0.2) {
-        dog.row = 2; // Sitting facing me
-        dog.col = Math.floor(Date.now() / 400) % 2;
+    // 3. Animation Control
+    if (dog.forceSit) {
+        dog.row = 2; // Sitting index
+        dog.col = Math.floor(Date.now() / 300) % 2;
+    } else if (speed < 0.2) {
+        dog.row = 0; // Standing facing me
+        dog.col = Math.floor(Date.now() / 500) % 2;
     } else {
-        // Directional walking/running
-        if (Math.abs(vx) > Math.abs(vy)) {
-            dog.row = vx > 0 ? 6 : 7; // Rows 7 or 8 (Indices 6/7)
-        } else {
-            dog.row = vy > 0 ? 4 : 5; // Rows 5 or 6 (Indices 4/5)
+        dog.rowTimer--;
+        if (dog.rowTimer <= 0) {
+            if (Math.abs(vx) > Math.abs(vy)) { dog.row = vx > 0 ? 6 : 7; } 
+            else { dog.row = vy > 0 ? 4 : 5; }
+            dog.rowTimer = 15; 
         }
-        // Change run/walk animation speed
-        let animSpeed = dog.state === 'running' ? 80 : 150;
-        dog.col = Math.floor(Date.now() / animSpeed) % 4;
+        dog.col = Math.floor(Date.now() / (speed > 4 ? 70 : 120)) % 4;
     }
 
-    // 3. Draw Icons
-    projectIcons.forEach(icon => {
-        if (assets[icon.id].loaded) {
-            ctx.globalAlpha = icon.revealed ? 1.0 : 0.25;
-            ctx.drawImage(assets[icon.id].img, icon.x - 40, icon.y - 40, 80, 80);
-            if (icon.revealed) {
-                ctx.fillStyle = "white";
-                ctx.font = "bold 14px Arial";
-                ctx.textAlign = "center";
-                ctx.fillText(icon.label, icon.x, icon.y + 60);
+    // 4. 2.5D Rendering (Y-Sort)
+    let renderList = [
+        ...projectIcons.map(i => ({ type: 'icon', obj: i, y: i.y + 20 })),
+        ...leaves.map(l => ({ type: 'leaf', obj: l, y: l.y })),
+        { type: 'dog', obj: dog, y: dog.y }
+    ];
+    renderList.sort((a, b) => a.y - b.y);
+
+    renderList.forEach(item => {
+        if (item.type === 'leaf') {
+            let l = item.obj;
+            // Interaction
+            let lDist = Math.hypot(l.x - dog.x, l.y - dog.y);
+            if (lDist < 60) {
+                l.x += vx * 1.4;
+                l.y += vy * 1.4;
+                l.vRot += 0.05;
+            }
+            // Wind & Drift
+            l.x += l.driftX + currentWind;
+            l.y += l.driftY;
+            l.rot += l.vRot;
+            l.vRot *= 0.95; // Friction for rotation
+
+            if (assets[l.type].loaded) {
+                ctx.save();
+                ctx.translate(l.x, l.y);
+                ctx.rotate(l.rot);
+                ctx.drawImage(assets[l.type].img, l.frame * 16, 0, 16, 16, -l.size/2, -l.size/2, l.size, l.size);
+                ctx.restore();
+            }
+        } else if (item.type === 'icon') {
+            let icon = item.obj;
+            if (assets[icon.id].loaded) {
+                ctx.globalAlpha = icon.revealed ? 1.0 : 0.1;
+                ctx.drawImage(assets[icon.id].img, icon.x - 60, icon.y - 60, 120, 120);
+                if (icon.revealed) {
+                    ctx.globalAlpha = 1.0;
+                    ctx.fillStyle = "white";
+                    ctx.font = "bold 18px Arial";
+                    ctx.textAlign = "center";
+                    ctx.fillText(icon.label, icon.x, icon.y + 80);
+                }
+            }
+            ctx.globalAlpha = 1.0;
+        } else if (item.type === 'dog') {
+            if (assets.dog.loaded) {
+                // Ground Shadow
+                ctx.fillStyle = 'rgba(0,0,0,0.25)';
+                ctx.beginPath();
+                ctx.ellipse(dog.x, dog.y + 30, 35, 12, 0, 0, Math.PI*2);
+                ctx.fill();
+                ctx.drawImage(assets.dog.img, dog.col * DOG_W, dog.row * DOG_H, DOG_W, DOG_H, dog.x-50, dog.y-65, 100, 125);
             }
         }
     });
-    ctx.globalAlpha = 1.0;
 
-    // 4. Draw Leaves (Physical disturbance)
-    leaves.forEach(l => {
-        let lDist = Math.hypot(l.x - dog.x, l.y - dog.y);
-        let force = dog.state === 'running' ? 2.5 : 1.2;
-        if (lDist < 40) {
-            l.x += vx * force;
-            l.y += vy * force;
-            l.rot += 0.1 * force;
-        }
-        if (assets[l.type].loaded) {
-            ctx.save();
-            ctx.translate(l.x, l.y);
-            ctx.rotate(l.rot);
-            ctx.drawImage(assets[l.type].img, l.frame * 16, 0, 16, 16, -8, -8, 18, 18);
-            ctx.restore();
-        }
-    });
-
-    // 5. Draw Dog
-    if (assets.dog.loaded) {
-        ctx.drawImage(assets.dog.img, dog.col * DOG_W, dog.row * DOG_H, DOG_W, DOG_H, dog.x-32, dog.y-40, 64, 80);
-    }
-
-    // 6. Particles
+    // 5. Particle System
     particles.forEach((p, i) => {
-        p.x += p.vx; p.y += p.vy; p.vy += 0.3; p.life -= 0.02;
+        p.x += p.vx; p.y += p.vy; p.vy += 0.4; p.life -= 0.015; p.rot += p.vRot;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
         ctx.fillStyle = p.color;
         ctx.globalAlpha = p.life;
-        ctx.fillRect(p.x, p.y, 4, 4);
+        ctx.fillRect(-10, -10, 20, 20);
+        ctx.restore();
         if (p.life <= 0) particles.splice(i, 1);
     });
+    ctx.globalAlpha = 1.0;
 
     requestAnimationFrame(gameLoop);
 }
