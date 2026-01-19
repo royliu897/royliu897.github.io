@@ -41,7 +41,6 @@ const LEAF_COUNT = 3500;
 const HORIZON_RATIO = 0.45; 
 const BOTTOM_MARGIN = 0.1;  
 const DEAD_ZONE = 100;      
-const WALK_THRESHOLD = 280; 
 const GRAVITY = 0.39;
 const DOG_W = 32, DOG_H = 40;
 
@@ -88,10 +87,8 @@ function init() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     dog.y = canvas.height * 0.7;
-
     Object.keys(assets).forEach(key => assets[key].img.src = assets[key].src);
     initLeaves();
-
     const topLimit = canvas.height * HORIZON_RATIO;
     const botLimit = canvas.height * (1 - BOTTOM_MARGIN);
     const ids = ['car', 'gamma', 'racket', 'stock'];
@@ -99,7 +96,6 @@ function init() {
         id, x: (i+1) * (canvas.width/5), y: topLimit + (botLimit - topLimit) * 0.4,
         rot: (Math.random()-0.5)*0.2, revealed: false, path: assets[id].path
     }));
-
     window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
     window.addEventListener('mousedown', e => {
         const topLimit = canvas.height * HORIZON_RATIO;
@@ -108,17 +104,14 @@ function init() {
         let clickedIcon = icons.find(i => Math.hypot(mouse.x - i.x, mouse.y - i.y) < 80);
         dog.targetAction = { x: mouse.x, y: mouse.y, icon: clickedIcon };
     });
-
     document.getElementById('resetBtn').onclick = (e) => { e.stopPropagation(); initLeaves(); };
     requestAnimationFrame(loop);
 }
 
 function triggerSitExplosion(x, y, icon) {
     dog.sitLock = true;
-    // --- SLINGSHOT FIX ---
-    dog.vx = 0; dog.vy = 0; // Immediate halt
-    dog.x = x; dog.y = y;   // Snap to target to ensure no drift
-    
+    dog.vx = 0; dog.vy = 0;
+    dog.x = x; dog.y = y;
     if (icon) {
         setTimeout(() => { window.location.href = icon.path; }, 500);
         icon.revealed = true;
@@ -130,24 +123,25 @@ function triggerSitExplosion(x, y, icon) {
         let d = Math.hypot(l.x - x, l.y - y);
         if (d < sitRadius) {
             let angle = Math.atan2(l.y - y, l.x - x) + (Math.random() - 0.5);
-            l.vx = Math.cos(angle) * (1.2 + Math.random() * 1.5);
-            l.vy = Math.sin(angle) * 1.2;
-            l.vz = (4.0 + Math.random() * 3) * 2.5; 
-            l.vrX = (Math.random() - 0.5) * 0.4; // Reduced flutter on sit
+            l.vx = Math.cos(angle) * (1.5 + Math.random() * 1.5);
+            l.vy = Math.sin(angle) * 1.5;
+            // Reverted sit physics as requested
+            l.vz = (3.3 + Math.random() * 3) * 2.5; 
+            l.vrX = (Math.random() - 0.5) * 0.8; // Kept slight decrease on rotation
             l.layer = 1.0; 
         }
     });
 }
 
+// Steeper, less sensitive leash function
 function getSoftTargetY(mouseY, topLimit, botLimit) {
     if (mouseY >= topLimit && mouseY <= botLimit) return mouseY;
-    // --- SENSITIVITY TRANSITION ---
     if (mouseY < topLimit) {
-        let over = topLimit - mouseY;
-        return topLimit - (Math.atan(over / 100) * 30); // Smooth log-like falloff
+        let over = (topLimit - mouseY) * 0.15; // Increased steepness (only 15% influence)
+        return topLimit - (Math.atan(over / 50) * 15); 
     } else {
-        let over = mouseY - botLimit;
-        return botLimit + (Math.atan(over / 100) * 30);
+        let over = (mouseY - botLimit) * 0.15;
+        return botLimit + (Math.atan(over / 50) * 15);
     }
 }
 
@@ -155,7 +149,6 @@ function loop(time) {
     if (isPaused) { requestAnimationFrame(loop); return; }
     const dt = Math.min((time - lastTime) / 16.67, 2) || 1;
     lastTime = time;
-    
     const topLimit = canvas.height * HORIZON_RATIO;
     const botLimit = canvas.height * (1 - BOTTOM_MARGIN);
 
@@ -163,9 +156,10 @@ function loop(time) {
     ctx.fillStyle = '#11150d'; ctx.fillRect(0, topLimit, canvas.width, botLimit - topLimit);
     ctx.fillStyle = '#000000'; ctx.fillRect(0, botLimit, canvas.width, canvas.height - botLimit);
 
-    // --- DOG BRAIN ---
     let targetX = dog.targetAction ? dog.targetAction.x : mouse.x;
-    let targetY = dog.targetAction ? dog.targetAction.y : getSoftTargetY(mouse.y, topLimit, botLimit);
+    let rawTargetY = dog.targetAction ? dog.targetAction.y : getSoftTargetY(mouse.y, topLimit, botLimit);
+    // Hard Clamp to ensure dog NEVER leaves the zone
+    let targetY = Math.max(topLimit + 5, Math.min(botLimit - 5, rawTargetY));
     
     let dx = targetX - dog.x, dy = targetY - dog.y;
     let dist = Math.hypot(dx, dy);
@@ -175,13 +169,10 @@ function loop(time) {
     if (!dog.sitLock) {
         if (dog.targetAction) {
             let angle = Math.atan2(dy, dx);
-            dog.vx = Math.cos(angle) * 9;
-            dog.vy = Math.sin(angle) * 9;
+            dog.vx = Math.cos(angle) * 9; dog.vy = Math.sin(angle) * 9;
             dog.facing = dog.vx > 0 ? 'right' : 'left';
         } else if (dist > DEAD_ZONE) {
-            let speedMult = (dist > WALK_THRESHOLD) ? 0.05 : 0.015;
-            dog.vx = dx * speedMult;
-            dog.vy = dy * speedMult;
+            dog.vx = dx * 0.05; dog.vy = dy * 0.05;
             dog.facing = dog.vx > 0 ? 'right' : 'left';
         } else {
             dog.vx *= 0.8; dog.vy *= 0.8;
@@ -192,7 +183,6 @@ function loop(time) {
     dog.x += dog.vx * dt; dog.y += dog.vy * dt;
     let moving = Math.hypot(dog.vx, dog.vy) > 0.4;
     
-    // Rows (0-indexed): 1=StandSide, 3=SitSide, 6/7=Run
     if (dog.sitLock) {
         dog.row = 3; dog.col = (dog.facing === 'right') ? 0 : 2; 
         dog.col += Math.floor(Date.now()/300)%2;
@@ -204,7 +194,6 @@ function loop(time) {
         dog.col = Math.floor(Date.now() / 100) % 4;
     }
 
-    // --- RENDER ---
     let renderList = [
         ...leaves.map(l => ({ type: 'leaf', y: l.y, d: l })),
         ...icons.map(i => ({ type: 'icon', y: i.y, d: i })),
@@ -219,10 +208,10 @@ function loop(time) {
             if (dDog < 50*p && moving && !dog.sitLock) {
                 if (l.layer > 0.7) { 
                     let pushAngle = Math.atan2(l.y - dog.y, l.x - dog.x);
-                    l.vx += Math.cos(pushAngle + (Math.random()-0.5)) * 1.5; // Reduced horiz displacement
+                    l.vx += Math.cos(pushAngle + (Math.random()-0.5)) * 1.5;
                     l.vy += Math.sin(pushAngle + (Math.random()-0.5)) * 0.8;
-                    l.vz += 0.08 + (Math.hypot(dog.vx, dog.vy) * 0.04); // Increased vertical
-                    l.vrX *= 0.8; // Reduce rotation during walk kicks
+                    l.vz += 0.08 + (Math.hypot(dog.vx, dog.vy) * 0.04);
+                    l.vrX *= 0.8; 
                 }
                 if (Math.random() > 0.5) l.layer = Math.min(1.0, l.layer + 0.08); 
             }
@@ -231,13 +220,10 @@ function loop(time) {
                 l.rotX += l.vrX * dt; l.rotY += l.vrY * dt;
                 if (l.z > 0) {
                     l.vz -= GRAVITY * dt;
-                    if (l.vz > 0) { 
-                        l.vx *= 0.99; l.vy *= 0.99;
-                        l.vrX *= 0.95; // Stiff on way up
-                    } else { 
-                        l.vx *= 0.92; l.vy *= 0.92; // Air resistance catching
-                        l.vx += Math.sin(Date.now()*0.003 + l.waft) * (0.6 * l.chaos); // Random waft drift
-                        l.vrX += Math.cos(Date.now()*0.005 + l.waft) * 0.03; // Atmospheric rocking
+                    if (l.vz > 0) { l.vx *= 0.99; l.vy *= 0.99; l.vrX *= 0.92; } // Rotation dampening on way up
+                    else { 
+                        l.vx *= 0.92; l.vy *= 0.92;
+                        l.vx += Math.sin(Date.now()*0.003 + l.waft) * (0.6 * l.chaos);
                     }
                 } else { l.z = 0; l.vz = 0; l.vx *= 0.5; l.vy *= 0.5; l.vrX = 0; }
                 if (l.x < 0) { l.x = 0; l.vx *= -1; } if (l.x > canvas.width) { l.x = canvas.width; l.vx *= -1; }
