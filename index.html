@@ -6,7 +6,7 @@
     <title>Roy R. Liu | Portfolio</title>
     <style>
         body, html { margin: 0; padding: 0; overflow: hidden; background: #050704; }
-        canvas { display: block; cursor: crosshair; }
+        canvas { display: block; } /* Cursor reset to default */
         #header {
             position: absolute;
             top: 40px; width: 100%; text-align: center;
@@ -15,6 +15,16 @@
             text-shadow: 0 0 15px rgba(0,0,0,0.8);
             z-index: 100;
         }
+        #resetBtn {
+            position: absolute;
+            bottom: 20px; right: 20px;
+            padding: 10px 15px;
+            background: rgba(255,255,255,0.1);
+            color: white; border: 1px solid rgba(255,255,255,0.3);
+            font-family: sans-serif; cursor: pointer; border-radius: 4px;
+            z-index: 101; transition: background 0.2s;
+        }
+        #resetBtn:hover { background: rgba(255,255,255,0.2); }
     </style>
 </head>
 <body>
@@ -22,6 +32,7 @@
 <div id="header">
     <h1>Welcome to my webpage, click on something.</h1>
 </div>
+<button id="resetBtn">Reset Leaves</button>
 <canvas id="gameCanvas"></canvas>
 
 <script>
@@ -32,7 +43,7 @@ const ctx = canvas.getContext('2d', { alpha: false });
 const LEAF_COUNT = 3500;    
 const HORIZON = 0.5;
 const DEAD_ZONE = 110;      
-const WALK_THRESHOLD = 280; // Extended walk zone before running
+const WALK_THRESHOLD = 280; 
 const DOG_SPEED_SCALAR = 0.9; 
 const GRAVITY = 0.39;
 const DOG_W = 32, DOG_H = 40;
@@ -42,6 +53,7 @@ let dog = { x: 200, y: 0, vx: 0, vy: 0, row: 3, col: 0, facing: 'right', sitLock
 let leaves = [];
 let icons = [];
 let lastTime = 0;
+let isPaused = false;
 
 const assets = {
     dog: { src: 'assets/dog.png', img: new Image() },
@@ -53,13 +65,8 @@ const assets = {
     stock: { src: 'assets/stock.png', img: new Image(), path: 'finance.html' }
 };
 
-function init() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    dog.y = canvas.height * 0.75;
-
-    Object.keys(assets).forEach(key => assets[key].img.src = assets[key].src);
-
+function initLeaves() {
+    leaves = [];
     const groundTop = canvas.height * HORIZON;
     for(let i=0; i<LEAF_COUNT; i++) {
         leaves.push({
@@ -70,42 +77,66 @@ function init() {
             vrX: 0, vrY: 0,
             type: Math.random() > 0.5 ? 'fallLeaf' : 'springLeaf',
             frame: Math.floor(Math.random()*5),
-            size: 25 + Math.random() * 50, // Only randomly bigger
+            size: 25 + Math.random() * 60, // Bigger leaves
             waft: Math.random() * 10,
             layer: Math.random(),
-            skew: (Math.random() - 0.5) * 0.3,
-            tint: 0.7 + Math.random() * 0.5
+            skew: (Math.random() - 0.5) * 0.1, // Minimal deformation
+            sat: 50 + Math.random() * 100, // 4th Parameter: Saturation
+            tint: 0.8 + Math.random() * 0.4
         });
     }
+}
 
+function init() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    dog.y = canvas.height * 0.75;
+
+    Object.keys(assets).forEach(key => assets[key].img.src = assets[key].src);
+    initLeaves();
+
+    const groundTop = canvas.height * HORIZON;
     const ids = ['car', 'gamma', 'racket', 'stock'];
     icons = ids.map((id, i) => ({
         id, x: (i+1) * (canvas.width/5), y: groundTop + (canvas.height-groundTop)*0.4,
         rot: (Math.random()-0.5)*0.2, revealed: false, path: assets[id].path
     }));
 
-    window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-    window.addEventListener('mousedown', handleClick);
-    requestAnimationFrame(loop);
-}
+    window.addEventListener('mousemove', e => { 
+        mouse.x = e.clientX; 
+        mouse.y = e.clientY; 
+    });
+    
+    window.addEventListener('mousedown', e => {
+        // Loophole Fix: Only respond to clicks in bottom half
+        if (e.clientY < canvas.height * HORIZON) return;
+        
+        let clickedIcon = icons.find(i => Math.hypot(mouse.x - i.x, mouse.y - i.y) < 100);
+        dog.targetAction = { x: mouse.x, y: mouse.y, icon: clickedIcon };
+    });
 
-function handleClick() {
-    let clickedIcon = icons.find(i => Math.hypot(mouse.x - i.x, mouse.y - i.y) < 100);
-    dog.targetAction = { x: mouse.x, y: mouse.y, icon: clickedIcon };
+    document.getElementById('resetBtn').addEventListener('click', initLeaves);
+    
+    // Tab Switching Fix
+    document.addEventListener("visibilitychange", () => {
+        isPaused = document.hidden;
+        if (!isPaused) lastTime = performance.now();
+    });
+
+    requestAnimationFrame(loop);
 }
 
 function triggerSitExplosion(x, y, icon) {
     dog.sitLock = true;
     setTimeout(() => { dog.sitLock = false; dog.targetAction = null; }, 1200);
 
-    const sitRadius = 115; 
-    // Reverted to the "Sit" logic that worked
+    const sitRadius = 60; // Exactly dog size
     leaves.forEach(l => {
         let d = Math.hypot(l.x - x, l.y - y);
         if (d < sitRadius) {
-            let angle = Math.atan2(l.y - y, l.x - x) + (Math.random()-0.5)*0.2;
-            l.vx = Math.cos(angle) * 7;
-            l.vy = Math.sin(angle) * 3;
+            let angle = Math.atan2(l.y - y, l.x - x);
+            l.vx = Math.cos(angle) * 3; // Decreased horizontal
+            l.vy = Math.sin(angle) * 1.5;
             l.vz = 5 + Math.random() * 5; 
             l.vrX = (Math.random()-0.5) * 0.6;
         }
@@ -114,7 +145,9 @@ function triggerSitExplosion(x, y, icon) {
 }
 
 function loop(time) {
-    const dt = (time - lastTime) / 16.67 || 1;
+    if (isPaused) { requestAnimationFrame(loop); return; }
+    
+    const dt = Math.min((time - lastTime) / 16.67, 3) || 1; // Cap dt to prevent jumps
     lastTime = time;
     const groundY = canvas.height * HORIZON;
 
@@ -122,8 +155,11 @@ function loop(time) {
     ctx.fillStyle = '#11150d'; ctx.fillRect(0, groundY, canvas.width, canvas.height-groundY);
 
     // --- DOG BRAIN ---
+    // Loophole Fix: Cursor target ignored if in top half
+    let isTargetValid = mouse.y >= groundY;
     let targetX = dog.targetAction ? dog.targetAction.x : mouse.x;
-    let targetY = dog.targetAction ? dog.targetAction.y : Math.max(groundY + 40, mouse.y);
+    let targetY = dog.targetAction ? dog.targetAction.y : (isTargetValid ? mouse.y : dog.y);
+    
     let dx = targetX - dog.x, dy = targetY - dog.y;
     let dist = Math.hypot(dx, dy);
     
@@ -134,8 +170,7 @@ function loop(time) {
             let angle = Math.atan2(dy, dx);
             dog.vx = Math.cos(angle) * 9 * DOG_SPEED_SCALAR;
             dog.vy = Math.sin(angle) * 9 * DOG_SPEED_SCALAR;
-        } else if (dist > DEAD_ZONE) {
-            // Extended Walk Zone logic
+        } else if (dist > DEAD_ZONE && isTargetValid) {
             let speedMult = (dist > WALK_THRESHOLD) ? 0.05 : 0.015;
             dog.vx = dx * speedMult * DOG_SPEED_SCALAR;
             dog.vy = dy * speedMult * DOG_SPEED_SCALAR;
@@ -148,14 +183,13 @@ function loop(time) {
     let moving = Math.abs(dog.vx) + Math.abs(dog.vy) > 0.4;
     if (moving) dog.facing = dog.vx > 0 ? 'right' : 'left';
 
-    // --- RENDER LIST CONSTRUCTION ---
+    // --- RENDER LIST ---
     let renderList = [
         ...leaves.map(l => ({ type: 'leaf', y: l.y, d: l })),
         ...icons.map(i => ({ type: 'icon', y: i.y, d: i })),
         { type: 'dog', y: dog.y }
     ].sort((a,b) => a.y - b.y);
 
-    // --- PHYSICS & DRAWING ---
     for (let obj of renderList) {
         let p = 0.5 + (obj.y/canvas.height);
 
@@ -163,15 +197,12 @@ function loop(time) {
             let l = obj.d;
             let dDog = Math.hypot(l.x - dog.x, l.y - (dog.y + 10));
             
-            // Walking leaf physics + speed-based vertical displacement
             if (dDog < 50*p && moving && !dog.sitLock && l.layer > 0.7) {
                 let pushAngle = Math.atan2(l.y - dog.y, l.x - dog.x);
                 let force = (50*p - dDog) * 0.15;
                 let dogSpeed = Math.hypot(dog.vx, dog.vy);
-
                 l.vx += Math.cos(pushAngle + (Math.random()-0.5)) * force * 2.5; 
                 l.vy += Math.sin(pushAngle + (Math.random()-0.5)) * force;
-                // Vertical kick based on dog speed
                 l.vz += 0.02 + (dogSpeed * 0.015); 
             }
 
@@ -182,19 +213,24 @@ function loop(time) {
                 if (l.z > 0) {
                     l.vz -= GRAVITY * dt;
                     l.vx *= 0.95; l.vy *= 0.95;
-                    l.vx += Math.sin(Date.now()*0.005 + l.waft) * 0.3;
+                    // Increased Wafting
+                    l.vx += Math.sin(Date.now()*0.005 + l.waft) * 0.8;
                 } else {
                     l.z = 0; l.vz = 0; l.vx *= 0.6; l.vy *= 0.6;
                 }
-                if (l.y < groundY) l.y = groundY + 5;
-                if (l.y > canvas.height) l.y = canvas.height - 5;
+
+                // Reflective Borders
+                if (l.x < 0) { l.x = 0; l.vx *= -1; }
+                if (l.x > canvas.width) { l.x = canvas.width; l.vx *= -1; }
+                if (l.y < groundY) { l.y = groundY; l.vy *= -1; }
+                if (l.y > canvas.height) { l.y = canvas.height; l.vy *= -1; }
             }
 
             if (assets[l.type].img.complete) {
-                // Optimized deformation: ensures scale doesn't drop to 0
                 let scaleX = p * Math.sin(l.rotX);
                 let scaleY = p * Math.cos(l.rotY);
-                ctx.setTransform(scaleX, l.skew * scaleY, 0, scaleY, l.x, l.y - l.z);
+                ctx.setTransform(scaleX, l.skew, 0, scaleY, l.x, l.y - l.z);
+                // Saturation param used via filter sparingly or simple color blending
                 ctx.drawImage(assets[l.type].img, l.frame*16, 0, 16, 16, -l.size/2, -l.size/2, l.size, l.size);
             }
 
