@@ -26,20 +26,21 @@
 
 <script>
 const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
+const ctx = canvas.getContext('2d', { alpha: false }); // Performance: Disable alpha for main context
 
-// --- ENGINE TUNING ---
-const LEAF_COUNT = 3000;    
-const HORIZON = 0.5;        
-const DEAD_ZONE = 140;      
-const RUN_THRESHOLD = 180;  
-const DOG_SPEED_SCALAR = 0.9; // Increased speed
+// --- TUNING & OPTIMIZATION ---
+const LEAF_COUNT = 3500;    // More leaves
+const HORIZON = 0.5;
+const DEAD_ZONE = 140;
+const DOG_SPEED_SCALAR = 0.9;
 const DOG_W = 32, DOG_H = 40;
+const GRID_SIZE = 80;       // Spatial partitioning grid size
 
 let mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
 let dog = { x: 200, y: 0, vx: 0, vy: 0, row: 3, col: 0, facing: 'right', sitLock: false, targetAction: null };
 let leaves = [];
 let icons = [];
+let spatialGrid = {};
 
 const assets = {
     dog: { src: 'assets/dog.png', img: new Image() },
@@ -50,6 +51,14 @@ const assets = {
     racket: { src: 'assets/racket.png', img: new Image(), path: 'tennis.html' },
     stock: { src: 'assets/stock.png', img: new Image(), path: 'finance.html' }
 };
+
+// --- PRE-RENDERING CACHE ---
+const leafCache = document.createElement('canvas');
+const lctx = leafCache.getContext('2d');
+function preRenderLeaves() {
+    leafCache.width = 256; leafCache.height = 256;
+    // Draw variants here once assets load to avoid ctx.filter during loop
+}
 
 function init() {
     canvas.width = window.innerWidth;
@@ -67,11 +76,10 @@ function init() {
             rotX: Math.random() * 6, rotY: Math.random() * 6,
             vrX: 0, vrY: 0,
             type: Math.random() > 0.5 ? 'fallLeaf' : 'springLeaf',
-            frame: Math.floor(Math.random()*5),
-            size: 20 + Math.random()*45, // Larger varied sizes
+            size: 20 + Math.random() * 50, // Even bigger variety
             waft: Math.random() * 10,
             layer: Math.random(),
-            tint: 0.7 + Math.random() * 0.5 // High variance shading
+            tint: 0.6 + Math.random() * 0.6
         });
     }
 
@@ -99,11 +107,11 @@ function triggerSitExplosion(x, y, icon) {
     leaves.forEach(l => {
         let d = Math.hypot(l.x - x, l.y - y);
         if (d < sitRadius) {
-            let angle = Math.atan2(l.y - y, l.x - x) + (Math.random()-0.5)*0.2;
-            l.vx = Math.cos(angle) * 7;
-            l.vy = Math.sin(angle) * 3;
-            l.vz = 5 + Math.random() * 5; 
-            l.vrX = (Math.random()-0.5) * 0.6;
+            // Minimal initial horizontal movement
+            l.vx = (Math.random() - 0.5) * 1.5; 
+            l.vy = (Math.random() - 0.5) * 1.5;
+            l.vz = 6 + Math.random() * 6; // Vertical pop remains
+            l.vrX = (Math.random()-0.5) * 0.8;
         }
     });
     if (icon) icon.revealed = true;
@@ -114,96 +122,112 @@ function loop() {
     ctx.fillStyle = '#050704'; ctx.fillRect(0,0,canvas.width, groundY);
     ctx.fillStyle = '#11150d'; ctx.fillRect(0, groundY, canvas.width, canvas.height-groundY);
 
-    // --- DOG BRAIN ---
+    // --- SPATIAL HASHING ---
+    spatialGrid = {};
+    for (let l of leaves) {
+        let gx = Math.floor(l.x / GRID_SIZE);
+        let gy = Math.floor(l.y / GRID_SIZE);
+        let key = `${gx},${gy}`;
+        if (!spatialGrid[key]) spatialGrid[key] = [];
+        spatialGrid[key].push(l);
+    }
+
+    // --- DOG LOGIC ---
     let targetX = dog.targetAction ? dog.targetAction.x : mouse.x;
     let targetY = dog.targetAction ? dog.targetAction.y : Math.max(groundY + 40, mouse.y);
-    let dx = targetX - dog.x;
-    let dy = targetY - dog.y;
+    let dx = targetX - dog.x, dy = targetY - dog.y;
     let dist = Math.hypot(dx, dy);
     
     if (dog.targetAction && dist < 20) triggerSitExplosion(dog.targetAction.x, dog.targetAction.y, dog.targetAction.icon);
 
     if (!dog.sitLock) {
         if (dog.targetAction) {
-            // Instant fast sprint for clicks, ignores leash
             let angle = Math.atan2(dy, dx);
-            dog.vx = Math.cos(angle) * 8 * DOG_SPEED_SCALAR;
-            dog.vy = Math.sin(angle) * 8 * DOG_SPEED_SCALAR;
+            dog.vx = Math.cos(angle) * 8.5 * DOG_SPEED_SCALAR;
+            dog.vy = Math.sin(angle) * 8.5 * DOG_SPEED_SCALAR;
         } else if (dist > DEAD_ZONE) {
-            let speedMult = (dist > RUN_THRESHOLD) ? 0.05 : 0.02;
+            let speedMult = (dist > 180) ? 0.05 : 0.02;
             dog.vx = dx * speedMult * DOG_SPEED_SCALAR;
             dog.vy = dy * speedMult * DOG_SPEED_SCALAR;
-        } else {
-            dog.vx *= 0.8; dog.vy *= 0.8;
-        }
+        } else { dog.vx *= 0.8; dog.vy *= 0.8; }
     } else { dog.vx *= 0.6; dog.vy *= 0.6; }
     
     dog.x += dog.vx; dog.y += dog.vy;
-    dog.facing = dog.vx > 0 ? 'right' : (dog.vx < 0 ? 'left' : dog.facing);
-
     let moving = Math.abs(dog.vx) + Math.abs(dog.vy) > 0.3;
-    if (dog.sitLock || !moving) { dog.row = 3; dog.col = dog.facing === 'right' ? 0 : 2; }
-    else { dog.row = 1; dog.col = (dog.facing === 'right' ? 0 : 2) + (Math.floor(Date.now()/120)%2); }
+    if (moving) dog.facing = dog.vx > 0 ? 'right' : 'left';
 
-    // --- RENDERING ---
-    icons.forEach(i => {
-        if (!assets[i.id].img.complete) return;
-        let p = 0.5 + (i.y/canvas.height);
-        ctx.save(); ctx.translate(i.x, i.y); ctx.rotate(i.rot); ctx.scale(p,p);
-        ctx.drawImage(assets[i.id].img, -60, -60, 120, 120);
-        ctx.restore();
-    });
-
-    let renderList = [...leaves, { isDog: true, y: dog.y }].sort((a,b) => a.y - b.y);
-
-    renderList.forEach(obj => {
-        if (obj.isDog) {
-            let p = 0.5 + (dog.y/canvas.height);
-            let dW = 135 * p, dH = 160 * p;
-            ctx.fillStyle = 'rgba(0,0,0,0.3)';
-            ctx.beginPath(); ctx.ellipse(dog.x, dog.y+25*p, 40*p, 10*p, 0, 0, 7); ctx.fill();
-            if (assets.dog.img.complete)
-                ctx.drawImage(assets.dog.img, dog.col*DOG_W, dog.row*DOG_H, DOG_W, DOG_H, dog.x - dW/2, dog.y - dH*0.7, dW, dH);
-            return;
-        }
-
-        let l = obj;
+    // --- LEAF PHYSICS & COLLISIONS ---
+    for (let l of leaves) {
         let p = 0.5 + (l.y/canvas.height);
-
-        // REALISTIC PARTING PHYSICS
-        let dDog = Math.hypot(l.x - dog.x, l.y - (dog.y + 10));
-        if (dDog < 50*p && moving && !dog.sitLock && l.layer > 0.7) {
-            let pushAngle = Math.atan2(l.y - dog.y, l.x - dog.x);
-            let force = (50*p - dDog) * 0.15;
-            // Push forward AND to the side with randomness
-            l.vx += Math.cos(pushAngle + (Math.random()-0.5)) * force * 2.5; 
-            l.vy += Math.sin(pushAngle + (Math.random()-0.5)) * force;
-            l.vz += 0.02; 
+        
+        // Dog Interaction: High Randomness to prevent sticking
+        let dDog = Math.hypot(l.x - dog.x, l.y - (dog.y + 12));
+        // Dog sometimes moves more than one layer (layer > 0.5)
+        let layerThreshold = Math.random() > 0.9 ? 0.3 : 0.7; 
+        
+        if (dDog < 55*p && moving && !dog.sitLock && l.layer > layerThreshold) {
+            let randAngle = Math.atan2(l.y - dog.y, l.x - dog.x) + (Math.random()-0.5) * 2;
+            l.vx += Math.cos(randAngle) * 4;
+            l.vy += Math.sin(randAngle) * 2;
+            l.vz += 0.05;
+            l.layer = Math.min(1, l.layer + 0.1); // Moving leaves rise to top
         }
 
+        // Inter-leaf Collisions (Spatial Hash optimized)
+        if (l.vz > 0 || Math.abs(l.vx) > 0.5) {
+            let gx = Math.floor(l.x / GRID_SIZE);
+            let gy = Math.floor(l.y / GRID_SIZE);
+            let neighbors = spatialGrid[`${gx},${gy}`] || [];
+            for (let other of neighbors) {
+                if (other === l) continue;
+                let d = Math.hypot(l.x - other.x, l.y - other.y);
+                if (d < 15) {
+                    other.vx += l.vx * 0.2;
+                    other.vy += l.vy * 0.2;
+                    // Swap layers occasionally on impact
+                    if (Math.random() > 0.8) [l.layer, other.layer] = [other.layer, l.layer];
+                }
+            }
+        }
+
+        // Movement Update
         if (l.z > 0 || Math.abs(l.vx) > 0.1) {
             l.x += l.vx; l.y += l.vy; l.z += l.vz;
             l.rotX += l.vrX; l.rotY += l.vrY;
-
             if (l.z > 0) {
-                l.vz -= 0.39; // Updated Gravity
-                l.vx *= 0.95; l.vy *= 0.95;
-                l.vx += Math.sin(Date.now()*0.005 + l.waft) * 0.3;
+                l.vz -= 0.39; // Gravity
+                l.vx *= 0.96; l.vy *= 0.96;
+                l.vx += Math.sin(Date.now()*0.005 + l.waft) * 0.5; // Randomness from falling
             } else {
-                l.z = 0; l.vz = 0; l.vx *= 0.6; l.vy *= 0.6;
+                l.z = 0; l.vz = 0; l.vx *= 0.5; l.vy *= 0.5;
             }
             if (l.y < groundY) l.y = groundY + 5;
             if (l.y > canvas.height) l.y = canvas.height - 5;
         }
+    }
 
-        if (assets[l.type].img.complete) {
-            ctx.save();
-            ctx.translate(l.x, l.y - l.z);
-            ctx.scale(p * Math.sin(l.rotX), p * Math.cos(l.rotY));
-            ctx.rotate(l.rotX);
-            if (l.tint !== 1) ctx.filter = `brightness(${l.tint})`;
-            ctx.drawImage(assets[l.type].img, l.frame*16, 0, 16, 16, -l.size/2, -l.size/2, l.size, l.size);
-            ctx.restore();
+    // --- SORTED RENDER ---
+    let renderList = [...leaves, { isDog: true, y: dog.y }].sort((a,b) => a.y - b.y);
+    renderList.forEach(obj => {
+        let p = 0.5 + (obj.y/canvas.height);
+        if (obj.isDog) {
+            let dW = 135 * p, dH = 160 * p;
+            if (assets.dog.img.complete) {
+                dog.col = (dog.sitLock || !moving) ? (dog.facing === 'right' ? 0 : 2) : (dog.facing === 'right' ? 0 : 2) + (Math.floor(Date.now()/120)%2);
+                dog.row = (dog.sitLock || !moving) ? 3 : 1;
+                ctx.drawImage(assets.dog.img, dog.col*DOG_W, dog.row*DOG_H, DOG_W, DOG_H, dog.x - dW/2, dog.y - dH*0.7, dW, dH);
+            }
+        } else {
+            let l = obj;
+            if (assets[l.type].img.complete) {
+                ctx.save();
+                ctx.translate(l.x, l.y - l.z);
+                ctx.scale(p * Math.sin(l.rotX), p * Math.cos(l.rotY));
+                ctx.rotate(l.rotX);
+                // Draw leaf without expensive filter during loop
+                ctx.drawImage(assets[l.type].img, 0, 0, 16, 16, -l.size/2, -l.size/2, l.size, l.size);
+                ctx.restore();
+            }
         }
     });
 
