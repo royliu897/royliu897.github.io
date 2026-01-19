@@ -26,21 +26,20 @@
 
 <script>
 const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d', { alpha: false }); // Performance: Disable alpha for main context
+const ctx = canvas.getContext('2d');
 
-// --- TUNING & OPTIMIZATION ---
-const LEAF_COUNT = 3500;    // More leaves
+// --- TUNING ---
+const LEAF_COUNT = 3500;    
 const HORIZON = 0.5;
-const DEAD_ZONE = 140;
-const DOG_SPEED_SCALAR = 0.9;
+const DEAD_ZONE = 145;
+const DOG_SPEED_SCALAR = 0.95;
+const GRAVITY = 0.39;
 const DOG_W = 32, DOG_H = 40;
-const GRID_SIZE = 80;       // Spatial partitioning grid size
 
 let mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
 let dog = { x: 200, y: 0, vx: 0, vy: 0, row: 3, col: 0, facing: 'right', sitLock: false, targetAction: null };
 let leaves = [];
 let icons = [];
-let spatialGrid = {};
 
 const assets = {
     dog: { src: 'assets/dog.png', img: new Image() },
@@ -51,14 +50,6 @@ const assets = {
     racket: { src: 'assets/racket.png', img: new Image(), path: 'tennis.html' },
     stock: { src: 'assets/stock.png', img: new Image(), path: 'finance.html' }
 };
-
-// --- PRE-RENDERING CACHE ---
-const leafCache = document.createElement('canvas');
-const lctx = leafCache.getContext('2d');
-function preRenderLeaves() {
-    leafCache.width = 256; leafCache.height = 256;
-    // Draw variants here once assets load to avoid ctx.filter during loop
-}
 
 function init() {
     canvas.width = window.innerWidth;
@@ -76,10 +67,10 @@ function init() {
             rotX: Math.random() * 6, rotY: Math.random() * 6,
             vrX: 0, vrY: 0,
             type: Math.random() > 0.5 ? 'fallLeaf' : 'springLeaf',
-            size: 20 + Math.random() * 50, // Even bigger variety
+            frame: Math.floor(Math.random()*5),
+            size: 20 + Math.random() * 55, // Varied sizes
             waft: Math.random() * 10,
-            layer: Math.random(),
-            tint: 0.6 + Math.random() * 0.6
+            layer: Math.random()
         });
     }
 
@@ -96,6 +87,7 @@ function init() {
 
 function handleClick() {
     let clickedIcon = icons.find(i => Math.hypot(mouse.x - i.x, mouse.y - i.y) < 100);
+    // Instant fast sprint for clicks, ignores leash
     dog.targetAction = { x: mouse.x, y: mouse.y, icon: clickedIcon };
 }
 
@@ -103,17 +95,17 @@ function triggerSitExplosion(x, y, icon) {
     dog.sitLock = true;
     setTimeout(() => { dog.sitLock = false; dog.targetAction = null; }, 1200);
 
-    const sitRadius = 115; // 1.1x Dog Size
-    leaves.forEach(l => {
+    const sitRadius = 110; // 1.1x Dog Size
+    for (let l of leaves) {
         let d = Math.hypot(l.x - x, l.y - y);
         if (d < sitRadius) {
-            // Minimal initial horizontal movement
-            l.vx = (Math.random() - 0.5) * 1.5; 
-            l.vy = (Math.random() - 0.5) * 1.5;
-            l.vz = 6 + Math.random() * 6; // Vertical pop remains
+            // Minimal initial horizontal movement, rely on wafting
+            l.vx = (Math.random() - 0.5) * 1.0; 
+            l.vy = (Math.random() - 0.5) * 1.0;
+            l.vz = 5 + Math.random() * 6; 
             l.vrX = (Math.random()-0.5) * 0.8;
         }
-    });
+    }
     if (icon) icon.revealed = true;
 }
 
@@ -122,17 +114,7 @@ function loop() {
     ctx.fillStyle = '#050704'; ctx.fillRect(0,0,canvas.width, groundY);
     ctx.fillStyle = '#11150d'; ctx.fillRect(0, groundY, canvas.width, canvas.height-groundY);
 
-    // --- SPATIAL HASHING ---
-    spatialGrid = {};
-    for (let l of leaves) {
-        let gx = Math.floor(l.x / GRID_SIZE);
-        let gy = Math.floor(l.y / GRID_SIZE);
-        let key = `${gx},${gy}`;
-        if (!spatialGrid[key]) spatialGrid[key] = [];
-        spatialGrid[key].push(l);
-    }
-
-    // --- DOG LOGIC ---
+    // --- DOG MOVEMENT ---
     let targetX = dog.targetAction ? dog.targetAction.x : mouse.x;
     let targetY = dog.targetAction ? dog.targetAction.y : Math.max(groundY + 40, mouse.y);
     let dx = targetX - dog.x, dy = targetY - dog.y;
@@ -143,72 +125,62 @@ function loop() {
     if (!dog.sitLock) {
         if (dog.targetAction) {
             let angle = Math.atan2(dy, dx);
-            dog.vx = Math.cos(angle) * 8.5 * DOG_SPEED_SCALAR;
-            dog.vy = Math.sin(angle) * 8.5 * DOG_SPEED_SCALAR;
+            dog.vx = Math.cos(angle) * 9 * DOG_SPEED_SCALAR;
+            dog.vy = Math.sin(angle) * 9 * DOG_SPEED_SCALAR;
         } else if (dist > DEAD_ZONE) {
-            let speedMult = (dist > 180) ? 0.05 : 0.02;
+            // Leash logic reverted as requested
+            let speedMult = (dist > 185) ? 0.05 : 0.02;
             dog.vx = dx * speedMult * DOG_SPEED_SCALAR;
             dog.vy = dy * speedMult * DOG_SPEED_SCALAR;
-        } else { dog.vx *= 0.8; dog.vy *= 0.8; }
+        } else {
+            dog.vx *= 0.8; dog.vy *= 0.8;
+        }
     } else { dog.vx *= 0.6; dog.vy *= 0.6; }
     
     dog.x += dog.vx; dog.y += dog.vy;
-    let moving = Math.abs(dog.vx) + Math.abs(dog.vy) > 0.3;
+    let moving = Math.abs(dog.vx) + Math.abs(dog.vy) > 0.4;
     if (moving) dog.facing = dog.vx > 0 ? 'right' : 'left';
 
-    // --- LEAF PHYSICS & COLLISIONS ---
+    // --- LEAF PHYSICS ---
     for (let l of leaves) {
         let p = 0.5 + (l.y/canvas.height);
         
-        // Dog Interaction: High Randomness to prevent sticking
+        // Realistic Parting Logic: Push to sides with high randomness
         let dDog = Math.hypot(l.x - dog.x, l.y - (dog.y + 12));
-        // Dog sometimes moves more than one layer (layer > 0.5)
-        let layerThreshold = Math.random() > 0.9 ? 0.3 : 0.7; 
-        
-        if (dDog < 55*p && moving && !dog.sitLock && l.layer > layerThreshold) {
-            let randAngle = Math.atan2(l.y - dog.y, l.x - dog.x) + (Math.random()-0.5) * 2;
-            l.vx += Math.cos(randAngle) * 4;
-            l.vy += Math.sin(randAngle) * 2;
-            l.vz += 0.05;
-            l.layer = Math.min(1, l.layer + 0.1); // Moving leaves rise to top
+        let layerThreshold = Math.random() > 0.92 ? 0.3 : 0.75; // Dog rarely moves deeper layers
+
+        if (dDog < 52*p && moving && !dog.sitLock && l.layer > layerThreshold) {
+            let pushAngle = Math.atan2(l.y - dog.y, l.x - dog.x) + (Math.random()-0.5) * 1.5;
+            let force = (52*p - dDog) * 0.12;
+            l.vx += Math.cos(pushAngle) * force * 5;
+            l.vy += Math.sin(pushAngle) * force * 2;
+            l.vz += 0.02; // Minimal vertical for walk
         }
 
-        // Inter-leaf Collisions (Spatial Hash optimized)
-        if (l.vz > 0 || Math.abs(l.vx) > 0.5) {
-            let gx = Math.floor(l.x / GRID_SIZE);
-            let gy = Math.floor(l.y / GRID_SIZE);
-            let neighbors = spatialGrid[`${gx},${gy}`] || [];
-            for (let other of neighbors) {
-                if (other === l) continue;
-                let d = Math.hypot(l.x - other.x, l.y - other.y);
-                if (d < 15) {
-                    other.vx += l.vx * 0.2;
-                    other.vy += l.vy * 0.2;
-                    // Swap layers occasionally on impact
-                    if (Math.random() > 0.8) [l.layer, other.layer] = [other.layer, l.layer];
-                }
-            }
-        }
-
-        // Movement Update
+        // Kinetic Update
         if (l.z > 0 || Math.abs(l.vx) > 0.1) {
             l.x += l.vx; l.y += l.vy; l.z += l.vz;
             l.rotX += l.vrX; l.rotY += l.vrY;
+
             if (l.z > 0) {
-                l.vz -= 0.39; // Gravity
+                l.vz -= GRAVITY; // 0.39 Gravity
                 l.vx *= 0.96; l.vy *= 0.96;
-                l.vx += Math.sin(Date.now()*0.005 + l.waft) * 0.5; // Randomness from falling
+                // Falling randomness / Horizontal movement
+                l.vx += Math.sin(Date.now()*0.005 + l.waft) * 0.4;
             } else {
-                l.z = 0; l.vz = 0; l.vx *= 0.5; l.vy *= 0.5;
+                l.z = 0; l.vz = 0; l.vx *= 0.55; l.vy *= 0.55;
             }
+            // Screen boundaries
             if (l.y < groundY) l.y = groundY + 5;
             if (l.y > canvas.height) l.y = canvas.height - 5;
+            if (l.x < 0) l.x = canvas.width; if (l.x > canvas.width) l.x = 0;
         }
     }
 
     // --- SORTED RENDER ---
     let renderList = [...leaves, { isDog: true, y: dog.y }].sort((a,b) => a.y - b.y);
-    renderList.forEach(obj => {
+
+    for (let obj of renderList) {
         let p = 0.5 + (obj.y/canvas.height);
         if (obj.isDog) {
             let dW = 135 * p, dH = 160 * p;
@@ -224,12 +196,24 @@ function loop() {
                 ctx.translate(l.x, l.y - l.z);
                 ctx.scale(p * Math.sin(l.rotX), p * Math.cos(l.rotY));
                 ctx.rotate(l.rotX);
-                // Draw leaf without expensive filter during loop
-                ctx.drawImage(assets[l.type].img, 0, 0, 16, 16, -l.size/2, -l.size/2, l.size, l.size);
+                ctx.drawImage(assets[l.type].img, l.frame*16, 0, 16, 16, -l.size/2, -l.size/2, l.size, l.size);
                 ctx.restore();
             }
         }
-    });
+    }
+
+    // Render icons on top of ground but under dog/leaf list
+    for (let i of icons) {
+        if (!assets[i.id].img.complete) continue;
+        let p = 0.5 + (i.y/canvas.height);
+        ctx.save(); ctx.translate(i.x, i.y); ctx.rotate(i.rot); ctx.scale(p,p);
+        ctx.drawImage(assets[i.id].img, -60, -60, 120, 120);
+        ctx.restore();
+        if (i.revealed) {
+            ctx.fillStyle = "white"; ctx.font = "italic 15px Georgia"; ctx.textAlign = "center";
+            ctx.fillText(i.id.toUpperCase(), i.x, i.y + 80*p);
+        }
+    }
 
     requestAnimationFrame(loop);
 }
