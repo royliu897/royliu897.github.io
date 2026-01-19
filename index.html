@@ -1,210 +1,157 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roy R. Liu | Portfolio</title>
-    <style>
-        body, html { margin: 0; padding: 0; overflow: hidden; background: #2d3436; }
-        canvas { display: block; cursor: none; } /* Hide real cursor to use dog */
-        #ui-layer {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            color: white;
-            font-family: 'Courier New', Courier, monospace;
-            pointer-events: none;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
-    </style>
-</head>
-<body>
-
-<div id="ui-layer">
-    <h1>ROY R. LIU</h1>
-    <p>Click to dig for projects...</p>
-</div>
-
-<canvas id="gameCanvas"></canvas>
-
-<script>
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-// --- ASSET CONFIGURATION ---
+// --- DIMENSIONS FROM YOUR DATA ---
+const DOG_W = 32; 
+const DOG_H = 40;
+const LEAF_SIZE = 16;
+
+let mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
+let dog = { x: 100, y: 100, vx: 0, vy: 0, frame: 0, lastDir: 'down' };
+let leaves = [];
+let particles = [];
+
 const assets = {
     dog: { src: 'assets/dog.png', img: new Image(), loaded: false },
     fallLeaf: { src: 'assets/fall_leaf.png', img: new Image(), loaded: false },
     springLeaf: { src: 'assets/spring_leaf.png', img: new Image(), loaded: false },
-    car: { src: 'assets/car.png', img: new Image(), label: 'Longhorn Racing' },
-    gamma: { src: 'assets/gamma.png', img: new Image(), label: 'Research' },
-    racket: { src: 'assets/racket.png', img: new Image(), label: 'Tennis' },
-    stock: { src: 'assets/stock.png', img: new Image(), label: 'Finance Modeling' }
+    car: { src: 'assets/car.png', img: new Image(), loaded: false },
+    gamma: { src: 'assets/gamma.png', img: new Image(), loaded: false },
+    racket: { src: 'assets/racket.png', img: new Image(), loaded: false },
+    stock: { src: 'assets/stock.png', img: new Image(), loaded: false }
 };
 
-// Define locations for your "buried" icons
 const projectIcons = [
-    { id: 'car', x: 200, y: 300, revealed: false },
-    { id: 'gamma', x: 600, y: 200, revealed: false },
-    { id: 'racket', x: 300, y: 600, revealed: false },
-    { id: 'stock', x: 800, y: 500, revealed: false }
+    { id: 'car', x: 200, y: 300, revealed: false, label: 'Longhorn Racing' },
+    { id: 'gamma', x: 600, y: 200, revealed: false, label: 'Research' },
+    { id: 'racket', x: 300, y: 600, revealed: false, label: 'Tennis' },
+    { id: 'stock', x: 800, y: 400, revealed: false, label: 'Finance Modeling' }
 ];
 
-// --- INITIALIZATION ---
-let mouse = { x: 0, y: 0 };
-let dog = { x: 100, y: 100, targetX: 100, targetY: 100, state: 'idle', frame: 0 };
-let leaves = [];
-let particles = [];
-
 function init() {
-    window.addEventListener('resize', resize);
-    window.addEventListener('mousemove', e => {
-        mouse.x = e.clientX;
-        mouse.y = e.clientY;
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
     });
-    window.addEventListener('mousedown', handleAction);
-    resize();
-    createLeafFloor();
-    loadAssets();
-}
+    window.dispatchEvent(new Event('resize'));
 
-function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
+    window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+    window.addEventListener('mousedown', () => {
+        projectIcons.forEach(icon => {
+            let d = Math.hypot(mouse.x - icon.x, mouse.y - icon.y);
+            if (d < 80) {
+                icon.revealed = true;
+                burstLeaves(icon.x, icon.y);
+            }
+        });
+    });
 
-function loadAssets() {
     Object.keys(assets).forEach(key => {
+        assets[key].img.onload = () => { assets[key].loaded = true; };
         assets[key].img.src = assets[key].src;
-        assets[key].img.onload = () => assets[key].loaded = true;
     });
+
+    for(let i=0; i<200; i++) {
+        leaves.push({
+            x: Math.random()*window.innerWidth, 
+            y: Math.random()*window.innerHeight,
+            rot: Math.random()*Math.PI*2,
+            type: Math.random() > 0.5 ? 'fallLeaf' : 'springLeaf',
+            frame: Math.floor(Math.random()*5) // Picks 1 of the 5 shapes
+        });
+    }
     requestAnimationFrame(gameLoop);
 }
 
-// --- LOGIC ---
-function createLeafFloor() {
-    // Fill screen with 200 initial leaves
-    for(let i=0; i<200; i++) {
-        leaves.push(new Leaf(Math.random()*window.innerWidth, Math.random()*window.innerHeight));
-    }
-}
-
-class Leaf {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.rot = Math.random() * Math.PI * 2;
-        this.type = Math.random() > 0.5 ? 'fallLeaf' : 'springLeaf';
-        this.vx = 0;
-        this.vy = 0;
-    }
-    update() {
-        // Trudging effect: move slightly away from dog
-        let dx = this.x - dog.x;
-        let dy = this.y - dog.y;
-        let dist = Math.sqrt(dx*dx + dy*dy);
-        if (dist < 60) {
-            this.vx = dx * 0.1;
-            this.vy = dy * 0.1;
-            this.rot += 0.1;
-        }
-        this.x += this.vx;
-        this.y += this.vy;
-        this.vx *= 0.9; // Friction
-        this.vy *= 0.9;
-    }
-    draw() {
-        if (!assets[this.type].loaded) return;
-        ctx.save();
-        ctx.translate(this.x, this.y);
-        ctx.rotate(this.rot);
-        // Draw first frame of leaf sheet
-        ctx.drawImage(assets[this.type].img, 0, 0, 32, 32, -16, -16, 32, 32);
-        ctx.restore();
-    }
-}
-
-function handleAction() {
-    // 1. Make dog "bound" to click
-    dog.targetX = mouse.x;
-    dog.targetY = mouse.y;
-    dog.state = 'bounding';
-
-    // 2. Check if we clicked near an icon
-    projectIcons.forEach(icon => {
-        let dx = mouse.x - icon.x;
-        let dy = mouse.y - icon.y;
-        if (Math.sqrt(dx*dx + dy*dy) < 100) {
-            setTimeout(() => {
-                icon.revealed = true;
-                burstLeaves(icon.x, icon.y);
-            }, 500); // Trigger after dog arrives
-        }
-    });
-}
-
 function burstLeaves(x, y) {
-    for(let i=0; i<15; i++) {
+    for(let i=0; i<20; i++) {
         particles.push({
             x: x, y: y,
-            vx: (Math.random()-0.5)*10,
-            vy: (Math.random()-0.5)*10 - 5,
-            life: 1.0
+            vx: (Math.random()-0.5)*12,
+            vy: (Math.random()-0.5)*12 - 4,
+            life: 1.0,
+            color: Math.random() > 0.5 ? '#e67e22' : '#27ae60'
         });
     }
 }
 
-// --- MAIN LOOP ---
 function gameLoop() {
-    // Draw Ground
-    ctx.fillStyle = '#3d4a35'; // Dark grass color
+    ctx.fillStyle = '#3d4a35'; 
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Update & Draw Icons
+    // 1. Draw Buried Icons
     projectIcons.forEach(icon => {
-        if (icon.revealed) {
-            ctx.globalAlpha = 1.0;
-        } else {
-            ctx.globalAlpha = 0.2; // Partially buried/ghostly
-        }
         if (assets[icon.id].loaded) {
+            ctx.globalAlpha = icon.revealed ? 1.0 : 0.15;
             ctx.drawImage(assets[icon.id].img, icon.x - 40, icon.y - 40, 80, 80);
-            if(icon.revealed) {
+            if (icon.revealed) {
                 ctx.fillStyle = "white";
-                ctx.fillText(assets[icon.id].label, icon.x - 20, icon.y + 60);
+                ctx.font = "bold 14px Arial";
+                ctx.textAlign = "center";
+                ctx.fillText(icon.label, icon.x, icon.y + 60);
             }
         }
     });
     ctx.globalAlpha = 1.0;
 
-    // Update & Draw Leaves
-    leaves.forEach(l => { l.update(); l.draw(); });
+    // 2. Dog Physics & Animation Logic
+    let oldX = dog.x;
+    let oldY = dog.y;
+    dog.x += (mouse.x - dog.x) * 0.06;
+    dog.y += (mouse.y - dog.y) * 0.06;
+    let vx = dog.x - oldX;
+    let vy = dog.y - oldY;
+    let speed = Math.hypot(vx, vy);
 
-    // Update Dog
-    let dDX = mouse.x - dog.x;
-    let dDY = mouse.y - dog.y;
-    dog.x += dDX * 0.08; // The "Lag"
-    dog.y += dDY * 0.08;
-    
-    // Draw Dog (Placeholder for your spritesheet logic)
-    if (assets.dog.loaded) {
-        // Simple logic: if moving, use frame 1, if still, use frame 0
-        let frameX = Math.abs(dDX) > 1 ? (Math.floor(Date.now()/100)%4) * 64 : 0; 
-        ctx.drawImage(assets.dog.img, frameX, 0, 64, 64, dog.x-32, dog.y-32, 64, 64);
+    // Determine Sprite Row
+    let row = 0; // Default: Standing facing me
+    let col = Math.floor(Date.now() / 150) % 2; // Simple 2-frame anim
+
+    if (speed > 0.5) {
+        if (Math.abs(vx) > Math.abs(vy)) {
+            row = vx > 0 ? 6 : 7; // Walking Right/Left rows
+        } else {
+            row = vy > 0 ? 4 : 5; // Walking Toward/Away rows
+        }
+        col = Math.floor(Date.now() / 100) % 4; // 4-frame walk cycle
+    } else {
+        row = 2; // Sitting facing me
     }
 
-    // Draw Particles
+    // 3. Draw Leaves (Trudging)
+    leaves.forEach(l => {
+        let dist = Math.hypot(l.x - dog.x, l.y - dog.y);
+        if (dist < 40) {
+            l.x += vx * 1.2;
+            l.y += vy * 1.2;
+            l.rot += 0.1;
+        }
+        if (assets[l.type].loaded) {
+            ctx.save();
+            ctx.translate(l.x, l.y);
+            ctx.rotate(l.rot);
+            // Draw one of the 5 leaves from the 80x16 sheet
+            ctx.drawImage(assets[l.type].img, l.frame * 16, 0, 16, 16, -8, -8, 16, 16);
+            ctx.restore();
+        }
+    });
+
+    // 4. Draw Dog
+    if (assets.dog.loaded) {
+        ctx.drawImage(assets.dog.img, col * DOG_W, row * DOG_H, DOG_W, DOG_H, dog.x-DOG_W, dog.y-DOG_H, DOG_W*2, DOG_H*2);
+    }
+
+    // 5. Draw Dig Particles
     particles.forEach((p, i) => {
-        p.x += p.vx; p.y += p.vy; p.vy += 0.2; p.life -= 0.02;
-        ctx.fillStyle = `rgba(255, 165, 0, ${p.life})`;
-        ctx.fillRect(p.x, p.y, 10, 10);
+        p.x += p.vx; p.y += p.vy; p.vy += 0.3; p.life -= 0.02;
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.life;
+        ctx.fillRect(p.x, p.y, 6, 6);
         if (p.life <= 0) particles.splice(i, 1);
     });
+    ctx.globalAlpha = 1.0;
 
     requestAnimationFrame(gameLoop);
 }
 
 init();
-</script>
-</body>
-</html>
