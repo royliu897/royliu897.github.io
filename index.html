@@ -28,11 +28,11 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d', { alpha: false });
 
-// --- TUNING ---
+// --- ENGINE TUNING ---
 const LEAF_COUNT = 3500;    
 const HORIZON = 0.5;
-const DEAD_ZONE = 100;      // Smaller dead zone
-const WALK_ZONE = 160;      // Shifted closer
+const DEAD_ZONE = 110;      
+const WALK_THRESHOLD = 280; // Extended walk zone before running
 const DOG_SPEED_SCALAR = 0.9; 
 const GRAVITY = 0.39;
 const DOG_W = 32, DOG_H = 40;
@@ -70,10 +70,11 @@ function init() {
             vrX: 0, vrY: 0,
             type: Math.random() > 0.5 ? 'fallLeaf' : 'springLeaf',
             frame: Math.floor(Math.random()*5),
-            size: 20 + Math.random() * 40, // Randomly bigger
+            size: 25 + Math.random() * 50, // Only randomly bigger
             waft: Math.random() * 10,
             layer: Math.random(),
-            skew: Math.random() * 0.5 // 3rd parameter: Structural skew
+            skew: (Math.random() - 0.5) * 0.3,
+            tint: 0.7 + Math.random() * 0.5
         });
     }
 
@@ -95,18 +96,20 @@ function handleClick() {
 
 function triggerSitExplosion(x, y, icon) {
     dog.sitLock = true;
-    setTimeout(() => { dog.sitLock = false; dog.targetAction = null; }, 1000);
+    setTimeout(() => { dog.sitLock = false; dog.targetAction = null; }, 1200);
 
-    const sitRadius = 110; 
-    for (let l of leaves) {
+    const sitRadius = 115; 
+    // Reverted to the "Sit" logic that worked
+    leaves.forEach(l => {
         let d = Math.hypot(l.x - x, l.y - y);
         if (d < sitRadius) {
-            l.vx = (Math.random() - 0.5) * 1.5; 
-            l.vy = (Math.random() - 0.5) * 1.5;
-            l.vz = 2 + Math.random() * 3; // Fixed: Much lower vertical pop
-            l.vrX = (Math.random()-0.5) * 0.4;
+            let angle = Math.atan2(l.y - y, l.x - x) + (Math.random()-0.5)*0.2;
+            l.vx = Math.cos(angle) * 7;
+            l.vy = Math.sin(angle) * 3;
+            l.vz = 5 + Math.random() * 5; 
+            l.vrX = (Math.random()-0.5) * 0.6;
         }
-    }
+    });
     if (icon) icon.revealed = true;
 }
 
@@ -115,25 +118,25 @@ function loop(time) {
     lastTime = time;
     const groundY = canvas.height * HORIZON;
 
-    // Fast Clear
     ctx.fillStyle = '#050704'; ctx.fillRect(0,0,canvas.width, groundY);
     ctx.fillStyle = '#11150d'; ctx.fillRect(0, groundY, canvas.width, canvas.height-groundY);
 
-    // --- DOG MOVEMENT ---
+    // --- DOG BRAIN ---
     let targetX = dog.targetAction ? dog.targetAction.x : mouse.x;
     let targetY = dog.targetAction ? dog.targetAction.y : Math.max(groundY + 40, mouse.y);
     let dx = targetX - dog.x, dy = targetY - dog.y;
     let dist = Math.hypot(dx, dy);
     
-    if (dog.targetAction && dist < 15) triggerSitExplosion(dog.targetAction.x, dog.targetAction.y, dog.targetAction.icon);
+    if (dog.targetAction && dist < 20) triggerSitExplosion(dog.targetAction.x, dog.targetAction.y, dog.targetAction.icon);
 
     if (!dog.sitLock) {
         if (dog.targetAction) {
             let angle = Math.atan2(dy, dx);
-            dog.vx = Math.cos(angle) * 10 * DOG_SPEED_SCALAR;
-            dog.vy = Math.sin(angle) * 10 * DOG_SPEED_SCALAR;
+            dog.vx = Math.cos(angle) * 9 * DOG_SPEED_SCALAR;
+            dog.vy = Math.sin(angle) * 9 * DOG_SPEED_SCALAR;
         } else if (dist > DEAD_ZONE) {
-            let speedMult = (dist > WALK_ZONE) ? 0.05 : 0.02;
+            // Extended Walk Zone logic
+            let speedMult = (dist > WALK_THRESHOLD) ? 0.05 : 0.015;
             dog.vx = dx * speedMult * DOG_SPEED_SCALAR;
             dog.vy = dy * speedMult * DOG_SPEED_SCALAR;
         } else {
@@ -145,7 +148,7 @@ function loop(time) {
     let moving = Math.abs(dog.vx) + Math.abs(dog.vy) > 0.4;
     if (moving) dog.facing = dog.vx > 0 ? 'right' : 'left';
 
-    // --- RENDER LIST CONSTRUCTION (Z-SORTING EVERYTHING) ---
+    // --- RENDER LIST CONSTRUCTION ---
     let renderList = [
         ...leaves.map(l => ({ type: 'leaf', y: l.y, d: l })),
         ...icons.map(i => ({ type: 'icon', y: i.y, d: i })),
@@ -158,15 +161,18 @@ function loop(time) {
 
         if (obj.type === 'leaf') {
             let l = obj.d;
-            // Parting Logic
-            let dDog = Math.hypot(l.x - dog.x, l.y - (dog.y + 12));
-            let layerThreshold = Math.random() > 0.9 ? 0.4 : 0.75;
+            let dDog = Math.hypot(l.x - dog.x, l.y - (dog.y + 10));
+            
+            // Walking leaf physics + speed-based vertical displacement
+            if (dDog < 50*p && moving && !dog.sitLock && l.layer > 0.7) {
+                let pushAngle = Math.atan2(l.y - dog.y, l.x - dog.x);
+                let force = (50*p - dDog) * 0.15;
+                let dogSpeed = Math.hypot(dog.vx, dog.vy);
 
-            if (dDog < 52*p && moving && !dog.sitLock && l.layer > layerThreshold) {
-                let pushAngle = Math.atan2(l.y - dog.y, l.x - dog.x) + (Math.random()-0.5) * 2;
-                l.vx += Math.cos(pushAngle) * 2.5;
-                l.vy += Math.sin(pushAngle) * 1.5;
-                l.vz += 0.02;
+                l.vx += Math.cos(pushAngle + (Math.random()-0.5)) * force * 2.5; 
+                l.vy += Math.sin(pushAngle + (Math.random()-0.5)) * force;
+                // Vertical kick based on dog speed
+                l.vz += 0.02 + (dogSpeed * 0.015); 
             }
 
             if (l.z > 0 || Math.abs(l.vx) > 0.1) {
@@ -175,17 +181,20 @@ function loop(time) {
 
                 if (l.z > 0) {
                     l.vz -= GRAVITY * dt;
-                    l.vx *= 0.96; l.vy *= 0.96;
-                    l.vx += Math.sin(Date.now()*0.005 + l.waft) * 0.4;
+                    l.vx *= 0.95; l.vy *= 0.95;
+                    l.vx += Math.sin(Date.now()*0.005 + l.waft) * 0.3;
                 } else {
-                    l.z = 0; l.vz = 0; l.vx *= 0.5; l.vy *= 0.5;
+                    l.z = 0; l.vz = 0; l.vx *= 0.6; l.vy *= 0.6;
                 }
                 if (l.y < groundY) l.y = groundY + 5;
                 if (l.y > canvas.height) l.y = canvas.height - 5;
             }
 
             if (assets[l.type].img.complete) {
-                ctx.setTransform(p * Math.sin(l.rotX), l.skew, 0, p * Math.cos(l.rotY), l.x, l.y - l.z);
+                // Optimized deformation: ensures scale doesn't drop to 0
+                let scaleX = p * Math.sin(l.rotX);
+                let scaleY = p * Math.cos(l.rotY);
+                ctx.setTransform(scaleX, l.skew * scaleY, 0, scaleY, l.x, l.y - l.z);
                 ctx.drawImage(assets[l.type].img, l.frame*16, 0, 16, 16, -l.size/2, -l.size/2, l.size, l.size);
             }
 
@@ -210,7 +219,7 @@ function loop(time) {
                 ctx.drawImage(assets.dog.img, dog.col*DOG_W, dog.row*DOG_H, DOG_W, DOG_H, -dW/2, -dH*0.7, dW, dH);
             }
         }
-        ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset for next item
+        ctx.setTransform(1, 0, 0, 1, 0, 0); 
     }
 
     requestAnimationFrame(loop);
