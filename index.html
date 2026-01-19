@@ -3,24 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roy R. Liu</title>
+    <title>Roy R. Liu | Portfolio</title>
     <style>
-        body, html { margin: 0; padding: 0; overflow: hidden; background: #1a1f16; }
+        body, html { margin: 0; padding: 0; overflow: hidden; background: #0d110a; }
         canvas { display: block; cursor: crosshair; }
         #header {
             position: absolute;
-            top: 40px; width: 100%; text-align: center;
-            color: white; font-family: 'Courier New', Courier, monospace;
-            pointer-events: none; text-shadow: 0 0 15px rgba(0,0,0,0.8);
+            top: 50px; width: 100%; text-align: center;
+            color: #f0f0f0; font-family: 'Georgia', serif; font-style: italic;
+            letter-spacing: 2px; pointer-events: none;
+            text-shadow: 0 0 20px rgba(0,0,0,0.9);
             z-index: 100;
         }
         .page-transition {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #1a1f16; transform: translateY(100%);
-            transition: transform 0.6s cubic-bezier(0.7, 0, 0.3, 1);
+            background: #0d110a; transform: scaleY(0); transform-origin: top;
+            transition: transform 0.8s cubic-bezier(0.8, 0, 0.2, 1);
             z-index: 999;
         }
-        .page-transition.active { transform: translateY(0); }
+        .page-transition.active { transform: scaleY(1); }
     </style>
 </head>
 <body>
@@ -35,15 +36,13 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-// Sprite Specs
 const DOG_W = 32; const DOG_H = 40;
-const LEASH_RADIUS = 180;
+const HORIZON = window.innerHeight * 0.4; // Side-view horizon line
 
 let mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
 let dog = { 
-    x: 100, y: 100, vx: 0, vy: 0, 
-    row: 3, col: 0, facing: 'right', 
-    sitLock: false 
+    x: 100, y: window.innerHeight * 0.7, vx: 0, vy: 0, 
+    row: 3, col: 0, facing: 'right', sitLock: false 
 };
 let leaves = [];
 let icons = [];
@@ -71,27 +70,35 @@ function init() {
         assets[key].img.src = assets[key].src;
     });
 
-    // Populate Leaves: Clumped for "Pile" effect
-    for(let i=0; i<450; i++) {
-        leaves.push({
-            x: Math.random()*canvas.width, 
-            y: Math.random()*canvas.height,
-            z: 0, vz: 0, // 2.5D Height
-            vx: 0, vy: 0, 
-            rot: Math.random()*Math.PI*2, vr: 0,
-            type: Math.random() > 0.5 ? 'fallLeaf' : 'springLeaf',
-            frame: Math.floor(Math.random()*5),
-            size: 50 + Math.random()*30
-        });
+    // Perspective-based leaf spawning
+    for(let i=0; i<400; i++) {
+        leaves.push(createLeaf());
     }
 
     const ids = ['car', 'gamma', 'racket', 'stock'];
     icons = ids.map((id, i) => ({
-        id, x: (i+1) * (canvas.width/5), y: 300 + Math.random()*(canvas.height-450),
-        rot: (Math.random()-0.5)*1.2, revealed: false, path: assets[id].path
+        id, x: (i+1) * (canvas.width/5), y: HORIZON + (Math.random()*(canvas.height - HORIZON - 100)),
+        rot: (Math.random()-0.5)*0.5, revealed: false, path: assets[id].path
     }));
 
     requestAnimationFrame(loop);
+}
+
+function createLeaf() {
+    let yPos = HORIZON + Math.random() * (canvas.height - HORIZON);
+    return {
+        x: Math.random() * canvas.width, 
+        y: yPos,
+        z: 0, vz: 0,
+        vx: 0, vy: 0, 
+        rotX: Math.random() * Math.PI, // 3D rotation simulations
+        rotY: Math.random() * Math.PI,
+        vrX: (Math.random()-0.5)*0.05,
+        vrY: (Math.random()-0.5)*0.05,
+        type: Math.random() > 0.5 ? 'fallLeaf' : 'springLeaf',
+        frame: Math.floor(Math.random()*5),
+        baseSize: 30 + Math.random()*20
+    };
 }
 
 function floomph() {
@@ -99,24 +106,24 @@ function floomph() {
 
     if (clickedIcon && clickedIcon.revealed) {
         document.getElementById('transition-layer').classList.add('active');
-        setTimeout(() => { window.location.href = clickedIcon.path; }, 600);
+        setTimeout(() => { window.location.href = clickedIcon.path; }, 800);
         return;
     }
 
-    // Trigger Dog Sit
     dog.sitLock = true;
     setTimeout(() => { dog.sitLock = false; }, 1200);
 
-    // Radial Leaf Displacement (The "Floomph")
+    // Radial Blast with Atmospheric Flutter
     leaves.forEach(l => {
         let d = Math.hypot(l.x - mouse.x, l.y - mouse.y);
-        if (d < 280) {
+        if (d < 300) {
             let angle = Math.atan2(l.y - mouse.y, l.x - mouse.x);
-            let force = (280 - d) * 0.12;
+            let force = (300 - d) * 0.15;
             l.vx = Math.cos(angle) * force;
             l.vy = Math.sin(angle) * force;
-            l.vz = 5 + Math.random() * 8; // Throw into air
-            l.vr = (Math.random()-0.5) * 0.4;
+            l.vz = 8 + Math.random() * 12; // Big "Floomph" jump
+            l.vrX = (Math.random()-0.5) * 0.3;
+            l.vrY = (Math.random()-0.5) * 0.3;
         }
     });
 
@@ -124,15 +131,20 @@ function floomph() {
 }
 
 function loop() {
-    ctx.fillStyle = '#1e241a';
+    // Gradient background for Forest Clearing atmosphere
+    let grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    grad.addColorStop(0, '#050704');
+    grad.addColorStop(HORIZON/canvas.height, '#1a1f16');
+    grad.addColorStop(1, '#2d3628');
+    ctx.fillStyle = grad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Dog movement
     let dx = mouse.x - dog.x;
-    let dy = mouse.y - dog.y;
+    let dy = (mouse.y < HORIZON + 50 ? HORIZON + 50 : mouse.y) - dog.y;
     let dist = Math.hypot(dx, dy);
     
-    if (!dog.sitLock && dist > LEASH_RADIUS) {
+    if (!dog.sitLock && dist > 100) {
         dog.vx = dx * 0.04;
         dog.vy = dy * 0.04;
         dog.facing = dog.vx > 0 ? 'right' : 'left';
@@ -141,16 +153,14 @@ function loop() {
     }
     dog.x += dog.vx; dog.y += dog.vy;
 
-    // Sprite Logic: Rows 2 (Running) and 4 (Sitting)
+    // Sprite Logic (Side View Only)
     if (dog.sitLock || (Math.abs(dog.vx) < 0.2 && Math.abs(dog.vy) < 0.2)) {
-        dog.row = 3; // Row 4 index
-        dog.col = dog.facing === 'right' ? 0 : 2; // Standing/Sitting cols
+        dog.row = 3; dog.col = dog.facing === 'right' ? 0 : 2; 
     } else {
-        dog.row = 1; // Row 2 index
-        dog.col = (dog.facing === 'right' ? 0 : 2) + (Math.floor(Date.now()/100)%2);
+        dog.row = 1; dog.col = (dog.facing === 'right' ? 0 : 2) + (Math.floor(Date.now()/120)%2);
     }
 
-    // Combined Y-Sort for Side-View Depth
+    // Perspective Rendering List
     let scene = [
         ...icons.map(i => ({ type: 'icon', y: i.y, d: i })),
         ...leaves.map(l => ({ type: 'leaf', y: l.y, d: l })),
@@ -158,57 +168,60 @@ function loop() {
     ].sort((a,b) => a.y - b.y);
 
     scene.forEach(ent => {
+        // Perspective Scaling Factor (objects lower on screen are bigger)
+        let pScale = 0.5 + (ent.y / canvas.height) * 1.2;
+
         if (ent.type === 'leaf') {
             let l = ent.d;
-            // Physical Interaction
+            // Leaf Physics
             let dDog = Math.hypot(l.x - dog.x, l.y - dog.y);
-            if (dDog < 60) {
-                l.vx += dog.vx * 0.4; l.vy += dog.vy * 0.4;
-                l.vz += Math.hypot(dog.vx, dog.vy) * 0.2;
+            if (dDog < 70 * pScale) {
+                l.vx += dog.vx * 0.3; l.vy += dog.vy * 0.3;
+                l.vz += 2;
             }
 
-            // Gravity & Air Resistance
             l.x += l.vx; l.y += l.vy; l.z += l.vz;
-            l.rot += l.vr;
+            l.rotX += l.vrX; l.rotY += l.vrY;
             
             if (l.z > 0) { 
-                l.vz -= 0.4; // Gravity
-                l.vr *= 0.98;
+                l.vz -= 0.3; // Gravity
+                l.vx *= 0.98; l.vy *= 0.98; // Air resistance
+                // Leaf "Flutter" effect
+                l.vx += Math.sin(Date.now()*0.01 + l.y) * 0.2;
             } else { 
                 l.z = 0; l.vz = 0; 
-                l.vx *= 0.85; l.vy *= 0.85; l.vr *= 0.8; // Friction
+                l.vx *= 0.8; l.vy *= 0.8; l.vrX *= 0.8; l.vrY *= 0.8;
             }
 
             if (assets[l.type].loaded) {
                 ctx.save();
-                // Draw leaf slightly higher based on Z-axis for 2.5D
-                ctx.translate(l.x, l.y - l.z); 
-                ctx.rotate(l.rot);
-                // Shadow
-                if (l.z > 2) {
-                    ctx.fillStyle = 'rgba(0,0,0,0.15)';
-                    ctx.beginPath(); ctx.ellipse(0, l.z, l.size/2, l.size/4, 0, 0, Math.PI*2); ctx.fill();
-                }
-                ctx.drawImage(assets[l.type].img, l.frame*16, 0, 16, 16, -l.size/2, -l.size/2, l.size, l.size);
+                ctx.translate(l.x, l.y - l.z);
+                // 3D tumble simulation
+                ctx.scale(pScale * Math.sin(l.rotX), pScale * Math.cos(l.rotY));
+                ctx.rotate(l.rotX);
+                // Tint based on depth
+                ctx.globalAlpha = 0.4 + (ent.y / canvas.height) * 0.6;
+                ctx.drawImage(assets[l.type].img, l.frame*16, 0, 16, 16, -l.baseSize/2, -l.baseSize/2, l.baseSize, l.baseSize);
                 ctx.restore();
+                ctx.globalAlpha = 1;
             }
         } else if (ent.type === 'icon') {
             let i = ent.d;
             if (assets[i.id].loaded) {
-                ctx.save(); ctx.translate(i.x, i.y); ctx.rotate(i.rot);
+                ctx.save(); ctx.translate(i.x, i.y); ctx.rotate(i.rot); ctx.scale(pScale, pScale);
                 ctx.drawImage(assets[i.id].img, -60, -60, 120, 120);
                 ctx.restore();
                 if (i.revealed) {
-                    ctx.fillStyle = "white"; ctx.font = "bold 14px monospace"; ctx.textAlign = "center";
-                    ctx.fillText(`[ OPEN ${i.id.toUpperCase()} ]`, i.x, i.y + 85);
+                    ctx.fillStyle = "rgba(255,255,255,0.9)"; ctx.font = "italic 16px Georgia"; ctx.textAlign = "center";
+                    ctx.fillText(i.id.toUpperCase(), i.x, i.y + (80 * pScale));
                 }
             }
         } else {
             if (assets.dog.loaded) {
-                // Ground Shadow
-                ctx.fillStyle = 'rgba(0,0,0,0.2)';
-                ctx.beginPath(); ctx.ellipse(dog.x, dog.y + 30, 40, 12, 0, 0, Math.PI*2); ctx.fill();
-                ctx.drawImage(assets.dog.img, dog.col*DOG_W, dog.row*DOG_H, DOG_W, DOG_H, dog.x-70, dog.y-90, 140, 175);
+                let dSize = 140 * pScale;
+                ctx.fillStyle = 'rgba(0,0,0,0.25)';
+                ctx.beginPath(); ctx.ellipse(dog.x, dog.y + (30*pScale), 40*pScale, 12*pScale, 0, 0, Math.PI*2); ctx.fill();
+                ctx.drawImage(assets.dog.img, dog.col*DOG_W, dog.row*DOG_H, DOG_W, DOG_H, dog.x - dSize/2, dog.y - dSize*0.6, dSize, dSize*1.2);
             }
         }
     });
