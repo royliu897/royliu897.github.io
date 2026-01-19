@@ -3,26 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roy R. Liu</title>
+    <title>Roy R. Liu | Portfolio</title>
     <style>
         body, html { margin: 0; padding: 0; overflow: hidden; background: #3d4a35; }
         canvas { display: block; }
-        #ui-layer {
+        #header {
             position: absolute;
-            top: 20px;
-            left: 20px;
+            top: 50px;
+            width: 100%;
+            text-align: center;
             color: white;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             pointer-events: none;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+            z-index: 10;
         }
     </style>
 </head>
 <body>
 
-<div id="ui-layer">
-    <h1>ROY R. LIU</h1>
-    <p>Explore the grounds...</p>
+<div id="header">
+    <h1>Welcome to my webpage, click on something.</h1>
 </div>
 
 <canvas id="gameCanvas"></canvas>
@@ -31,12 +32,13 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-// --- DATA ---
-const DOG_W = 32; 
-const DOG_H = 40;
+// --- CONSTANTS FROM YOUR SPRITE SPECS ---
+const DOG_W = 32; // 128px / 4 columns
+const DOG_H = 40; // 320px / 8 rows
+const LEASH_RADIUS = 120; // The "Comfort Zone"
 
 let mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
-let dog = { x: 100, y: 100, vx: 0, vy: 0 };
+let dog = { x: 100, y: 100, vx: 0, vy: 0, state: 'idle', row: 2, col: 0 };
 let leaves = [];
 let particles = [];
 
@@ -51,10 +53,10 @@ const assets = {
 };
 
 const projectIcons = [
-    { id: 'car', x: 250, y: 300, revealed: false, label: 'Longhorn Racing' },
-    { id: 'gamma', x: 600, y: 200, revealed: false, label: 'Research' },
-    { id: 'racket', x: 350, y: 600, revealed: false, label: 'Tennis' },
-    { id: 'stock', x: 800, y: 450, revealed: false, label: 'Finance Modeling' }
+    { id: 'car', x: 250, y: 400, revealed: false, label: 'Longhorn Racing' },
+    { id: 'gamma', x: 650, y: 300, revealed: false, label: 'Research' },
+    { id: 'racket', x: 400, y: 650, revealed: false, label: 'Tennis' },
+    { id: 'stock', x: 850, y: 500, revealed: false, label: 'Finance Modeling' }
 ];
 
 function init() {
@@ -64,17 +66,15 @@ function init() {
     });
     window.dispatchEvent(new Event('resize'));
 
-    window.addEventListener('mousemove', e => { 
-        mouse.x = e.clientX; 
-        mouse.y = e.clientY; 
-    });
-
+    window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
     window.addEventListener('mousedown', () => {
+        // Run to cursor and sit
+        dog.state = 'running_to_click';
         projectIcons.forEach(icon => {
             let d = Math.hypot(mouse.x - icon.x, mouse.y - icon.y);
             if (d < 80) {
                 icon.revealed = true;
-                burstLeaves(icon.x, icon.y); // These are the "colorful leaf" particles
+                burstLeaves(icon.x, icon.y, 25); // Major disturbance on click
             }
         });
     });
@@ -84,7 +84,7 @@ function init() {
         assets[key].img.src = assets[key].src;
     });
 
-    for(let i=0; i<150; i++) {
+    for(let i=0; i<200; i++) {
         leaves.push({
             x: Math.random()*window.innerWidth, 
             y: Math.random()*window.innerHeight,
@@ -96,14 +96,13 @@ function init() {
     requestAnimationFrame(gameLoop);
 }
 
-function burstLeaves(x, y) {
-    for(let i=0; i<15; i++) {
+function burstLeaves(x, y, count) {
+    for(let i=0; i<count; i++) {
         particles.push({
             x: x, y: y,
-            vx: (Math.random()-0.5)*10,
-            vy: (Math.random()-0.5)*10 - 3,
+            vx: (Math.random()-0.5)*15,
+            vy: (Math.random()-0.5)*15 - 5,
             life: 1.0,
-            // Particles are orange/green like the leaves
             color: Math.random() > 0.5 ? '#e67e22' : '#2ecc71'
         });
     }
@@ -113,10 +112,47 @@ function gameLoop() {
     ctx.fillStyle = '#3d4a35'; 
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // 1. Draw Icons (Starts semi-hidden)
+    // 1. Physics - "Rubber Band" Leash Logic
+    let dx = mouse.x - dog.x;
+    let dy = mouse.y - dog.y;
+    let dist = Math.hypot(dx, dy);
+    let oldX = dog.x;
+    let oldY = dog.y;
+
+    if (dist > LEASH_RADIUS || dog.state === 'running_to_click') {
+        let speed = (dist > LEASH_RADIUS * 2 || dog.state === 'running_to_click') ? 0.08 : 0.03;
+        dog.x += dx * speed;
+        dog.y += dy * speed;
+        dog.state = speed > 0.05 ? 'running' : 'walking';
+        if (dist < 10 && dog.state === 'running_to_click') dog.state = 'idle';
+    } else {
+        dog.state = 'idle';
+    }
+
+    let vx = dog.x - oldX;
+    let vy = dog.y - oldY;
+    let currentSpeed = Math.hypot(vx, vy);
+
+    // 2. Animation Logic (Row/Col picking)
+    if (currentSpeed < 0.2) {
+        dog.row = 2; // Sitting facing me
+        dog.col = Math.floor(Date.now() / 400) % 2;
+    } else {
+        // Directional walking/running
+        if (Math.abs(vx) > Math.abs(vy)) {
+            dog.row = vx > 0 ? 6 : 7; // Rows 7 or 8 (Indices 6/7)
+        } else {
+            dog.row = vy > 0 ? 4 : 5; // Rows 5 or 6 (Indices 4/5)
+        }
+        // Change run/walk animation speed
+        let animSpeed = dog.state === 'running' ? 80 : 150;
+        dog.col = Math.floor(Date.now() / animSpeed) % 4;
+    }
+
+    // 3. Draw Icons
     projectIcons.forEach(icon => {
         if (assets[icon.id].loaded) {
-            ctx.globalAlpha = icon.revealed ? 1.0 : 0.3; 
+            ctx.globalAlpha = icon.revealed ? 1.0 : 0.25;
             ctx.drawImage(assets[icon.id].img, icon.x - 40, icon.y - 40, 80, 80);
             if (icon.revealed) {
                 ctx.fillStyle = "white";
@@ -128,60 +164,40 @@ function gameLoop() {
     });
     ctx.globalAlpha = 1.0;
 
-    // 2. Dog Movement
-    let oldX = dog.x;
-    let oldY = dog.y;
-    dog.x += (mouse.x - dog.x) * 0.05;
-    dog.y += (mouse.y - dog.y) * 0.05;
-    let vx = dog.x - oldX;
-    let vy = dog.y - oldY;
-    let speed = Math.hypot(vx, vy);
-
-    // 3. Animation Rows
-    let row = 2; // Default Sit
-    let col = Math.floor(Date.now() / 200) % 2; 
-
-    if (speed > 0.5) {
-        if (Math.abs(vx) > Math.abs(vy)) { row = vx > 0 ? 6 : 7; } 
-        else { row = vy > 0 ? 4 : 5; }
-        col = Math.floor(Date.now() / 100) % 4; 
-    }
-
-    // 4. Draw Leaves
+    // 4. Draw Leaves (Physical disturbance)
     leaves.forEach(l => {
-        let dist = Math.hypot(l.x - dog.x, l.y - dog.y);
-        if (dist < 40) {
-            l.x += vx * 1.2;
-            l.y += vy * 1.2;
-            l.rot += 0.1;
+        let lDist = Math.hypot(l.x - dog.x, l.y - dog.y);
+        let force = dog.state === 'running' ? 2.5 : 1.2;
+        if (lDist < 40) {
+            l.x += vx * force;
+            l.y += vy * force;
+            l.rot += 0.1 * force;
         }
         if (assets[l.type].loaded) {
             ctx.save();
             ctx.translate(l.x, l.y);
             ctx.rotate(l.rot);
-            ctx.drawImage(assets[l.type].img, l.frame * 16, 0, 16, 16, -8, -8, 16, 16);
+            ctx.drawImage(assets[l.type].img, l.frame * 16, 0, 16, 16, -8, -8, 18, 18);
             ctx.restore();
         }
     });
 
     // 5. Draw Dog
     if (assets.dog.loaded) {
-        ctx.drawImage(assets.dog.img, col * DOG_W, row * DOG_H, DOG_W, DOG_H, dog.x-32, dog.y-40, 64, 80);
+        ctx.drawImage(assets.dog.img, dog.col * DOG_W, dog.row * DOG_H, DOG_W, DOG_H, dog.x-32, dog.y-40, 64, 80);
     }
 
-    // 6. Draw Leaf Particles (The "burst")
+    // 6. Particles
     particles.forEach((p, i) => {
-        p.x += p.vx; p.y += p.vy; p.vy += 0.2; p.life -= 0.02;
+        p.x += p.vx; p.y += p.vy; p.vy += 0.3; p.life -= 0.02;
         ctx.fillStyle = p.color;
         ctx.globalAlpha = p.life;
-        ctx.fillRect(p.x, p.y, 5, 5);
+        ctx.fillRect(p.x, p.y, 4, 4);
         if (p.life <= 0) particles.splice(i, 1);
     });
-    ctx.globalAlpha = 1.0;
 
     requestAnimationFrame(gameLoop);
 }
-
 init();
 </script>
 </body>
