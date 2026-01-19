@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roy R. Liu | Portfolio</title>
     <style>
-        body, html { margin: 0; padding: 0; overflow: hidden; background: #050704; font-family: 'Georgia', serif; }
-        canvas { display: block; cursor: crosshair; }
+        body, html { margin: 0; padding: 0; overflow: hidden; background: #050704; }
+        canvas { display: block; cursor: crosshair; image-rendering: pixelated; }
         #header {
             position: absolute;
-            top: 50px; width: 100%; text-align: center;
-            color: #f0f0f0; font-style: italic;
+            top: 40px; width: 100%; text-align: center;
+            color: #f0f0f0; font-family: 'Georgia', serif; font-style: italic;
             letter-spacing: 2px; pointer-events: none;
-            text-shadow: 0 0 20px rgba(0,0,0,0.9);
+            text-shadow: 0 0 15px rgba(0,0,0,0.8);
             z-index: 100;
         }
     </style>
@@ -28,18 +28,17 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-// --- CONFIGURATION ---
-const DOG_W = 32; const DOG_H = 40;
-const HORIZON_RATIO = 0.5; 
-const DEAD_ZONE = 90;     // Bigger dead zone
-const RUN_THRESHOLD = 200; // Shorter leash for running
-const LEAF_COUNT = 1200;   // Massive increase for "pile" effect
+// --- ENGINE TUNING ---
+const LEAF_COUNT = 2500;  // Massive density
+const HORIZON = 0.5;      // Ground starts at 50% height
+const DEAD_ZONE = 120;    // Large stay-still radius
+const WALK_ZONE = 250;    // Shorter walk-to-run transition
+const DOG_WALK_SPEED = 1.2;
+const DOG_RUN_SPEED = 4.5;
+const DOG_W = 32, DOG_H = 40;
 
 let mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
-let dog = { 
-    x: 200, y: window.innerHeight * 0.75, vx: 0, vy: 0, 
-    row: 3, col: 0, facing: 'right', sitLock: false 
-};
+let dog = { x: 200, y: 0, vx: 0, vy: 0, row: 3, col: 0, facing: 'right', sitLock: false };
 let leaves = [];
 let icons = [];
 
@@ -56,166 +55,156 @@ const assets = {
 function init() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    window.addEventListener('resize', () => {
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-    });
-    window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-    window.addEventListener('mousedown', handleInteraction);
+    dog.y = canvas.height * 0.75;
 
-    Object.keys(assets).forEach(key => { assets[key].img.src = assets[key].src; });
+    Object.keys(assets).forEach(key => assets[key].img.src = assets[key].src);
 
-    const groundTop = canvas.height * HORIZON_RATIO;
+    const groundTop = canvas.height * HORIZON;
     for(let i=0; i<LEAF_COUNT; i++) {
         leaves.push({
-            x: Math.random() * canvas.width, 
+            x: Math.random() * canvas.width,
             y: groundTop + Math.random() * (canvas.height - groundTop),
-            z: 0, vz: 0, vx: 0, vy: 0, 
+            z: 0, vz: 0, vx: 0, vy: 0,
             rotX: Math.random() * 6, rotY: Math.random() * 6,
-            vrX: (Math.random()-0.5)*0.02, vrY: (Math.random()-0.5)*0.02,
+            vrX: 0, vrY: 0,
             type: Math.random() > 0.5 ? 'fallLeaf' : 'springLeaf',
             frame: Math.floor(Math.random()*5),
-            baseSize: 30 + Math.random()*20,
-            waftOffset: Math.random() * 100,
-            layer: Math.random() // 0 to 1 (0 is buried, 1 is top of pile)
+            size: 25 + Math.random()*20,
+            waft: Math.random() * 10,
+            layer: Math.random() // Used for collision depth
         });
     }
 
     const ids = ['car', 'gamma', 'racket', 'stock'];
     icons = ids.map((id, i) => ({
-        id, x: (i+1) * (canvas.width/5), y: groundTop + 100 + Math.random()*(canvas.height * 0.3),
-        rot: (Math.random()-0.5)*0.5, revealed: false, path: assets[id].path
+        id, x: (i+1) * (canvas.width/5), y: groundTop + (canvas.height-groundTop)*0.4,
+        rot: (Math.random()-0.5)*0.3, revealed: false, path: assets[id].path
     }));
 
+    window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+    window.addEventListener('mousedown', handleAction);
     requestAnimationFrame(loop);
 }
 
-function handleInteraction() {
-    let clickedIcon = icons.find(i => Math.hypot(mouse.x - i.x, mouse.y - i.y) < 120);
-    if (clickedIcon && clickedIcon.revealed) {
-        window.location.href = clickedIcon.path;
-        return;
-    }
+function handleAction() {
+    let clicked = icons.find(i => Math.hypot(mouse.x - i.x, mouse.y - i.y) < 100);
+    if (clicked && clicked.revealed) { window.location.href = clicked.path; return; }
 
     dog.sitLock = true;
-    setTimeout(() => { dog.sitLock = false; }, 1200);
+    setTimeout(() => dog.sitLock = false, 1000);
 
-    // Click Floomph: Disperse everything with higher randomness
+    // Toned down "Sit" pop - focus on area immediately around mouse
     leaves.forEach(l => {
         let d = Math.hypot(l.x - mouse.x, l.y - mouse.y);
-        if (d < 350) {
-            let angle = Math.atan2(l.y - mouse.y, l.x - mouse.x) + (Math.random() - 0.5);
-            let force = (350 - d) * 0.15;
-            l.vx = Math.cos(angle) * force;
-            l.vy = Math.sin(angle) * force;
-            l.vz = 8 + Math.random() * 12;
-            l.vrX = (Math.random()-0.5) * 0.8;
+        if (d < 180) {
+            let angle = Math.atan2(l.y - mouse.y, l.x - mouse.x) + (Math.random()-0.5)*0.5;
+            let p = (180 - d) / 180;
+            l.vx = Math.cos(angle) * p * 8;
+            l.vy = Math.sin(angle) * p * 4; // Less horizontal push
+            l.vz = 5 + Math.random() * 7;   // Toned down vertical
+            l.vrX = (Math.random()-0.5) * 0.4;
         }
     });
-    if (clickedIcon) clickedIcon.revealed = true;
+    if (clicked) clicked.revealed = true;
 }
 
 function loop() {
-    const horizonY = canvas.height * HORIZON_RATIO;
-    
-    // BG
-    ctx.fillStyle = '#0d110a'; ctx.fillRect(0, 0, canvas.width, horizonY);
-    let gGrad = ctx.createLinearGradient(0, horizonY, 0, canvas.height);
-    gGrad.addColorStop(0, '#1a1f16'); gGrad.addColorStop(1, '#2d3628');
-    ctx.fillStyle = gGrad; ctx.fillRect(0, horizonY, canvas.width, canvas.height - horizonY);
+    const groundY = canvas.height * HORIZON;
 
-    // Dog Logic
+    // --- OPTIMIZED DRAWING ---
+    ctx.fillStyle = '#050704'; ctx.fillRect(0,0,canvas.width, groundY);
+    ctx.fillStyle = '#141810'; ctx.fillRect(0, groundY, canvas.width, canvas.height-groundY);
+
+    // --- DOG BRAIN ---
     let dx = mouse.x - dog.x;
-    let targetY = Math.max(horizonY + 60, mouse.y);
-    let dy = targetY - dog.y;
+    let dy = Math.max(groundY + 40, mouse.y) - dog.y;
     let dist = Math.hypot(dx, dy);
     
     if (!dog.sitLock) {
-        if (dist < DEAD_ZONE) {
-            dog.vx *= 0.8; dog.vy *= 0.8;
-        } else {
-            // Slower dog speed (0.02 walk, 0.045 run)
-            let moveSpeed = dist > RUN_THRESHOLD ? 0.045 : 0.02;
-            dog.vx = dx * moveSpeed; dog.vy = dy * moveSpeed;
+        if (dist > DEAD_ZONE) {
+            let speed = dist > WALK_ZONE ? DOG_RUN_SPEED : DOG_WALK_SPEED;
+            let angle = Math.atan2(dy, dx);
+            dog.vx = Math.cos(angle) * speed;
+            dog.vy = Math.sin(angle) * speed;
             dog.facing = dog.vx > 0 ? 'right' : 'left';
+        } else {
+            dog.vx *= 0.8; dog.vy *= 0.8;
         }
-    } else {
-        dog.vx *= 0.7; dog.vy *= 0.7;
-    }
+    } else { dog.vx *= 0.6; dog.vy *= 0.6; }
+    
     dog.x += dog.vx; dog.y += dog.vy;
 
-    let isMoving = Math.abs(dog.vx) > 0.2 || Math.abs(dog.vy) > 0.2;
-    if (dog.sitLock || !isMoving) {
-        dog.row = 3; dog.col = dog.facing === 'right' ? 0 : 2; 
-    } else {
-        dog.row = 1; dog.col = (dog.facing === 'right' ? 0 : 2) + (Math.floor(Date.now()/130)%2);
-    }
+    // Animation state
+    let moving = Math.abs(dog.vx) + Math.abs(dog.vy) > 0.5;
+    if (dog.sitLock || !moving) { dog.row = 3; dog.col = dog.facing === 'right' ? 0 : 2; }
+    else { dog.row = 1; dog.col = (dog.facing === 'right' ? 0 : 2) + (Math.floor(Date.now()/120)%2); }
 
-    let scene = [
-        ...icons.map(i => ({ type: 'icon', y: i.y, d: i })),
-        ...leaves.map(l => ({ type: 'leaf', y: l.y, d: l })),
-        { type: 'dog', y: dog.y, d: dog }
-    ].sort((a,b) => a.y - b.y);
+    // --- DEPTH SORTED SCENE ---
+    // Icons rendered first so they are "under" the pile
+    icons.forEach(i => {
+        if (!assets[i.id].img.complete) return;
+        let p = 0.5 + (i.y/canvas.height);
+        ctx.save(); ctx.translate(i.x, i.y); ctx.rotate(i.rot); ctx.scale(p,p);
+        ctx.drawImage(assets[i.id].img, -60, -60, 120, 120);
+        ctx.restore();
+        if (i.revealed) {
+            ctx.fillStyle = "white"; ctx.font = "italic 15px Georgia"; ctx.textAlign = "center";
+            ctx.fillText(i.id.toUpperCase(), i.x, i.y + 80*p);
+        }
+    });
 
-    let dogSpeed = Math.hypot(dog.vx, dog.vy);
+    // Sort leaves and dog by Y position
+    let renderList = [...leaves, { isDog: true, y: dog.y }].sort((a,b) => a.y - b.y);
 
-    scene.forEach(ent => {
-        let pScale = 0.5 + (ent.y / canvas.height) * 1.1;
+    renderList.forEach(obj => {
+        if (obj.isDog) {
+            let p = 0.5 + (dog.y/canvas.height);
+            let dW = 135 * p, dH = 160 * p;
+            ctx.fillStyle = 'rgba(0,0,0,0.3)';
+            ctx.beginPath(); ctx.ellipse(dog.x, dog.y+25*p, 40*p, 10*p, 0, 0, 7); ctx.fill();
+            if (assets.dog.img.complete)
+                ctx.drawImage(assets.dog.img, dog.col*DOG_W, dog.row*DOG_H, DOG_W, DOG_H, dog.x - dW/2, dog.y - dH*0.7, dW, dH);
+            return;
+        }
 
-        if (ent.type === 'leaf') {
-            let l = ent.d;
-            let dDog = Math.hypot(l.x - dog.x, l.y - dog.y);
+        let l = obj;
+        let p = 0.5 + (l.y/canvas.height);
+
+        // PHYSICS
+        let dDog = Math.hypot(l.x - dog.x, l.y - dog.y);
+        // Only disturb top layers (layer > 0.7) when walking
+        if (dDog < 55*p && moving && !dog.sitLock && l.layer > 0.7) {
+            l.vx += dog.vx * 0.15; l.vy += dog.vy * 0.1;
+            l.vz += 0.2; // Tiny realistic pop
+        }
+
+        if (l.z > 0 || Math.abs(l.vx) > 0.1) {
+            l.x += l.vx; l.y += l.vy; l.z += l.vz;
+            l.rotX += l.vrX; l.rotY += l.vrY;
+
+            if (l.z > 0) {
+                l.vz -= 0.45; // Orthogonal Gravity
+                l.vx *= 0.95; l.vy *= 0.95;
+                // Enhanced Wafting (Horizontal Drift + Swing)
+                let drift = Math.sin(Date.now()*0.005 + l.waft);
+                l.vx += drift * 0.4;
+                l.rotY += drift * 0.08;
+            } else {
+                l.z = 0; l.vz = 0; l.vx *= 0.7; l.vy *= 0.7;
+            }
             
-            // Interaction: Only top layers (layer > 0.6) get pushed by walking
-            if (dDog < 50 * pScale && isMoving && !dog.sitLock && l.layer > 0.6) {
-                l.vx += dog.vx * 0.25;
-                l.vy += dog.vy * 0.25;
-            }
+            // Containment logic
+            if (l.y < groundY) l.y = groundY + 2;
+            if (l.y > canvas.height) l.y = canvas.height - 2;
+        }
 
-            // Gravity & Wafting
-            if (l.z > 0 || Math.abs(l.vx) > 0.1) {
-                l.x += l.vx; l.y += l.vy; l.z += l.vz;
-                l.rotX += l.vrX; l.rotY += l.vrY;
-                
-                if (l.z > 0) {
-                    l.vz -= 0.5; // Stronger Gravity
-                    l.vx *= 0.94; l.vy *= 0.94; // Air Resistance
-                    // Wafting: Combined rotation and horizontal movement
-                    let waft = Math.sin(Date.now() * 0.006 + l.waftOffset);
-                    l.vx += waft * 0.5; 
-                    l.rotY += waft * 0.1;
-                } else {
-                    l.z = 0; l.vz = 0; l.vx *= 0.7; l.vy *= 0.7; l.vrX *= 0.7;
-                }
-            }
-
-            if (assets[l.type].img.complete) {
-                ctx.save();
-                ctx.translate(l.x, l.y - l.z);
-                ctx.scale(pScale * Math.sin(l.rotX), pScale * Math.cos(l.rotY));
-                ctx.rotate(l.rotX);
-                ctx.globalAlpha = 0.3 + (l.layer * 0.7); // Buried leaves are dimmer
-                ctx.drawImage(assets[l.type].img, l.frame*16, 0, 16, 16, -l.baseSize/2, -l.baseSize/2, l.baseSize, l.baseSize);
-                ctx.restore();
-            }
-        } else if (ent.type === 'icon') {
-            let i = ent.d;
-            if (assets[i.id].img.complete) {
-                ctx.save(); ctx.translate(i.x, i.y); ctx.rotate(i.rot); ctx.scale(pScale, pScale);
-                // Icons appear slightly "buried" by rendering them under the leaf sort
-                ctx.drawImage(assets[i.id].img, -60, -60, 120, 120);
-                ctx.restore();
-                if (i.revealed) {
-                    ctx.fillStyle = "rgba(255,255,255,0.9)"; ctx.font = "italic 16px Georgia"; ctx.textAlign = "center";
-                    ctx.fillText(i.id.toUpperCase(), i.x, i.y + (85 * pScale));
-                }
-            }
-        } else {
-            if (assets.dog.img.complete) {
-                let dSize = 135 * pScale;
-                ctx.fillStyle = 'rgba(0,0,0,0.25)';
-                ctx.beginPath(); ctx.ellipse(dog.x, dog.y + (30*pScale), 40*pScale, 10*pScale, 0, 0, Math.PI*2); ctx.fill();
-                ctx.drawImage(assets.dog.img, dog.col*DOG_W, dog.row*DOG_H, DOG_W, DOG_H, dog.x - dSize/2, dog.y - dSize*0.6, dSize, dSize*1.2);
-            }
+        if (assets[l.type].img.complete) {
+            ctx.save();
+            ctx.translate(l.x, l.y - l.z);
+            ctx.scale(p * Math.sin(l.rotX), p * Math.cos(l.rotY));
+            ctx.rotate(l.rotX);
+            ctx.drawImage(assets[l.type].img, l.frame*16, 0, 16, 16, -l.size/2, -l.size/2, l.size, l.size);
+            ctx.restore();
         }
     });
 
