@@ -6,262 +6,180 @@
     <title>Roy R. Liu | Portfolio</title>
     <style>
         body, html { margin: 0; padding: 0; overflow: hidden; background: #040503; }
-        canvas { display: block; image-rendering: pixelated; } /* Performance boost for some GPUs */
+        /* Move brightness to CSS for 10x better performance */
+        canvas { display: block; filter: brightness(0.9); } 
         #header {
-            position: absolute;
-            top: 40px; width: 100%; text-align: center;
+            position: absolute; top: 40px; width: 100%; text-align: center;
             color: #d0d0d0; font-family: 'Georgia', serif; font-style: italic;
             letter-spacing: 2px; pointer-events: none; z-index: 100;
-        }
-        #resetBtn {
-            position: absolute; bottom: 3%; right: 20px;
-            padding: 8px 12px; background: rgba(255,255,255,0.05);
-            color: #aaa; border: 1px solid rgba(255,255,255,0.1);
-            font-family: sans-serif; cursor: pointer; border-radius: 4px; z-index: 101;
         }
     </style>
 </head>
 <body>
 
-<div id="header">
-    <h1>Welcome to my webpage.</h1>
-</div>
-<button id="resetBtn">Reset Leaves</button>
+<div id="header"><h1>Welcome to my webpage.</h1></div>
 <canvas id="gameCanvas"></canvas>
 
 <script>
 const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d', { alpha: false, desynchronized: true }); // Low latency mode
+const ctx = canvas.getContext('2d', { alpha: false });
 
-// --- ENGINE TUNING ---
-const LEAF_COUNT = 3200; // Slightly reduced for peak performance
+// --- SETTINGS ---
+const LEAF_COUNT = 2800; // Balanced for high-density + speed
 const HORIZON_RATIO = 0.45; 
 const BOTTOM_MARGIN = 0.1;  
-const DEAD_ZONE = 100;      
 const GRAVITY = 0.42;
 const DOG_W = 32, DOG_H = 40;
-const BRIGHTNESS = 0.9;
 
-let mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
-let dog = { x: 200, y: 0, vx: 0, vy: 0, row: 1, col: 0, facing: 'right', sitLock: false, targetAction: null };
+let mouse = { x: 0, y: 0 };
+let dog = { x: 200, y: 0, vx: 0, vy: 0, row: 1, col: 0, facing: 'right', sitLock: false };
 let leaves = [];
 let icons = [];
 let lastTime = 0;
-let isPaused = false;
 
 const assets = {
     dog: { src: 'assets/dog.png', img: new Image() },
     fallLeaf: { src: 'assets/fall_leaf.png', img: new Image() },
-    springLeaf: { src: 'assets/spring_leaf.png', img: new Image() },
-    car: { src: 'assets/car.png', img: new Image(), path: 'racing.html' },
-    gamma: { src: 'assets/gamma.png', img: new Image(), path: 'research.html' },
-    racket: { src: 'assets/racket.png', img: new Image(), path: 'tennis.html' },
-    stock: { src: 'assets/stock.png', img: new Image(), path: 'finance.html' }
+    springLeaf: { src: 'assets/spring_leaf.png', img: new Image() }
 };
 
-function initLeaves() {
-    leaves = [];
+function init() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
     const topLimit = canvas.height * HORIZON_RATIO;
     const botLimit = canvas.height * (1 - BOTTOM_MARGIN);
+    dog.y = canvas.height * 0.7;
+
     for(let i=0; i<LEAF_COUNT; i++) {
         leaves.push({
             x: Math.random() * canvas.width,
             y: topLimit + Math.random() * (botLimit - topLimit),
             z: 0, vz: 0, vx: 0, vy: 0,
-            rotX: Math.random() * 6, rotY: Math.random() * 6,
-            vrX: 0, vrY: 0,
+            rotX: Math.random() * 6, rotY: Math.random() * 6, vrX: 0,
             type: Math.random() > 0.5 ? 'fallLeaf' : 'springLeaf',
             frame: Math.floor(Math.random()*5),
             size: 42 + Math.random() * 45, 
             waftSeed: Math.random() * 100,
             layer: Math.random(),
-            skew: (Math.random() - 0.5) * 0.1,
             chaos: 0.7 + Math.random() * 0.6
         });
     }
-}
-
-function init() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    dog.y = canvas.height * 0.7;
-    Object.keys(assets).forEach(key => assets[key].img.src = assets[key].src);
-    initLeaves();
-    const topLimit = canvas.height * HORIZON_RATIO;
-    const botLimit = canvas.height * (1 - BOTTOM_MARGIN);
-    const ids = ['car', 'gamma', 'racket', 'stock'];
-    icons = ids.map((id, i) => ({
-        id, x: (i+1) * (canvas.width/5), y: topLimit + (botLimit - topLimit) * 0.4,
-        rot: (Math.random()-0.5)*0.2, revealed: false, path: assets[id].path
-    }));
+    
+    Object.keys(assets).forEach(k => assets[k].img.src = assets[k].src);
     window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-    window.addEventListener('mousedown', e => {
-        const topLimit = canvas.height * HORIZON_RATIO;
-        const botLimit = canvas.height * (1 - BOTTOM_MARGIN);
-        if (e.clientY < topLimit || e.clientY > botLimit) return;
-        let clickedIcon = icons.find(i => Math.hypot(mouse.x - i.x, mouse.y - i.y) < 80);
-        dog.targetAction = { x: mouse.x, y: mouse.y, icon: clickedIcon };
-    });
-    document.getElementById('resetBtn').onclick = (e) => { e.stopPropagation(); initLeaves(); };
+    window.addEventListener('mousedown', triggerSit);
     requestAnimationFrame(loop);
 }
 
-function triggerSitExplosion(x, y, icon) {
+function triggerSit(e) {
+    if (dog.sitLock) return;
+    const topLimit = canvas.height * HORIZON_RATIO;
+    const botLimit = canvas.height * (1 - BOTTOM_MARGIN);
+    if (e.clientY < topLimit || e.clientY > botLimit) return;
+
     dog.sitLock = true;
-    dog.vx = 0; dog.vy = 0; dog.x = x; dog.y = y;
-    if (icon) {
-        setTimeout(() => { window.location.href = icon.path; }, 500);
-        icon.revealed = true;
-    }
-    setTimeout(() => { dog.sitLock = false; dog.targetAction = null; }, 1200);
-
-    const sitRadius = 90; 
-    leaves.forEach(l => {
-        let dx = l.x - x;
-        let dy = l.y - y;
-        let d = Math.sqrt(dx*dx + dy*dy);
-        if (d < sitRadius) {
-            // Re-using scuff physics logic but scaled up
+    dog.vx = 0; dog.vy = 0;
+    
+    // Scuff physics sit effect
+    for(let l of leaves) {
+        let dx = l.x - dog.x, dy = l.y - dog.y;
+        let dSq = dx*dx + dy*dy;
+        if (dSq < 8100) { // 90px radius
             let angle = Math.atan2(dy, dx) + (Math.random() - 0.5) * 0.4;
-            l.vx += (Math.cos(angle) * 0.8) + (Math.random() - 0.5); // Minimal horizontal
-            l.vz += (5.5 + Math.random() * 4) * 0.8; // High vertical
-            l.vrX = (Math.random() - 0.5) * 0.3; // Tiny rotation on way up
-            l.layer = 1.0; 
+            l.vx += (Math.cos(angle) * 0.8) + (Math.random() - 0.5);
+            l.vz += (5.5 + Math.random() * 4) * 0.64; // Re-applied 0.8x twice for balance
+            l.vrX = (Math.random() - 0.5) * 0.2;
+            l.layer = 1.0;
         }
-    });
-}
-
-function getSoftTargetY(mouseY, topLimit, botLimit) {
-    if (mouseY >= topLimit && mouseY <= botLimit) return mouseY;
-    let factor = 0.1;
-    if (mouseY < topLimit) {
-        return topLimit - (Math.atan((topLimit - mouseY) * factor / 50) * 12); 
-    } else {
-        return botLimit + (Math.atan((mouseY - botLimit) * factor / 50) * 12);
     }
+    setTimeout(() => { dog.sitLock = false; }, 1200);
 }
 
 function loop(time) {
-    if (isPaused) { requestAnimationFrame(loop); return; }
-    const dt = Math.min((time - lastTime) / 16.67, 1.5);
+    const dt = Math.min((time - lastTime) / 16.67, 1.5) || 1;
     lastTime = time;
     const topLimit = canvas.height * HORIZON_RATIO;
     const botLimit = canvas.height * (1 - BOTTOM_MARGIN);
 
-    // Optimized background clear
+    // Optimized Clear
     ctx.fillStyle = '#040503'; ctx.fillRect(0, 0, canvas.width, topLimit);
     ctx.fillStyle = '#0d100a'; ctx.fillRect(0, topLimit, canvas.width, botLimit - topLimit);
     ctx.fillStyle = '#000000'; ctx.fillRect(0, botLimit, canvas.width, canvas.height - botLimit);
 
-    let targetX = dog.targetAction ? dog.targetAction.x : mouse.x;
-    let rawTargetY = dog.targetAction ? dog.targetAction.y : getSoftTargetY(mouse.y, topLimit, botLimit);
-    let targetY = Math.max(topLimit + 5, Math.min(botLimit - 5, rawTargetY));
-    
-    let dx = targetX - dog.x, dy = targetY - dog.y;
-    let dist = Math.sqrt(dx*dx + dy*dy);
-    
-    if (dog.targetAction && dist < 15) triggerSitExplosion(dog.targetAction.x, dog.targetAction.y, dog.targetAction.icon);
+    // Dog Logic
+    let targetY = Math.max(topLimit + 5, Math.min(botLimit - 5, mouse.y));
+    let dx = mouse.x - dog.x, dy = targetY - dog.y;
+    let distSq = dx*dx + dy*dy;
 
     if (!dog.sitLock) {
-        if (dog.targetAction) {
-            let angle = Math.atan2(dy, dx);
-            dog.vx = Math.cos(angle) * 9; dog.vy = Math.sin(angle) * 9;
-            dog.facing = dog.vx > 0 ? 'right' : 'left';
-        } else if (dist > DEAD_ZONE) {
+        if (distSq > 10000) { // Dead zone 100px
             dog.vx = dx * 0.05; dog.vy = dy * 0.05;
-            dog.facing = dog.vx > 0 ? 'right' : 'left';
         } else {
             dog.vx *= 0.8; dog.vy *= 0.8;
-            dog.facing = (mouse.x > dog.x) ? 'right' : 'left';
         }
+        dog.facing = (mouse.x > dog.x) ? 'right' : 'left';
     }
-    
     dog.x += dog.vx * dt; dog.y += dog.vy * dt;
-    let moving = dog.vx*dog.vx + dog.vy*dog.vy > 0.16;
-    
-    if (dog.sitLock) {
-        dog.row = 3; dog.col = (dog.facing === 'right') ? 0 : 2; 
-        dog.col += Math.floor(Date.now()/300)%2;
-    } else if (!moving) {
-        dog.row = 1; dog.col = (dog.facing === 'right') ? 0 : 2; 
-        dog.col += Math.floor(Date.now()/500)%2;
-    } else {
-        dog.row = (dog.facing === 'right') ? 6 : 7;
-        dog.col = Math.floor(Date.now() / 100) % 4;
+
+    // Sprite selection
+    let moving = dog.vx*dog.vx + dog.vy*dog.vy > 0.5;
+    if (dog.sitLock) { dog.row = 3; dog.col = (dog.facing==='right'?0:2) + (Math.floor(time/300)%2); }
+    else if (!moving) { dog.row = 1; dog.col = (dog.facing==='right'?0:2) + (Math.floor(time/500)%2); }
+    else { dog.row = (dog.facing==='right'?6:7); dog.col = Math.floor(time/100)%4; }
+
+    // Leaf Update & Render
+    // We combine loops for speed
+    const renderList = [];
+    const dogX = dog.x, dogY = dog.y;
+
+    for (let i = 0; i < LEAF_COUNT; i++) {
+        let l = leaves[i];
+        
+        // Physics update (only if airborne or moving)
+        if (l.z > 0 || Math.abs(l.vx) > 0.1) {
+            l.x += l.vx * dt; l.y += l.vy * dt; l.z += l.vz * dt;
+            if (l.z > 0) {
+                l.vz -= GRAVITY * dt;
+                if (l.vz < 0) { // Falling (waft)
+                    l.vx *= 0.94; l.vx += Math.sin(time*0.002 + l.waftSeed) * 0.2 * l.chaos;
+                } else { l.vx *= 0.99; l.vrX *= 0.96; }
+            } else { l.z = 0; l.vz = 0; l.vx *= 0.6; l.vy *= 0.6; l.vrX = 0; }
+            
+            // Boundary bounce
+            if (l.x < 0 || l.x > canvas.width) l.vx *= -0.5;
+            if (l.y < topLimit || l.y > botLimit) l.vy *= -0.5;
+        }
+
+        // Collision Check (Culled by distance for performance)
+        let dSq = (l.x-dogX)*(l.x-dogX) + (l.y-dogY)*(l.y-dogY);
+        if (dSq < 2500 && moving && !dog.sitLock) {
+            if (l.layer > 0.7 && Math.random() > 0.5) {
+                l.vz += (0.07 + Math.sqrt(dog.vx*dog.vx + dog.vy*dog.vy)*0.04) * 0.8;
+                l.vx += (l.x - dogX) * 0.05;
+                l.layer = Math.min(1.0, l.layer + 0.1);
+            }
+        }
+        renderList.push(l);
     }
 
-    // Single pass sort for performance
-    let renderList = [];
-    for(let i=0; i<LEAF_COUNT; i++) renderList.push({type:'leaf', y: leaves[i].y, d: leaves[i]});
-    for(let i=0; i<icons.length; i++) renderList.push({type:'icon', y: icons[i].y, d: icons[i]});
-    renderList.push({type:'dog', y: dog.y});
-    renderList.sort((a,b) => a.y - b.y);
-
-    ctx.filter = `brightness(${BRIGHTNESS})`; // Apply global brightness
+    renderList.push('DOG');
+    renderList.sort((a,b) => (a==='DOG'?dog.y:a.y) - (b==='DOG'?dog.y:b.y));
 
     for (let obj of renderList) {
-        let p = 0.5 + (obj.y/canvas.height);
-        if (obj.type === 'leaf') {
-            let l = obj.d;
-            let dogDistSq = Math.pow(l.x - dog.x, 2) + Math.pow(l.y - (dog.y + 10), 2);
-            
-            if (dogDistSq < (2500*p*p) && moving && !dog.sitLock) {
-                if (l.layer > 0.7) { 
-                    let pushAngle = Math.atan2(l.y - dog.y, l.x - dog.x);
-                    l.vx += (Math.cos(pushAngle) * 1.2) + (Math.random() - 0.5) * 0.4;
-                    l.vz += (0.07 + (Math.sqrt(dog.vx*dog.vx + dog.vy*dog.vy) * 0.04)) * 0.8;
-                    l.vrX *= 0.85; 
-                }
-                if (Math.random() > 0.5) l.layer = Math.min(1.0, l.layer + 0.08); 
-            }
-
-            if (l.z > 0 || Math.abs(l.vx) > 0.1) {
-                l.x += l.vx * dt; l.y += l.vy * dt; l.z += l.vz * dt;
-                l.rotX += l.vrX * dt; l.rotY += l.vrY * dt;
-                
-                if (l.z > 0) {
-                    l.vz -= GRAVITY * dt;
-                    if (l.vz > 0) { 
-                        l.vx *= 0.99; l.vy *= 0.99; l.vrX *= 0.96; 
-                    } else { 
-                        l.vx *= 0.94; l.vy *= 0.94;
-                        // Better random wafting: Combine seeds and time
-                        let waftX = Math.sin(time * 0.002 + l.waftSeed) * Math.cos(time * 0.0007 + l.waftSeed);
-                        l.vx += waftX * 0.3 * l.chaos;
-                        l.vrX += Math.sin(time * 0.004 + l.waftSeed) * 0.04; 
-                    }
-                } else { l.z = 0; l.vz = 0; l.vx *= 0.6; l.vy *= 0.6; l.vrX = 0; }
-
-                // Bounds check
-                if (l.x < 0 || l.x > canvas.width) l.vx *= -0.5;
-                if (l.y < topLimit || l.y > botLimit) l.vy *= -0.5;
-            }
-
-            if (assets[l.type].img.complete) {
-                ctx.setTransform(p * Math.sin(l.rotX), l.skew, 0, p * Math.cos(l.rotY), l.x, l.y - l.z);
-                ctx.drawImage(assets[l.type].img, l.frame*16, 0, 16, 16, -l.size/2, -l.size/2, l.size, l.size);
-            }
-        } else if (obj.type === 'icon') {
-            let i = obj.d;
-            if (assets[i.id].img.complete) {
-                ctx.setTransform(p, 0, 0, p, i.x, i.y); ctx.rotate(i.rot);
-                ctx.drawImage(assets[i.id].img, -60, -60, 120, 120);
-                if (i.revealed) {
-                    ctx.setTransform(1, 0, 0, 1, i.x, i.y + 80*p);
-                    ctx.fillStyle = "white"; ctx.font = "italic 15px Georgia"; ctx.textAlign = "center";
-                    ctx.fillText(i.id.toUpperCase(), 0, 0);
-                }
+        if (obj === 'DOG') {
+            if (assets.dog.img.complete) {
+                let p = 0.5 + (dog.y/canvas.height);
+                ctx.drawImage(assets.dog.img, dog.col*DOG_W, dog.row*DOG_H, DOG_W, DOG_H, dog.x-(135*p/2), dog.y-(160*p*0.7), 135*p, 160*p);
             }
         } else {
-            if (assets.dog.img.complete) {
-                let dW = 135 * p, dH = 160 * p;
-                ctx.setTransform(1, 0, 0, 1, dog.x, dog.y);
-                ctx.drawImage(assets.dog.img, dog.col*DOG_W, dog.row*DOG_H, DOG_W, DOG_H, -dW/2, -dH*0.7, dW, dH);
+            if (assets[obj.type].img.complete) {
+                let p = 0.5 + (obj.y/canvas.height);
+                ctx.setTransform(p * Math.sin(obj.rotX), 0, 0, p * Math.cos(obj.rotY), obj.x, obj.y - obj.z);
+                ctx.drawImage(assets[obj.type].img, obj.frame*16, 0, 16, 16, -obj.size/2, -obj.size/2, obj.size, obj.size);
+                ctx.setTransform(1,0,0,1,0,0);
             }
         }
-        ctx.setTransform(1, 0, 0, 1, 0, 0); 
     }
-    ctx.filter = 'none';
     requestAnimationFrame(loop);
 }
 init();
