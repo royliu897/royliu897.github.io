@@ -116,7 +116,7 @@ function triggerSitExplosion(x, y, icon) {
         setTimeout(() => { window.location.href = icon.path; }, 500);
         icon.revealed = true;
     }
-    setTimeout(() => { dog.sitLock = false; dog.targetAction = null; }, 1200);
+    setTimeout(() => { dog.sitLock = false; dog.targetAction = null; }, 500);
 
     const sitRadius = 85; 
     leaves.forEach(l => {
@@ -130,7 +130,7 @@ function triggerSitExplosion(x, y, icon) {
             l.vx += (Math.cos(angle) * 0.6) + (Math.random() - 0.5) * 0.3;
             l.vy += Math.sin(angle) * 0.4;
             // Decent amount of vertical displacement scaled by V_SCALE
-            l.vz += (0.8 + Math.random() * 0.5) * V_SCALE; 
+            l.vz += (0.8 + Math.random() * 0.2) * V_SCALE; 
             l.vrX = (Math.random() - 0.5) * 0.2; // Tiny rotation on way up
             l.layer = 1.0; 
         }
