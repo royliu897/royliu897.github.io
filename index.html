@@ -5,24 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roy R. Liu | Portfolio</title>
     <style>
-        body, html { margin: 0; padding: 0; overflow: hidden; background: #030502; }
+        body, html { margin: 0; padding: 0; overflow: hidden; background: #050704; }
         canvas { display: block; }
         #header {
             position: absolute;
             top: 40px; width: 100%; text-align: center;
-            color: #d0d0d0; font-family: 'Georgia', serif; font-style: italic;
+            color: #f0f0f0; font-family: 'Georgia', serif; font-style: italic;
             letter-spacing: 2px; pointer-events: none; z-index: 100;
         }
         #resetBtn {
-            position: absolute;
-            bottom: 3%; right: 20px;
-            padding: 8px 15px;
-            background: rgba(0,0,0,0.5);
-            color: #aaa; border: 1px solid rgba(255,255,255,0.1);
-            font-family: sans-serif; cursor: pointer; border-radius: 4px;
-            z-index: 101; transition: 0.3s;
+            position: absolute; bottom: 3%; right: 20px;
+            padding: 8px 12px; background: rgba(255,255,255,0.1);
+            color: white; border: 1px solid rgba(255,255,255,0.3);
+            font-family: sans-serif; cursor: pointer; border-radius: 4px; z-index: 101;
         }
-        #resetBtn:hover { background: rgba(255,255,255,0.1); color: #fff; }
     </style>
 </head>
 <body>
@@ -42,14 +38,16 @@ const LEAF_COUNT = 3500;
 const HORIZON_RATIO = 0.45; 
 const BOTTOM_MARGIN = 0.1;  
 const DEAD_ZONE = 100;      
-const GRAVITY = 0.42;
+const GRAVITY = 0.35; // Slightly lighter gravity for better hang time
 const DOG_W = 32, DOG_H = 40;
+const V_SCALE = 0.8; 
 
 let mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
 let dog = { x: 200, y: 0, vx: 0, vy: 0, row: 1, col: 0, facing: 'right', sitLock: false, targetAction: null };
 let leaves = [];
 let icons = [];
 let lastTime = 0;
+let isPaused = false;
 
 const assets = {
     dog: { src: 'assets/dog.png', img: new Image() },
@@ -74,13 +72,40 @@ function initLeaves() {
             vrX: 0, vrY: 0,
             type: Math.random() > 0.5 ? 'fallLeaf' : 'springLeaf',
             frame: Math.floor(Math.random()*5),
-            size: 42 + Math.random() * 48, 
-            waft: Math.random() * 100,
+            size: 40 + Math.random() * 50, 
+            waftSeed: Math.random() * 100,
             layer: Math.random(),
             skew: (Math.random() - 0.5) * 0.1,
-            chaos: 0.4 + Math.random() * 0.8
+            chaos: 0.8 + Math.random() * 0.4
         });
     }
+}
+
+function triggerSitExplosion(x, y, icon) {
+    dog.sitLock = true;
+    dog.vx = 0; dog.vy = 0; dog.x = x; dog.y = y;
+    if (icon) {
+        setTimeout(() => { window.location.href = icon.path; }, 500);
+        icon.revealed = true;
+    }
+    setTimeout(() => { dog.sitLock = false; dog.targetAction = null; }, 1200);
+
+    const sitRadius = 90; 
+    leaves.forEach(l => {
+        let d = Math.hypot(l.x - x, l.y - y);
+        if (d < sitRadius) {
+            // Replaced old programmed explosion with Ballistic Kick Logic
+            let angle = Math.atan2(l.y - y, l.x - x) + (Math.random() - 0.5) * 0.3;
+            let pushPower = (sitRadius - d) / sitRadius;
+            
+            l.vx = Math.cos(angle) * 1.8 * pushPower + (Math.random() - 0.5);
+            l.vy = Math.sin(angle) * 1.0 * pushPower;
+            // High vertical, low horizontal ballistic launch
+            l.vz = (5.5 + Math.random() * 4) * V_SCALE * pushPower; 
+            l.vrX = (Math.random() - 0.5) * 0.5; 
+            l.layer = 1.0; 
+        }
+    });
 }
 
 function init() {
@@ -108,85 +133,59 @@ function init() {
     requestAnimationFrame(loop);
 }
 
-// Optimized unified physics scuff function
-function scuffLeaf(l, sourceX, sourceY, isSit) {
-    const p = 0.5 + (l.y/canvas.height);
-    const d = Math.hypot(l.x - sourceX, l.y - sourceY);
-    const radius = isSit ? 95 : 50 * p;
-    
-    if (d < radius) {
-        const angle = Math.atan2(l.y - sourceY, l.x - sourceX) + (Math.random()-0.5)*0.4;
-        const power = isSit ? 0.9 : 1.2; 
-        
-        // Sit effect: Less horizontal, High vertical scuff
-        l.vx += (Math.cos(angle) * (isSit ? 1.0 : 1.6)) + (Math.random()-0.5);
-        l.vy += Math.sin(angle) * (isSit ? 0.6 : 0.8);
-        
-        // Vertical scuff logic
-        const vBase = isSit ? 9.0 : 0.1;
-        l.vz += (vBase + (Math.random() * 4)) * 0.8; 
-        
-        // Allow bit of rotation on way up
-        l.vrX = (Math.random() - 0.5) * 0.3;
-        
-        if (Math.random() > 0.5) l.layer = Math.min(1.0, l.layer + 0.1);
-    }
-}
-
 function getSoftTargetY(mouseY, topLimit, botLimit) {
     if (mouseY >= topLimit && mouseY <= botLimit) return mouseY;
-    let factor = 0.12;
-    if (mouseY < topLimit) return topLimit - (Math.atan((topLimit - mouseY) * factor / 50) * 12);
-    return botLimit + (Math.atan((mouseY - botLimit) * factor / 50) * 12);
+    let factor = 0.15;
+    if (mouseY < topLimit) return topLimit - (Math.atan((topLimit - mouseY) * factor / 50) * 15); 
+    else return botLimit + (Math.atan((mouseY - botLimit) * factor / 50) * 15);
 }
 
 function loop(time) {
-    const dt = Math.min((time - lastTime) / 16.67, 1.5) || 1;
+    if (isPaused) { requestAnimationFrame(loop); return; }
+    const dt = Math.min((time - lastTime) / 16.67, 2) || 1;
     lastTime = time;
     const topLimit = canvas.height * HORIZON_RATIO;
     const botLimit = canvas.height * (1 - BOTTOM_MARGIN);
 
-    // Faster redraw
-    ctx.fillStyle = '#030502'; ctx.fillRect(0, 0, canvas.width, topLimit);
-    ctx.fillStyle = '#0a0d08'; ctx.fillRect(0, topLimit, canvas.width, botLimit - topLimit);
-    ctx.fillStyle = '#000'; ctx.fillRect(0, botLimit, canvas.width, canvas.height - botLimit);
+    ctx.fillStyle = '#050704'; ctx.fillRect(0, 0, canvas.width, topLimit);
+    ctx.fillStyle = '#11150d'; ctx.fillRect(0, topLimit, canvas.width, botLimit - topLimit);
+    ctx.fillStyle = '#000000'; ctx.fillRect(0, botLimit, canvas.width, canvas.height - botLimit);
 
     let targetX = dog.targetAction ? dog.targetAction.x : mouse.x;
-    let targetY = Math.max(topLimit+5, Math.min(botLimit-5, dog.targetAction ? dog.targetAction.y : getSoftTargetY(mouse.y, topLimit, botLimit)));
+    let rawTargetY = dog.targetAction ? dog.targetAction.y : getSoftTargetY(mouse.y, topLimit, botLimit);
+    let targetY = Math.max(topLimit + 5, Math.min(botLimit - 5, rawTargetY));
     
     let dx = targetX - dog.x, dy = targetY - dog.y;
     let dist = Math.hypot(dx, dy);
     
-    if (dog.targetAction && dist < 12 && !dog.sitLock) {
-        dog.sitLock = true; dog.vx = 0; dog.vy = 0;
-        if (dog.targetAction.icon) {
-            setTimeout(() => { window.location.href = dog.targetAction.icon.path; }, 500);
-            dog.targetAction.icon.revealed = true;
-        }
-        setTimeout(() => { dog.sitLock = false; dog.targetAction = null; }, 1200);
-        // Trigger explosion using Scuff Physics
-        leaves.forEach(l => scuffLeaf(l, dog.x, dog.y, true));
-    }
+    if (dog.targetAction && dist < 15) triggerSitExplosion(dog.targetAction.x, dog.targetAction.y, dog.targetAction.icon);
 
     if (!dog.sitLock) {
-        if (dog.targetAction || dist > DEAD_ZONE) {
-            let s = dog.targetAction ? 9 : (dist > 280 ? 0.05 * dist : 0.015 * dist);
-            let a = Math.atan2(dy, dx);
-            dog.vx = Math.cos(a) * s; dog.vy = Math.sin(a) * s;
-            dog.facing = dog.vx > 0 ? 'right' : 'left';
+        if (dog.targetAction) {
+            let angle = Math.atan2(dy, dx);
+            dog.vx = Math.cos(angle) * 9; dog.vy = Math.sin(angle) * 9;
+        } else if (dist > DEAD_ZONE) {
+            dog.vx = dx * 0.05; dog.vy = dy * 0.05;
         } else {
             dog.vx *= 0.8; dog.vy *= 0.8;
-            dog.facing = (mouse.x > dog.x) ? 'right' : 'left';
         }
+        if (Math.abs(dog.vx) > 0.1) dog.facing = dog.vx > 0 ? 'right' : 'left';
+        else dog.facing = (mouse.x > dog.x) ? 'right' : 'left';
     }
     
     dog.x += dog.vx * dt; dog.y += dog.vy * dt;
-    let moving = Math.hypot(dog.vx, dog.vy) > 0.5;
+    let moving = Math.hypot(dog.vx, dog.vy) > 0.4;
     
-    // Animation Logic
-    if (dog.sitLock) { dog.row = 3; dog.col = (dog.facing === 'right' ? 0 : 2) + Math.floor(Date.now()/300)%2; }
-    else if (!moving) { dog.row = 1; dog.col = (dog.facing === 'right' ? 0 : 2) + Math.floor(Date.now()/500)%2; }
-    else { dog.row = (dog.facing === 'right' ? 6 : 7); dog.col = Math.floor(Date.now()/100)%4; }
+    if (dog.sitLock) {
+        dog.row = 3; dog.col = (dog.facing === 'right') ? 0 : 2; 
+        dog.col += Math.floor(Date.now()/300)%2;
+    } else if (!moving) {
+        dog.row = 1; dog.col = (dog.facing === 'right') ? 0 : 2; 
+        dog.col += Math.floor(Date.now()/500)%2;
+    } else {
+        dog.row = (dog.facing === 'right') ? 6 : 7;
+        dog.col = Math.floor(Date.now() / 100) % 4;
+    }
 
     let renderList = [
         ...leaves.map(l => ({ type: 'leaf', y: l.y, d: l })),
@@ -198,30 +197,39 @@ function loop(time) {
         let p = 0.5 + (obj.y/canvas.height);
         if (obj.type === 'leaf') {
             let l = obj.d;
-            if (moving && !dog.sitLock) scuffLeaf(l, dog.x, dog.y + 10, false);
-
+            let dDog = Math.hypot(l.x - dog.x, l.y - (dog.y + 10));
+            if (dDog < 50*p && moving && !dog.sitLock) {
+                if (l.layer > 0.7) { 
+                    let pushAngle = Math.atan2(l.y - dog.y, l.x - dog.x) + (Math.random()-0.5)*0.2;
+                    l.vx += (Math.cos(pushAngle) * 1.5) + (Math.random() - 0.5) * 0.4;
+                    l.vy += Math.sin(pushAngle) * 0.8;
+                    l.vz += (0.1 + (Math.hypot(dog.vx, dog.vy) * 0.04)) * V_SCALE;
+                    l.vrX *= 0.85; 
+                }
+                if (Math.random() > 0.5) l.layer = Math.min(1.0, l.layer + 0.08); 
+            }
             if (l.z > 0 || Math.abs(l.vx) > 0.1) {
                 l.x += l.vx * dt; l.y += l.vy * dt; l.z += l.vz * dt;
                 l.rotX += l.vrX * dt; l.rotY += l.vrY * dt;
                 if (l.z > 0) {
                     l.vz -= GRAVITY * dt;
-                    if (l.vz > 0) { l.vx *= 0.98; l.vy *= 0.98; l.vrX *= 0.97; } 
-                    else { 
-                        l.vx *= 0.94; l.vy *= 0.94;
-                        // Organic Brownian-style waft (irregular)
-                        l.vx += Math.sin(Date.now() * 0.002 + l.waft) * l.chaos * 0.5;
-                        l.vy += Math.cos(Date.now() * 0.001 + l.waft) * 0.2;
-                        l.vrX += Math.sin(Date.now() * 0.005 + l.waft) * 0.02;
+                    if (l.vz > 0) { 
+                        l.vx *= 0.98; l.vy *= 0.98; 
+                        l.vrX *= 0.97; // Ballistic ascent
+                    } else { 
+                        l.vx *= 0.93; l.vy *= 0.93;
+                        // Improved random wafting (Less regular)
+                        l.vx += Math.sin(time * 0.002 + l.waftSeed) * 0.4 * l.chaos;
+                        l.vrX += Math.cos(time * 0.003 + l.waftSeed) * 0.02;
                     }
-                } else { l.z = 0; l.vz = 0; l.vx *= 0.6; l.vy *= 0.6; l.vrX = 0; }
-                if (l.x < 0 || l.x > canvas.width) l.vx *= -0.5;
-                if (l.y < topLimit || l.y > botLimit) l.vy *= -0.5;
+                } else { l.z = 0; l.vz = 0; l.vx *= 0.5; l.vy *= 0.5; l.vrX = 0; }
+                if (l.x < 0) { l.x = 0; l.vx *= -1; } if (l.x > canvas.width) { l.x = canvas.width; l.vx *= -1; }
+                if (l.y < topLimit) { l.y = topLimit; l.vy *= -1; } if (l.y > botLimit) { l.y = botLimit; l.vy *= -1; }
             }
-
             if (assets[l.type].img.complete) {
+                // Applied 0.9 Brightness Darkening
+                ctx.filter = 'brightness(0.9)';
                 ctx.setTransform(p * Math.sin(l.rotX), l.skew, 0, p * Math.cos(l.rotY), l.x, l.y - l.z);
-                // Make leaves darker using a brightness filter
-                ctx.filter = 'brightness(0.7)'; 
                 ctx.drawImage(assets[l.type].img, l.frame*16, 0, 16, 16, -l.size/2, -l.size/2, l.size, l.size);
                 ctx.filter = 'none';
             }
@@ -232,7 +240,7 @@ function loop(time) {
                 ctx.drawImage(assets[i.id].img, -60, -60, 120, 120);
                 if (i.revealed) {
                     ctx.setTransform(1, 0, 0, 1, i.x, i.y + 80*p);
-                    ctx.fillStyle = "#fff"; ctx.font = "italic 15px Georgia"; ctx.textAlign = "center";
+                    ctx.fillStyle = "white"; ctx.font = "italic 15px Georgia"; ctx.textAlign = "center";
                     ctx.fillText(i.id.toUpperCase(), 0, 0);
                 }
             }
