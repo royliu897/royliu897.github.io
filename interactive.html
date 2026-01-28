@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roy R. Liu | Interactive Portfolio</title>
+    <style>
+        body, html { margin: 0; padding: 0; overflow: hidden; background: #050704; }
+        canvas { display: block; }
+        
+        /* New Button Style for Professional View */
+        #backToNormal {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 18px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #f0f0f0;
+            text-decoration: none;
+            font-family: 'Georgia', serif;
+            font-style: italic;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            backdrop-filter: blur(5px);
+            z-index: 200;
+            transition: background 0.3s;
+        }
+        #backToNormal:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        #header {
+            position: absolute;
+            top: 40px; width: 100%; text-align: center;
+            color: #f0f0f0; font-family: 'Georgia', serif; font-style: italic;
+            letter-spacing: 2px; pointer-events: none; z-index: 100;
+        }
+        #resetBtn {
+            position: absolute;
+            bottom: 3%; right: 20px;
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.1);
+            color: white; border: 1px solid rgba(255,255,255,0.3);
+            font-family: sans-serif; cursor: pointer; border-radius: 4px;
+            z-index: 101;
+        }
+    </style>
+</head>
+<body>
+
+<a href="index.html" id="backToNormal">← Professional View</a>
+
+<div id="header">
+    <h1>Welcome to my webpage, click on something.</h1>
+</div>
+<button id="resetBtn">Reset Leaves</button>
+<canvas id="gameCanvas"></canvas>
+
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d', { alpha: false });
+
+// --- ENGINE TUNING ---
+const LEAF_COUNT = 3500;    
+const HORIZON_RATIO = 0.45; 
+const BOTTOM_MARGIN = 0.1;  
+const DEAD_ZONE = 100;      
+const GRAVITY = 0.39;
+const DOG_W = 32, DOG_H = 40;
+const V_SCALE = 0.8; // 0.8x Vertical scaling
+
+let mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
+let dog = { x: 200, y: 0, vx: 0, vy: 0, row: 1, col: 0, facing: 'right', sitLock: false, targetAction: null };
+let leaves = [];
+let icons = [];
+let lastTime = 0;
+let isPaused = false;
+
+const assets = {
+    dog: { src: 'assets/dog.png', img: new Image() },
+    fallLeaf: { src: 'assets/fall_leaf.png', img: new Image() },
+    springLeaf: { src: 'assets/spring_leaf.png', img: new Image() },
+    car: { src: 'assets/car.png', img: new Image(), path: 'racing.html' },
+    gamma: { src: 'assets/gamma.png', img: new Image(), path: 'research.html' },
+    racket: { src: 'assets/racket.png', img: new Image(), path: 'tennis.html' },
+    stock: { src: 'assets/stock.png', img: new Image(), path: 'finance.html' }
+};
+
+function initLeaves() {
+    leaves = [];
+    const topLimit = canvas.height * HORIZON_RATIO;
+    const botLimit = canvas.height * (1 - BOTTOM_MARGIN);
+    for(let i=0; i<LEAF_COUNT; i++) {
+        leaves.push({
+            x: Math.random() * canvas.width,
+            y: topLimit + Math.random() * (botLimit - topLimit),
+            z: 0, vz: 0, vx: 0, vy: 0,
+            rotX: Math.random() * 6, rotY: Math.random() * 6,
+            vrX: 0, vrY: 0,
+            type: Math.random() > 0.5 ? 'fallLeaf' : 'springLeaf',
+            frame: Math.floor(Math.random()*5),
+            size: 40 + Math.random() * 50, 
+            waft: Math.random() * 10,
+            layer: Math.random(),
+            skew: (Math.random() - 0.5) * 0.1,
+            chaos: 0.5 + Math.random()
+        });
+    }
+}
+
+function init() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    dog.y = canvas.height * 0.7;
+    Object.keys(assets).forEach(key => assets[key].img.src = assets[key].src);
+    initLeaves();
+    const topLimit = canvas.height * HORIZON_RATIO;
+    const botLimit = canvas.height * (1 - BOTTOM_MARGIN);
+    const ids = ['car', 'gamma', 'racket', 'stock'];
+    icons = ids.map((id, i) => ({
+        id, x: (i+1) * (canvas.width/5), y: topLimit + (botLimit - topLimit) * 0.4,
+        rot: (Math.random()-0.5)*0.2, revealed: false, path: assets[id].path
+    }));
+    window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+    window.addEventListener('mousedown', e => {
+        const topLimit = canvas.height * HORIZON_RATIO;
+        const botLimit = canvas.height * (1 - BOTTOM_MARGIN);
+        if (e.clientY < topLimit || e.clientY > botLimit) return;
+        let clickedIcon = icons.find(i => Math.hypot(mouse.x - i.x, mouse.y - i.y) < 80);
+        dog.targetAction = { x: mouse.x, y: mouse.y, icon: clickedIcon };
+    });
+    document.getElementById('resetBtn').onclick = (e) => { e.stopPropagation(); initLeaves(); };
+    requestAnimationFrame(loop);
+}
+
+function triggerSitExplosion(x, y, icon) {
+    dog.sitLock = true;
+    dog.vx = 0; dog.vy = 0; dog.x = x; dog.y = y; // Fix slingshot
+    if (icon) {
+        setTimeout(() => { window.location.href = icon.path; }, 500);
+        icon.revealed = true;
+    }
+    setTimeout(() => { dog.sitLock = false; dog.targetAction = null; }, 500);
+
+    const sitRadius = 85; 
+    leaves.forEach(l => {
+        let dx = l.x - x;
+        let dy = l.y - y;
+        let d = Math.hypot(dx, dy);
+        if (d < sitRadius) {
+            let angle = Math.atan2(dy, dx);
+            // Re-using walk/run scuffing logic:
+            l.vx += (Math.cos(angle) * 0.6) + (Math.random() - 0.5) * 0.3;
+            l.vy += Math.sin(angle) * 0.4;
+            l.vz += (0.8 + Math.random() * 0.2) * V_SCALE; 
+            l.vrX = (Math.random() - 0.5) * 0.2; 
+            l.layer = 1.0; 
+        }
+    });
+}
+
+function getSoftTargetY(mouseY, topLimit, botLimit) {
+    if (mouseY >= topLimit && mouseY <= botLimit) return mouseY;
+    let factor = 0.15;
+    if (mouseY < topLimit) {
+        let over = (topLimit - mouseY) * factor;
+        return topLimit - (Math.atan(over / 50) * 15); 
+    } else {
+        let over = (mouseY - botLimit) * factor;
+        return botLimit + (Math.atan(over / 50) * 15);
+    }
+}
+
+function loop(time) {
+    if (isPaused) { requestAnimationFrame(loop); return; }
+    const dt = Math.min((time - lastTime) / 16.67, 2) || 1;
+    lastTime = time;
+    const topLimit = canvas.height * HORIZON_RATIO;
+    const botLimit = canvas.height * (1 - BOTTOM_MARGIN);
+
+    ctx.fillStyle = '#050704'; ctx.fillRect(0, 0, canvas.width, topLimit);
+    ctx.fillStyle = '#11150d'; ctx.fillRect(0, topLimit, canvas.width, botLimit - topLimit);
+    ctx.fillStyle = '#000000'; ctx.fillRect(0, botLimit, canvas.width, canvas.height - botLimit);
+
+    let targetX = dog.targetAction ? dog.targetAction.x : mouse.x;
+    let rawTargetY = dog.targetAction ? dog.targetAction.y : getSoftTargetY(mouse.y, topLimit, botLimit);
+    let targetY = Math.max(topLimit + 5, Math.min(botLimit - 5, rawTargetY));
+    
+    let dx = targetX - dog.x, dy = targetY - dog.y;
+    let dist = Math.hypot(dx, dy);
+    
+    if (dog.targetAction && dist < 15) triggerSitExplosion(dog.targetAction.x, dog.targetAction.y, dog.targetAction.icon);
+
+    if (!dog.sitLock) {
+        if (dog.targetAction) {
+            let angle = Math.atan2(dy, dx);
+            dog.vx = Math.cos(angle) * 9; dog.vy = Math.sin(angle) * 9;
+            dog.facing = dog.vx > 0 ? 'right' : 'left';
+        } else if (dist > DEAD_ZONE) {
+            dog.vx = dx * 0.05; dog.vy = dy * 0.05;
+            dog.facing = dog.vx > 0 ? 'right' : 'left';
+        } else {
+            dog.vx *= 0.8; dog.vy *= 0.8;
+            dog.facing = (mouse.x > dog.x) ? 'right' : 'left';
+        }
+    }
+    
+    dog.x += dog.vx * dt; dog.y += dog.vy * dt;
+    let moving = Math.hypot(dog.vx, dog.vy) > 0.4;
+    
+    if (dog.sitLock) {
+        dog.row = 3; dog.col = (dog.facing === 'right') ? 0 : 2; 
+        dog.col += Math.floor(Date.now()/300)%2;
+    } else if (!moving) {
+        dog.row = 1; dog.col = (dog.facing === 'right') ? 0 : 2; 
+        dog.col += Math.floor(Date.now()/500)%2;
+    } else {
+        dog.row = (dog.facing === 'right') ? 6 : 7;
+        dog.col = Math.floor(Date.now() / 100) % 4;
+    }
+
+    let renderList = [
+        ...leaves.map(l => ({ type: 'leaf', y: l.y, d: l })),
+        ...icons.map(i => ({ type: 'icon', y: i.y, d: i })),
+        { type: 'dog', y: dog.y }
+    ].sort((a,b) => a.y - b.y);
+
+    for (let obj of renderList) {
+        let p = 0.5 + (obj.y/canvas.height);
+        if (obj.type === 'leaf') {
+            let l = obj.d;
+            let dDog = Math.hypot(l.x - dog.x, l.y - (dog.y + 10));
+            if (dDog < 50*p && moving && !dog.sitLock) {
+                if (l.layer > 0.7) { 
+                    let pushAngle = Math.atan2(l.y - dog.y, l.x - dog.x);
+                    l.vx += (Math.cos(pushAngle) * 1.5) + (Math.random() - 0.5) * 0.5;
+                    l.vy += Math.sin(pushAngle) * 0.8;
+                    l.vz += (0.08 + (Math.hypot(dog.vx, dog.vy) * 0.04)) * V_SCALE;
+                    l.vrX *= 0.85; 
+                }
+                if (Math.random() > 0.5) l.layer = Math.min(1.0, l.layer + 0.08); 
+            }
+            if (l.z > 0 || Math.abs(l.vx) > 0.1) {
+                l.x += l.vx * dt; l.y += l.vy * dt; l.z += l.vz * dt;
+                l.rotX += l.vrX * dt; l.rotY += l.vrY * dt;
+                if (l.z > 0) {
+                    l.vz -= GRAVITY * dt;
+                    if (l.vz > 0) { l.vx *= 0.99; l.vy *= 0.99; l.vrX *= 0.96; } 
+                    else { 
+                        l.vx *= 0.92; l.vy *= 0.92;
+                        l.vx += Math.sin(Date.now()*0.003 + l.waft) * (0.6 * l.chaos);
+                    }
+                } else { l.z = 0; l.vz = 0; l.vx *= 0.5; l.vy *= 0.5; l.vrX = 0; }
+                if (l.x < 0) { l.x = 0; l.vx *= -1; } if (l.x > canvas.width) { l.x = canvas.width; l.vx *= -1; }
+                if (l.y < topLimit) { l.y = topLimit; l.vy *= -1; } if (l.y > botLimit) { l.y = botLimit; l.vy *= -1; }
+            }
+            if (assets[l.type].img.complete) {
+                ctx.setTransform(p * Math.sin(l.rotX), l.skew, 0, p * Math.cos(l.rotY), l.x, l.y - l.z);
+                ctx.drawImage(assets[l.type].img, l.frame*16, 0, 16, 16, -l.size/2, -l.size/2, l.size, l.size);
+            }
+        } else if (obj.type === 'icon') {
+            let i = obj.d;
+            if (assets[i.id].img.complete) {
+                ctx.setTransform(p, 0, 0, p, i.x, i.y); ctx.rotate(i.rot);
+                ctx.drawImage(assets[i.id].img, -60, -60, 120, 120);
+                if (i.revealed) {
+                    ctx.setTransform(1, 0, 0, 1, i.x, i.y + 80*p);
+                    ctx.fillStyle = "white"; ctx.font = "italic 15px Georgia"; ctx.textAlign = "center";
+                    ctx.fillText(i.id.toUpperCase(), 0, 0);
+                }
+            }
+        } else {
+            if (assets.dog.img.complete) {
+                let dW = 135 * p, dH = 160 * p;
+                ctx.setTransform(1, 0, 0, 1, dog.x, dog.y);
+                ctx.drawImage(assets.dog.img, dog.col*DOG_W, dog.row*DOG_H, DOG_W, DOG_H, -dW/2, -dH*0.7, dW, dH);
+            }
+        }
+        ctx.setTransform(1, 0, 0, 1, 0, 0); 
+    }
+    requestAnimationFrame(loop);
+}
+init();
+</script>
+</body>
+</html>
