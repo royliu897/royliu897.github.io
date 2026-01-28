@@ -17,16 +17,29 @@
         }
         #backToNormal:hover { background: rgba(255, 255, 255, 0.2); }
 
-        #header {
-            position: absolute; top: 40px; width: 100%; text-align: center;
-            color: #f0f0f0; font-family: 'Georgia', serif; font-style: italic;
-            letter-spacing: 2px; pointer-events: none; z-index: 100;
-        }
         #resetBtn {
-            position: absolute; bottom: 3%; right: 20px;
+            position: absolute; bottom: 12%; right: 20px;
             padding: 8px 12px; background: rgba(255,255,255,0.1);
             color: white; border: 1px solid rgba(255,255,255,0.3);
             font-family: sans-serif; cursor: pointer; border-radius: 4px; z-index: 101;
+        }
+
+        /* NEW FOOTER STYLING */
+        #footer {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 10%;
+            background: #1c2124; /* Nice dark slate color */
+            border-top: 1px solid #333;
+            display: flex; align-items: center; justify-content: center;
+            gap: 15px; z-index: 100; pointer-events: none; /* Let clicks pass through if needed, though usually not for footer */
+        }
+        #footer span {
+            color: #b0b0b0; font-family: 'Georgia', serif; font-style: italic; font-size: 1rem;
+            letter-spacing: 1px;
+        }
+        .legend-icons { display: flex; gap: 15px; align-items: center; }
+        .legend-icons img {
+            height: 32px; width: auto; opacity: 0.7; 
+            filter: drop-shadow(0 0 2px rgba(255,255,255,0.2));
         }
     </style>
 </head>
@@ -34,9 +47,16 @@
 
 <a href="index.html" id="backToNormal">← Professional View</a>
 
-<div id="header">
-    <h1>Welcome to my webpage, click on something.</h1>
+<div id="footer">
+    <span>Find and click on these items:</span>
+    <div class="legend-icons">
+        <img src="assets/car.png" alt="Racing">
+        <img src="assets/gamma.png" alt="Research">
+        <img src="assets/racket.png" alt="Tennis">
+        <img src="assets/stock.png" alt="Finance">
+    </div>
 </div>
+
 <button id="resetBtn">Reset Leaves</button>
 <canvas id="gameCanvas"></canvas>
 
@@ -69,7 +89,7 @@ const assets = {
     springLeaf: { src: 'assets/spring_leaf.png', img: new Image() },
     treeGreen: { src: 'assets/tree_green.png', img: new Image() },
     treeFall: { src: 'assets/tree_fall.png', img: new Image() },
-    // NEW: The pre-generated static floor
+    // Pre-generated static floor
     complete_floor: { src: 'assets/complete_floor.png', img: new Image() },
     
     car: { src: 'assets/car.png', img: new Image(), path: 'racing.html' },
@@ -124,7 +144,7 @@ function initEnvironment() {
             type: type, sx: sx, sy: sy,
             x: pad + Math.random() * (canvas.width - pad*2),
             y: topLimit + pad + Math.random() * (botLimit - topLimit - pad), 
-            // UPDATED: Bigger trees
+            // Base scale (will be multiplied by perspective 'p' in render loop)
             scale: 2.5 + Math.random() * 1.5, 
             collisionRadius: 40
         });
@@ -149,6 +169,7 @@ function init() {
     window.addEventListener('mousedown', e => {
         const topLimit = canvas.height * HORIZON_RATIO;
         const botLimit = canvas.height * (1 - BOTTOM_MARGIN);
+        // Allow clicks in the play area (footer region is handled by UI overlay)
         if (e.clientY < topLimit || e.clientY > botLimit) return;
         let clickedIcon = icons.find(i => Math.hypot(mouse.x - i.x, mouse.y - i.y) < 80);
         dog.targetAction = { x: mouse.x, y: mouse.y, icon: clickedIcon };
@@ -220,7 +241,7 @@ function loop(time) {
         ctx.fillRect(0, topLimit, canvas.width, botLimit - topLimit);
     }
     
-    // Black bar at bottom
+    // Black bar at bottom (behind the UI Footer)
     ctx.fillStyle = '#000000'; 
     ctx.fillRect(0, botLimit, canvas.width, canvas.height - botLimit);
 
@@ -318,12 +339,13 @@ function loop(time) {
         } else if (obj.type === 'tree') {
             let t = obj.d;
             if (assets[t.type].img.complete) {
-                let renderSize = 128 * t.scale;
+                // FIXED: Trees now scale with depth (p) just like icons and the dog
+                let renderSize = 128 * t.scale * p;
                 ctx.setTransform(1, 0, 0, 1, t.x, t.y);
                 ctx.drawImage(
                     assets[t.type].img, 
                     t.sx, t.sy, 128, 128, 
-                    -renderSize/2, -renderSize + 10, renderSize, renderSize 
+                    -renderSize/2, -renderSize + (10 * p), renderSize, renderSize 
                 );
             }
         } else if (obj.type === 'icon') {
