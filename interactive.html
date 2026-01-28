@@ -69,12 +69,13 @@ const assets = {
     springLeaf: { src: 'assets/spring_leaf.png', img: new Image() },
     treeGreen: { src: 'assets/tree_green.png', img: new Image() },
     treeFall: { src: 'assets/tree_fall.png', img: new Image() },
+    
     car: { src: 'assets/car.png', img: new Image(), path: 'racing.html' },
     gamma: { src: 'assets/gamma.png', img: new Image(), path: 'research.html' },
     racket: { src: 'assets/racket.png', img: new Image(), path: 'tennis.html' },
     stock: { src: 'assets/stock.png', img: new Image(), path: 'finance.html' },
-    
-    // Sky Layers (1 = Back, 4 = Front)
+
+    // Sky Layers
     sky1: { src: `assets/Clouds/Clouds ${SKY_ID}/1.png`, img: new Image(), speed: 0.0 },
     sky2: { src: `assets/Clouds/Clouds ${SKY_ID}/2.png`, img: new Image(), speed: 0.05 },
     sky3: { src: `assets/Clouds/Clouds ${SKY_ID}/3.png`, img: new Image(), speed: 0.1 },
@@ -106,6 +107,9 @@ function initLeaves() {
 function initEnvironment() {
     trees = [];
     const topLimit = canvas.height * HORIZON_RATIO;
+    const botLimit = canvas.height * (1 - BOTTOM_MARGIN);
+    
+    // Create exactly 5 trees placed RANDOMLY within the ground zone
     for(let i=0; i<5; i++) {
         const isFall = Math.random() > 0.5;
         const type = isFall ? 'treeFall' : 'treeGreen';
@@ -113,15 +117,17 @@ function initEnvironment() {
         const sx = (frameIndex % 4) * 128;
         const sy = Math.floor(frameIndex / 4) * 128;
 
+        // Place within play area (leaf zone)
+        // Add padding so they don't spawn right on the edge
+        const pad = 50;
         trees.push({
             type: type, sx: sx, sy: sy,
-            x: (Math.random() * (canvas.width * 1.2)) - (canvas.width * 0.1),
-            y: topLimit, 
-            depth: 0.1 + Math.random() * 0.2, 
-            scale: 1.8 + Math.random() * 0.8 
+            x: pad + Math.random() * (canvas.width - pad*2),
+            y: topLimit + pad + Math.random() * (botLimit - topLimit - pad), 
+            scale: 1.5 + Math.random() * 0.5,
+            collisionRadius: 30
         });
     }
-    trees.sort((a,b) => a.depth - b.depth);
 }
 
 function init() {
@@ -158,6 +164,7 @@ function triggerSitExplosion(x, y, icon) {
         icon.revealed = true;
     }
     setTimeout(() => { dog.sitLock = false; dog.targetAction = null; }, 500);
+
     const sitRadius = 85; 
     leaves.forEach(l => {
         let dx = l.x - x; let dy = l.y - y;
@@ -175,25 +182,14 @@ function triggerSitExplosion(x, y, icon) {
 
 function drawSkyLayer(layer, dt, time) {
     if (!layer.img.complete) return;
-    
-    // Scale image to cover width
     const imgRatio = layer.img.width / layer.img.height;
-    // We want the sky to cover roughly the top 60% of screen or at least match horizon
     const drawH = canvas.height; 
-    const drawW = drawH * imgRatio; // Keep aspect ratio
-
-    // Calculate Offset:
-    // 1. Wind (Time based)
-    // 2. Parallax (Dog position based)
+    const drawW = drawH * imgRatio;
     let wind = time * 0.02 * layer.speed; 
     let parallax = dog.x * 0.2 * layer.speed;
-    
     let totalX = -(wind + parallax) % drawW;
-    
-    // Draw twice to loop seamlessly
     ctx.drawImage(layer.img, totalX, 0, drawW, drawH);
     ctx.drawImage(layer.img, totalX + drawW, 0, drawW, drawH);
-    // Draw a third time just in case of wide screens
     if (totalX + drawW < canvas.width) {
         ctx.drawImage(layer.img, totalX + drawW * 2, 0, drawW, drawH);
     }
@@ -206,27 +202,14 @@ function loop(time) {
     const botLimit = canvas.height * (1 - BOTTOM_MARGIN);
 
     // 1. SKY (Background Layers)
-    // Clear with a base color just in case images are loading
     ctx.fillStyle = '#87CEEB'; 
     ctx.fillRect(0, 0, canvas.width, topLimit);
-    
-    drawSkyLayer(assets.sky1, dt, time); // Static Sky
-    drawSkyLayer(assets.sky2, dt, time); // Back Clouds
-    drawSkyLayer(assets.sky3, dt, time); // Mid Clouds
-    drawSkyLayer(assets.sky4, dt, time); // Front Clouds
+    drawSkyLayer(assets.sky1, dt, time);
+    drawSkyLayer(assets.sky2, dt, time);
+    drawSkyLayer(assets.sky3, dt, time);
+    drawSkyLayer(assets.sky4, dt, time);
 
-    // 2. PARALLAX TREES
-    trees.forEach(t => {
-        let parallaxX = t.x - (dog.x * t.depth);
-        let screenW = canvas.width + 400;
-        let drawX = ((parallaxX % screenW) + screenW) % screenW - 200; 
-        let renderSize = 128 * t.scale;
-        if (assets[t.type].img.complete) {
-            ctx.drawImage(assets[t.type].img, t.sx, t.sy, 128, 128, drawX, t.y - renderSize + 20, renderSize, renderSize);
-        }
-    });
-
-    // 3. GROUND
+    // 2. GROUND BACKGROUND
     ctx.fillStyle = '#11150d'; 
     ctx.fillRect(0, topLimit, canvas.width, botLimit - topLimit);
     ctx.fillStyle = '#000000'; 
@@ -249,60 +232,120 @@ function loop(time) {
         } else {
             dog.vx *= 0.8; dog.vy *= 0.8;
         }
-        if (Math.abs(dog.vx) > 0.1) dog.facing = dog.vx > 0 ? 'right' : 'left';
+        
+        // --- TREE COLLISION CHECK ---
+        // Predict next position
+        let nextX = dog.x + dog.vx * dt;
+        let nextY = dog.y + dog.vy * dt;
+        let collided = false;
+        
+        for(let t of trees) {
+            // Check collision with tree base
+            let dTree = Math.hypot(nextX - t.x, nextY - t.y);
+            if(dTree < t.collisionRadius) {
+                // Simple collision response: Stop moving towards it
+                dog.vx *= 0.5; dog.vy *= 0.5; 
+                collided = true;
+                // Optional: Push back slightly
+                let angle = Math.atan2(dog.y - t.y, dog.x - t.x);
+                dog.x = t.x + Math.cos(angle) * (t.collisionRadius + 1);
+                dog.y = t.y + Math.sin(angle) * (t.collisionRadius + 1);
+            }
+        }
+
+        if (!collided) {
+             if (Math.abs(dog.vx) > 0.1) dog.facing = dog.vx > 0 ? 'right' : 'left';
+        }
     }
     
-    dog.x += dog.vx * dt; dog.y += dog.vy * dt;
+    // Apply movement if not fully blocked
+    if (!dog.sitLock) {
+        dog.x += dog.vx * dt; dog.y += dog.vy * dt;
+    }
+
     let moving = Math.hypot(dog.vx, dog.vy) > 0.4;
     
     if (dog.sitLock) { dog.row = 3; dog.col = (dog.facing === 'right' ? 0 : 2) + Math.floor(Date.now()/300)%2; }
     else if (!moving) { dog.row = 1; dog.col = (dog.facing === 'right' ? 0 : 2) + Math.floor(Date.now()/500)%2; }
     else { dog.row = (dog.facing === 'right' ? 6 : 7); dog.col = Math.floor(Date.now() / 100) % 4; }
 
-    // --- RENDER SORTING ---
+    // --- RENDER SORTING (Merged Trees, Leaves, Dog, Icons) ---
+    // This allows the dog to walk BEHIND trees if his Y is lower than tree Y
     let renderList = [
         ...leaves.map(l => ({ type: 'leaf', y: l.y, d: l })),
         ...icons.map(i => ({ type: 'icon', y: i.y, d: i })),
+        ...trees.map(t => ({ type: 'tree', y: t.y, d: t })), // Added Trees
         { type: 'dog', y: dog.y }
     ].sort((a,b) => a.y - b.y);
 
     for (let obj of renderList) {
         let p = 0.5 + (obj.y/canvas.height);
+        
         if (obj.type === 'leaf') {
+            // --- RESTORED PHYSICS ---
             let l = obj.d;
             let dDog = Math.hypot(l.x - dog.x, l.y - (dog.y + 10));
             if (dDog < 50*p && moving && !dog.sitLock) {
                 if (l.layer > 0.7) { 
                     let pushAngle = Math.atan2(l.y - dog.y, l.x - dog.x);
-                    l.vx += (Math.cos(pushAngle) * 1.5);
-                    l.vz += 0.05 * V_SCALE;
+                    l.vx += (Math.cos(pushAngle) * 1.5) + (Math.random() - 0.5) * 0.5;
+                    l.vy += Math.sin(pushAngle) * 0.8;
+                    l.vz += (0.08 + (Math.hypot(dog.vx, dog.vy) * 0.04)) * V_SCALE;
+                    l.vrX *= 0.85; 
                 }
+                if (Math.random() > 0.5) l.layer = Math.min(1.0, l.layer + 0.08); 
             }
             if (l.z > 0 || Math.abs(l.vx) > 0.1) {
                 l.x += l.vx * dt; l.y += l.vy * dt; l.z += l.vz * dt;
-                l.vz -= GRAVITY * dt;
-                if (l.z <= 0) { l.z = 0; l.vz = 0; l.vx *= 0.5; l.vy *= 0.5; }
-                if (l.x < 0 || l.x > canvas.width) l.vx *= -1;
+                l.rotX += l.vrX * dt; l.rotY += l.vrY * dt;
+                if (l.z > 0) {
+                    l.vz -= GRAVITY * dt;
+                    if (l.vz > 0) { l.vx *= 0.99; l.vy *= 0.99; l.vrX *= 0.96; } 
+                    else { 
+                        l.vx *= 0.92; l.vy *= 0.92;
+                        l.vx += Math.sin(Date.now()*0.003 + l.waft) * (0.6 * l.chaos);
+                    }
+                } else { l.z = 0; l.vz = 0; l.vx *= 0.5; l.vy *= 0.5; l.vrX = 0; }
+                if (l.x < 0) { l.x = 0; l.vx *= -1; } if (l.x > canvas.width) { l.x = canvas.width; l.vx *= -1; }
+                if (l.y < topLimit) { l.y = topLimit; l.vy *= -1; } if (l.y > botLimit) { l.y = botLimit; l.vy *= -1; }
             }
             if (assets[l.type].img.complete) {
                 ctx.setTransform(p * Math.sin(l.rotX), l.skew, 0, p * Math.cos(l.rotY), l.x, l.y - l.z);
                 ctx.drawImage(assets[l.type].img, l.frame*16, 0, 16, 16, -l.size/2, -l.size/2, l.size, l.size);
-                ctx.setTransform(1, 0, 0, 1, 0, 0);
+            }
+        } else if (obj.type === 'tree') {
+            // Draw Tree
+            let t = obj.d;
+            if (assets[t.type].img.complete) {
+                let renderSize = 128 * t.scale;
+                ctx.setTransform(1, 0, 0, 1, t.x, t.y);
+                // Adjust drawing offset so (0,0) is at the tree trunk base
+                ctx.drawImage(
+                    assets[t.type].img, 
+                    t.sx, t.sy, 128, 128, 
+                    -renderSize/2, -renderSize + 10, renderSize, renderSize // +10 anchors base slightly lower
+                );
             }
         } else if (obj.type === 'icon') {
             let i = obj.d;
             if (assets[i.id].img.complete) {
                 ctx.setTransform(p, 0, 0, p, i.x, i.y); ctx.rotate(i.rot);
                 ctx.drawImage(assets[i.id].img, -60, -60, 120, 120);
-                ctx.setTransform(1, 0, 0, 1, 0, 0);
+                if (i.revealed) {
+                    ctx.setTransform(1, 0, 0, 1, i.x, i.y + 80*p);
+                    ctx.fillStyle = "white"; ctx.font = "italic 15px Georgia"; ctx.textAlign = "center";
+                    ctx.fillText(i.id.toUpperCase(), 0, 0);
+                }
             }
         } else {
+            // Draw Dog
             if (assets.dog.img.complete) {
+                let dW = 135 * p, dH = 160 * p;
                 ctx.setTransform(1, 0, 0, 1, dog.x, dog.y);
-                ctx.drawImage(assets.dog.img, dog.col*DOG_W, dog.row*DOG_H, DOG_W, DOG_H, -(135*p)/2, -(160*p)*0.7, 135*p, 160*p);
-                ctx.setTransform(1, 0, 0, 1, 0, 0);
+                ctx.drawImage(assets.dog.img, dog.col*DOG_W, dog.row*DOG_H, DOG_W, DOG_H, -dW/2, -dH*0.7, dW, dH);
             }
         }
+        ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset for next obj
     }
     requestAnimationFrame(loop);
 }
