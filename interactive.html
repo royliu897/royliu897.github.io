@@ -8,42 +8,25 @@
         body, html { margin: 0; padding: 0; overflow: hidden; background: #050704; }
         canvas { display: block; }
         
-        /* New Button Style for Professional View */
         #backToNormal {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            padding: 10px 18px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #f0f0f0;
-            text-decoration: none;
-            font-family: 'Georgia', serif;
-            font-style: italic;
-            font-size: 0.9rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-            backdrop-filter: blur(5px);
-            z-index: 200;
-            transition: background 0.3s;
+            position: absolute; top: 20px; left: 20px;
+            padding: 10px 18px; background: rgba(255, 255, 255, 0.1);
+            color: #f0f0f0; text-decoration: none; font-family: 'Georgia', serif;
+            font-style: italic; font-size: 0.9rem; border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px; backdrop-filter: blur(5px); z-index: 200; transition: background 0.3s;
         }
-        #backToNormal:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
+        #backToNormal:hover { background: rgba(255, 255, 255, 0.2); }
 
         #header {
-            position: absolute;
-            top: 40px; width: 100%; text-align: center;
+            position: absolute; top: 40px; width: 100%; text-align: center;
             color: #f0f0f0; font-family: 'Georgia', serif; font-style: italic;
             letter-spacing: 2px; pointer-events: none; z-index: 100;
         }
         #resetBtn {
-            position: absolute;
-            bottom: 3%; right: 20px;
-            padding: 8px 12px;
-            background: rgba(255,255,255,0.1);
+            position: absolute; bottom: 3%; right: 20px;
+            padding: 8px 12px; background: rgba(255,255,255,0.1);
             color: white; border: 1px solid rgba(255,255,255,0.3);
-            font-family: sans-serif; cursor: pointer; border-radius: 4px;
-            z-index: 101;
+            font-family: sans-serif; cursor: pointer; border-radius: 4px; z-index: 101;
         }
     </style>
 </head>
@@ -68,23 +51,34 @@ const BOTTOM_MARGIN = 0.1;
 const DEAD_ZONE = 100;      
 const GRAVITY = 0.39;
 const DOG_W = 32, DOG_H = 40;
-const V_SCALE = 0.8; // 0.8x Vertical scaling
+const V_SCALE = 0.8;
+
+// Select Sky Folder (1-8) ONCE on load
+const SKY_ID = Math.ceil(Math.random() * 8);
 
 let mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
 let dog = { x: 200, y: 0, vx: 0, vy: 0, row: 1, col: 0, facing: 'right', sitLock: false, targetAction: null };
 let leaves = [];
 let icons = [];
+let trees = []; 
 let lastTime = 0;
-let isPaused = false;
 
 const assets = {
     dog: { src: 'assets/dog.png', img: new Image() },
     fallLeaf: { src: 'assets/fall_leaf.png', img: new Image() },
     springLeaf: { src: 'assets/spring_leaf.png', img: new Image() },
+    treeGreen: { src: 'assets/tree_green.png', img: new Image() },
+    treeFall: { src: 'assets/tree_fall.png', img: new Image() },
     car: { src: 'assets/car.png', img: new Image(), path: 'racing.html' },
     gamma: { src: 'assets/gamma.png', img: new Image(), path: 'research.html' },
     racket: { src: 'assets/racket.png', img: new Image(), path: 'tennis.html' },
-    stock: { src: 'assets/stock.png', img: new Image(), path: 'finance.html' }
+    stock: { src: 'assets/stock.png', img: new Image(), path: 'finance.html' },
+    
+    // Sky Layers (1 = Back, 4 = Front)
+    sky1: { src: `assets/Clouds/Clouds ${SKY_ID}/1.png`, img: new Image(), speed: 0.0 },
+    sky2: { src: `assets/Clouds/Clouds ${SKY_ID}/2.png`, img: new Image(), speed: 0.05 },
+    sky3: { src: `assets/Clouds/Clouds ${SKY_ID}/3.png`, img: new Image(), speed: 0.1 },
+    sky4: { src: `assets/Clouds/Clouds ${SKY_ID}/4.png`, img: new Image(), speed: 0.2 }
 };
 
 function initLeaves() {
@@ -109,12 +103,34 @@ function initLeaves() {
     }
 }
 
+function initEnvironment() {
+    trees = [];
+    const topLimit = canvas.height * HORIZON_RATIO;
+    for(let i=0; i<5; i++) {
+        const isFall = Math.random() > 0.5;
+        const type = isFall ? 'treeFall' : 'treeGreen';
+        const frameIndex = Math.floor(Math.random() * 15);
+        const sx = (frameIndex % 4) * 128;
+        const sy = Math.floor(frameIndex / 4) * 128;
+
+        trees.push({
+            type: type, sx: sx, sy: sy,
+            x: (Math.random() * (canvas.width * 1.2)) - (canvas.width * 0.1),
+            y: topLimit, 
+            depth: 0.1 + Math.random() * 0.2, 
+            scale: 1.8 + Math.random() * 0.8 
+        });
+    }
+    trees.sort((a,b) => a.depth - b.depth);
+}
+
 function init() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     dog.y = canvas.height * 0.7;
     Object.keys(assets).forEach(key => assets[key].img.src = assets[key].src);
     initLeaves();
+    initEnvironment();
     const topLimit = canvas.height * HORIZON_RATIO;
     const botLimit = canvas.height * (1 - BOTTOM_MARGIN);
     const ids = ['car', 'gamma', 'racket', 'stock'];
@@ -136,21 +152,18 @@ function init() {
 
 function triggerSitExplosion(x, y, icon) {
     dog.sitLock = true;
-    dog.vx = 0; dog.vy = 0; dog.x = x; dog.y = y; // Fix slingshot
+    dog.vx = 0; dog.vy = 0; dog.x = x; dog.y = y;
     if (icon) {
         setTimeout(() => { window.location.href = icon.path; }, 500);
         icon.revealed = true;
     }
     setTimeout(() => { dog.sitLock = false; dog.targetAction = null; }, 500);
-
     const sitRadius = 85; 
     leaves.forEach(l => {
-        let dx = l.x - x;
-        let dy = l.y - y;
+        let dx = l.x - x; let dy = l.y - y;
         let d = Math.hypot(dx, dy);
         if (d < sitRadius) {
             let angle = Math.atan2(dy, dx);
-            // Re-using walk/run scuffing logic:
             l.vx += (Math.cos(angle) * 0.6) + (Math.random() - 0.5) * 0.3;
             l.vy += Math.sin(angle) * 0.4;
             l.vz += (0.8 + Math.random() * 0.2) * V_SCALE; 
@@ -160,33 +173,68 @@ function triggerSitExplosion(x, y, icon) {
     });
 }
 
-function getSoftTargetY(mouseY, topLimit, botLimit) {
-    if (mouseY >= topLimit && mouseY <= botLimit) return mouseY;
-    let factor = 0.15;
-    if (mouseY < topLimit) {
-        let over = (topLimit - mouseY) * factor;
-        return topLimit - (Math.atan(over / 50) * 15); 
-    } else {
-        let over = (mouseY - botLimit) * factor;
-        return botLimit + (Math.atan(over / 50) * 15);
+function drawSkyLayer(layer, dt, time) {
+    if (!layer.img.complete) return;
+    
+    // Scale image to cover width
+    const imgRatio = layer.img.width / layer.img.height;
+    // We want the sky to cover roughly the top 60% of screen or at least match horizon
+    const drawH = canvas.height; 
+    const drawW = drawH * imgRatio; // Keep aspect ratio
+
+    // Calculate Offset:
+    // 1. Wind (Time based)
+    // 2. Parallax (Dog position based)
+    let wind = time * 0.02 * layer.speed; 
+    let parallax = dog.x * 0.2 * layer.speed;
+    
+    let totalX = -(wind + parallax) % drawW;
+    
+    // Draw twice to loop seamlessly
+    ctx.drawImage(layer.img, totalX, 0, drawW, drawH);
+    ctx.drawImage(layer.img, totalX + drawW, 0, drawW, drawH);
+    // Draw a third time just in case of wide screens
+    if (totalX + drawW < canvas.width) {
+        ctx.drawImage(layer.img, totalX + drawW * 2, 0, drawW, drawH);
     }
 }
 
 function loop(time) {
-    if (isPaused) { requestAnimationFrame(loop); return; }
     const dt = Math.min((time - lastTime) / 16.67, 2) || 1;
     lastTime = time;
     const topLimit = canvas.height * HORIZON_RATIO;
     const botLimit = canvas.height * (1 - BOTTOM_MARGIN);
 
-    ctx.fillStyle = '#050704'; ctx.fillRect(0, 0, canvas.width, topLimit);
-    ctx.fillStyle = '#11150d'; ctx.fillRect(0, topLimit, canvas.width, botLimit - topLimit);
-    ctx.fillStyle = '#000000'; ctx.fillRect(0, botLimit, canvas.width, canvas.height - botLimit);
-
-    let targetX = dog.targetAction ? dog.targetAction.x : mouse.x;
-    let rawTargetY = dog.targetAction ? dog.targetAction.y : getSoftTargetY(mouse.y, topLimit, botLimit);
-    let targetY = Math.max(topLimit + 5, Math.min(botLimit - 5, rawTargetY));
+    // 1. SKY (Background Layers)
+    // Clear with a base color just in case images are loading
+    ctx.fillStyle = '#87CEEB'; 
+    ctx.fillRect(0, 0, canvas.width, topLimit);
     
+    drawSkyLayer(assets.sky1, dt, time); // Static Sky
+    drawSkyLayer(assets.sky2, dt, time); // Back Clouds
+    drawSkyLayer(assets.sky3, dt, time); // Mid Clouds
+    drawSkyLayer(assets.sky4, dt, time); // Front Clouds
+
+    // 2. PARALLAX TREES
+    trees.forEach(t => {
+        let parallaxX = t.x - (dog.x * t.depth);
+        let screenW = canvas.width + 400;
+        let drawX = ((parallaxX % screenW) + screenW) % screenW - 200; 
+        let renderSize = 128 * t.scale;
+        if (assets[t.type].img.complete) {
+            ctx.drawImage(assets[t.type].img, t.sx, t.sy, 128, 128, drawX, t.y - renderSize + 20, renderSize, renderSize);
+        }
+    });
+
+    // 3. GROUND
+    ctx.fillStyle = '#11150d'; 
+    ctx.fillRect(0, topLimit, canvas.width, botLimit - topLimit);
+    ctx.fillStyle = '#000000'; 
+    ctx.fillRect(0, botLimit, canvas.width, canvas.height - botLimit);
+
+    // --- DOG LOGIC ---
+    let targetX = dog.targetAction ? dog.targetAction.x : mouse.x;
+    let targetY = Math.max(topLimit + 5, Math.min(botLimit - 5, dog.targetAction ? dog.targetAction.y : mouse.y));
     let dx = targetX - dog.x, dy = targetY - dog.y;
     let dist = Math.hypot(dx, dy);
     
@@ -196,30 +244,22 @@ function loop(time) {
         if (dog.targetAction) {
             let angle = Math.atan2(dy, dx);
             dog.vx = Math.cos(angle) * 9; dog.vy = Math.sin(angle) * 9;
-            dog.facing = dog.vx > 0 ? 'right' : 'left';
         } else if (dist > DEAD_ZONE) {
             dog.vx = dx * 0.05; dog.vy = dy * 0.05;
-            dog.facing = dog.vx > 0 ? 'right' : 'left';
         } else {
             dog.vx *= 0.8; dog.vy *= 0.8;
-            dog.facing = (mouse.x > dog.x) ? 'right' : 'left';
         }
+        if (Math.abs(dog.vx) > 0.1) dog.facing = dog.vx > 0 ? 'right' : 'left';
     }
     
     dog.x += dog.vx * dt; dog.y += dog.vy * dt;
     let moving = Math.hypot(dog.vx, dog.vy) > 0.4;
     
-    if (dog.sitLock) {
-        dog.row = 3; dog.col = (dog.facing === 'right') ? 0 : 2; 
-        dog.col += Math.floor(Date.now()/300)%2;
-    } else if (!moving) {
-        dog.row = 1; dog.col = (dog.facing === 'right') ? 0 : 2; 
-        dog.col += Math.floor(Date.now()/500)%2;
-    } else {
-        dog.row = (dog.facing === 'right') ? 6 : 7;
-        dog.col = Math.floor(Date.now() / 100) % 4;
-    }
+    if (dog.sitLock) { dog.row = 3; dog.col = (dog.facing === 'right' ? 0 : 2) + Math.floor(Date.now()/300)%2; }
+    else if (!moving) { dog.row = 1; dog.col = (dog.facing === 'right' ? 0 : 2) + Math.floor(Date.now()/500)%2; }
+    else { dog.row = (dog.facing === 'right' ? 6 : 7); dog.col = Math.floor(Date.now() / 100) % 4; }
 
+    // --- RENDER SORTING ---
     let renderList = [
         ...leaves.map(l => ({ type: 'leaf', y: l.y, d: l })),
         ...icons.map(i => ({ type: 'icon', y: i.y, d: i })),
@@ -234,50 +274,35 @@ function loop(time) {
             if (dDog < 50*p && moving && !dog.sitLock) {
                 if (l.layer > 0.7) { 
                     let pushAngle = Math.atan2(l.y - dog.y, l.x - dog.x);
-                    l.vx += (Math.cos(pushAngle) * 1.5) + (Math.random() - 0.5) * 0.5;
-                    l.vy += Math.sin(pushAngle) * 0.8;
-                    l.vz += (0.08 + (Math.hypot(dog.vx, dog.vy) * 0.04)) * V_SCALE;
-                    l.vrX *= 0.85; 
+                    l.vx += (Math.cos(pushAngle) * 1.5);
+                    l.vz += 0.05 * V_SCALE;
                 }
-                if (Math.random() > 0.5) l.layer = Math.min(1.0, l.layer + 0.08); 
             }
             if (l.z > 0 || Math.abs(l.vx) > 0.1) {
                 l.x += l.vx * dt; l.y += l.vy * dt; l.z += l.vz * dt;
-                l.rotX += l.vrX * dt; l.rotY += l.vrY * dt;
-                if (l.z > 0) {
-                    l.vz -= GRAVITY * dt;
-                    if (l.vz > 0) { l.vx *= 0.99; l.vy *= 0.99; l.vrX *= 0.96; } 
-                    else { 
-                        l.vx *= 0.92; l.vy *= 0.92;
-                        l.vx += Math.sin(Date.now()*0.003 + l.waft) * (0.6 * l.chaos);
-                    }
-                } else { l.z = 0; l.vz = 0; l.vx *= 0.5; l.vy *= 0.5; l.vrX = 0; }
-                if (l.x < 0) { l.x = 0; l.vx *= -1; } if (l.x > canvas.width) { l.x = canvas.width; l.vx *= -1; }
-                if (l.y < topLimit) { l.y = topLimit; l.vy *= -1; } if (l.y > botLimit) { l.y = botLimit; l.vy *= -1; }
+                l.vz -= GRAVITY * dt;
+                if (l.z <= 0) { l.z = 0; l.vz = 0; l.vx *= 0.5; l.vy *= 0.5; }
+                if (l.x < 0 || l.x > canvas.width) l.vx *= -1;
             }
             if (assets[l.type].img.complete) {
                 ctx.setTransform(p * Math.sin(l.rotX), l.skew, 0, p * Math.cos(l.rotY), l.x, l.y - l.z);
                 ctx.drawImage(assets[l.type].img, l.frame*16, 0, 16, 16, -l.size/2, -l.size/2, l.size, l.size);
+                ctx.setTransform(1, 0, 0, 1, 0, 0);
             }
         } else if (obj.type === 'icon') {
             let i = obj.d;
             if (assets[i.id].img.complete) {
                 ctx.setTransform(p, 0, 0, p, i.x, i.y); ctx.rotate(i.rot);
                 ctx.drawImage(assets[i.id].img, -60, -60, 120, 120);
-                if (i.revealed) {
-                    ctx.setTransform(1, 0, 0, 1, i.x, i.y + 80*p);
-                    ctx.fillStyle = "white"; ctx.font = "italic 15px Georgia"; ctx.textAlign = "center";
-                    ctx.fillText(i.id.toUpperCase(), 0, 0);
-                }
+                ctx.setTransform(1, 0, 0, 1, 0, 0);
             }
         } else {
             if (assets.dog.img.complete) {
-                let dW = 135 * p, dH = 160 * p;
                 ctx.setTransform(1, 0, 0, 1, dog.x, dog.y);
-                ctx.drawImage(assets.dog.img, dog.col*DOG_W, dog.row*DOG_H, DOG_W, DOG_H, -dW/2, -dH*0.7, dW, dH);
+                ctx.drawImage(assets.dog.img, dog.col*DOG_W, dog.row*DOG_H, DOG_W, DOG_H, -(135*p)/2, -(160*p)*0.7, 135*p, 160*p);
+                ctx.setTransform(1, 0, 0, 1, 0, 0);
             }
         }
-        ctx.setTransform(1, 0, 0, 1, 0, 0); 
     }
     requestAnimationFrame(loop);
 }
