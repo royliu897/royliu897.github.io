@@ -62,6 +62,7 @@ let leaves = [];
 let icons = [];
 let trees = []; 
 let lastTime = 0;
+let floorCanvas = null; // Offscreen canvas for the floor
 
 const assets = {
     dog: { src: 'assets/dog.png', img: new Image() },
@@ -69,6 +70,7 @@ const assets = {
     springLeaf: { src: 'assets/spring_leaf.png', img: new Image() },
     treeGreen: { src: 'assets/tree_green.png', img: new Image() },
     treeFall: { src: 'assets/tree_fall.png', img: new Image() },
+    floor: { src: 'assets/floor.png', img: new Image() }, // Added Floor
     
     car: { src: 'assets/car.png', img: new Image(), path: 'racing.html' },
     gamma: { src: 'assets/gamma.png', img: new Image(), path: 'research.html' },
@@ -81,6 +83,49 @@ const assets = {
     sky3: { src: `assets/Clouds/Clouds ${SKY_ID}/3.png`, img: new Image(), speed: 0.1 },
     sky4: { src: `assets/Clouds/Clouds ${SKY_ID}/4.png`, img: new Image(), speed: 0.2 }
 };
+
+// --- PRE-RENDER FLOOR ---
+// Generates a static random tiling of the floor image so we don't calculate it every frame
+function generateFloorMap() {
+    if (!assets.floor.img.complete) return;
+    
+    floorCanvas = document.createElement('canvas');
+    floorCanvas.width = canvas.width;
+    floorCanvas.height = canvas.height;
+    const fCtx = floorCanvas.getContext('2d');
+    
+    const topLimit = canvas.height * HORIZON_RATIO;
+    const TILE_SIZE = 600; // Size of each tile (scaled down slightly from 1134 for better texture density)
+
+    // Base color
+    fCtx.fillStyle = '#11150d';
+    fCtx.fillRect(0, 0, floorCanvas.width, floorCanvas.height);
+
+    const cols = Math.ceil(canvas.width / TILE_SIZE) + 1;
+    const rows = Math.ceil((canvas.height - topLimit) / TILE_SIZE) + 1;
+
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+            fCtx.save();
+            // Position center of tile
+            let cx = c * TILE_SIZE + (TILE_SIZE/2) - (TILE_SIZE/2); // Offset to start at edge
+            let cy = topLimit + r * TILE_SIZE + (TILE_SIZE/2) - 50; // -50 to overlap horizon slightly
+            
+            fCtx.translate(cx, cy);
+            
+            // Random 90 degree rotation
+            const angle = Math.floor(Math.random() * 4) * (Math.PI / 2);
+            fCtx.rotate(angle);
+            
+            // Draw image centered
+            fCtx.drawImage(assets.floor.img, -TILE_SIZE/2, -TILE_SIZE/2, TILE_SIZE, TILE_SIZE);
+            fCtx.restore();
+        }
+    }
+}
+
+// When floor image loads, generate the map
+assets.floor.img.onload = generateFloorMap;
 
 function initLeaves() {
     leaves = [];
@@ -109,7 +154,6 @@ function initEnvironment() {
     const topLimit = canvas.height * HORIZON_RATIO;
     const botLimit = canvas.height * (1 - BOTTOM_MARGIN);
     
-    // Create exactly 5 trees placed RANDOMLY within the ground zone
     for(let i=0; i<5; i++) {
         const isFall = Math.random() > 0.5;
         const type = isFall ? 'treeFall' : 'treeGreen';
@@ -117,15 +161,14 @@ function initEnvironment() {
         const sx = (frameIndex % 4) * 128;
         const sy = Math.floor(frameIndex / 4) * 128;
 
-        // Place within play area (leaf zone)
-        // Add padding so they don't spawn right on the edge
         const pad = 50;
         trees.push({
             type: type, sx: sx, sy: sy,
             x: pad + Math.random() * (canvas.width - pad*2),
             y: topLimit + pad + Math.random() * (botLimit - topLimit - pad), 
-            scale: 1.5 + Math.random() * 0.5,
-            collisionRadius: 30
+            // BIGGER TREES: Increased scale
+            scale: 2.5 + Math.random() * 1.5, 
+            collisionRadius: 40 // Slightly larger collision for bigger trees
         });
     }
 }
@@ -137,6 +180,9 @@ function init() {
     Object.keys(assets).forEach(key => assets[key].img.src = assets[key].src);
     initLeaves();
     initEnvironment();
+    // Try to gen floor immediately if already cached
+    if (assets.floor.img.complete) generateFloorMap();
+
     const topLimit = canvas.height * HORIZON_RATIO;
     const botLimit = canvas.height * (1 - BOTTOM_MARGIN);
     const ids = ['car', 'gamma', 'racket', 'stock'];
@@ -183,15 +229,22 @@ function triggerSitExplosion(x, y, icon) {
 function drawSkyLayer(layer, dt, time) {
     if (!layer.img.complete) return;
     const imgRatio = layer.img.width / layer.img.height;
-    const drawH = canvas.height; 
+    
+    // HIGHER CLOUDS: Draw slightly larger than screen height to allow shifting up
+    const drawH = canvas.height * 1.2; 
     const drawW = drawH * imgRatio;
+    
     let wind = time * 0.02 * layer.speed; 
     let parallax = dog.x * 0.2 * layer.speed;
     let totalX = -(wind + parallax) % drawW;
-    ctx.drawImage(layer.img, totalX, 0, drawW, drawH);
-    ctx.drawImage(layer.img, totalX + drawW, 0, drawW, drawH);
+    
+    // Shift Y up by 15% of height to lift clouds
+    const offsetY = -canvas.height * 0.15; 
+
+    ctx.drawImage(layer.img, totalX, offsetY, drawW, drawH);
+    ctx.drawImage(layer.img, totalX + drawW, offsetY, drawW, drawH);
     if (totalX + drawW < canvas.width) {
-        ctx.drawImage(layer.img, totalX + drawW * 2, 0, drawW, drawH);
+        ctx.drawImage(layer.img, totalX + drawW * 2, offsetY, drawW, drawH);
     }
 }
 
@@ -210,8 +263,16 @@ function loop(time) {
     drawSkyLayer(assets.sky4, dt, time);
 
     // 2. GROUND BACKGROUND
-    ctx.fillStyle = '#11150d'; 
-    ctx.fillRect(0, topLimit, canvas.width, botLimit - topLimit);
+    if (floorCanvas) {
+        // Draw the pre-rendered floor map
+        ctx.drawImage(floorCanvas, 0, 0);
+    } else {
+        // Fallback color while loading
+        ctx.fillStyle = '#11150d'; 
+        ctx.fillRect(0, topLimit, canvas.width, botLimit - topLimit);
+    }
+    
+    // Black bar at very bottom
     ctx.fillStyle = '#000000'; 
     ctx.fillRect(0, botLimit, canvas.width, canvas.height - botLimit);
 
@@ -234,22 +295,20 @@ function loop(time) {
         }
         
         // --- TREE COLLISION CHECK ---
-        // Predict next position
         let nextX = dog.x + dog.vx * dt;
         let nextY = dog.y + dog.vy * dt;
         let collided = false;
         
         for(let t of trees) {
-            // Check collision with tree base
-            let dTree = Math.hypot(nextX - t.x, nextY - t.y);
+            // Collision with tree base (offset Y slightly to match visual trunk)
+            let treeBaseY = t.y; 
+            let dTree = Math.hypot(nextX - t.x, nextY - treeBaseY);
             if(dTree < t.collisionRadius) {
-                // Simple collision response: Stop moving towards it
                 dog.vx *= 0.5; dog.vy *= 0.5; 
                 collided = true;
-                // Optional: Push back slightly
-                let angle = Math.atan2(dog.y - t.y, dog.x - t.x);
+                let angle = Math.atan2(dog.y - treeBaseY, dog.x - t.x);
                 dog.x = t.x + Math.cos(angle) * (t.collisionRadius + 1);
-                dog.y = t.y + Math.sin(angle) * (t.collisionRadius + 1);
+                dog.y = treeBaseY + Math.sin(angle) * (t.collisionRadius + 1);
             }
         }
 
@@ -258,7 +317,6 @@ function loop(time) {
         }
     }
     
-    // Apply movement if not fully blocked
     if (!dog.sitLock) {
         dog.x += dog.vx * dt; dog.y += dog.vy * dt;
     }
@@ -269,12 +327,11 @@ function loop(time) {
     else if (!moving) { dog.row = 1; dog.col = (dog.facing === 'right' ? 0 : 2) + Math.floor(Date.now()/500)%2; }
     else { dog.row = (dog.facing === 'right' ? 6 : 7); dog.col = Math.floor(Date.now() / 100) % 4; }
 
-    // --- RENDER SORTING (Merged Trees, Leaves, Dog, Icons) ---
-    // This allows the dog to walk BEHIND trees if his Y is lower than tree Y
+    // --- RENDER SORTING ---
     let renderList = [
         ...leaves.map(l => ({ type: 'leaf', y: l.y, d: l })),
         ...icons.map(i => ({ type: 'icon', y: i.y, d: i })),
-        ...trees.map(t => ({ type: 'tree', y: t.y, d: t })), // Added Trees
+        ...trees.map(t => ({ type: 'tree', y: t.y, d: t })), 
         { type: 'dog', y: dog.y }
     ].sort((a,b) => a.y - b.y);
 
@@ -282,7 +339,6 @@ function loop(time) {
         let p = 0.5 + (obj.y/canvas.height);
         
         if (obj.type === 'leaf') {
-            // --- RESTORED PHYSICS ---
             let l = obj.d;
             let dDog = Math.hypot(l.x - dog.x, l.y - (dog.y + 10));
             if (dDog < 50*p && moving && !dog.sitLock) {
@@ -314,17 +370,11 @@ function loop(time) {
                 ctx.drawImage(assets[l.type].img, l.frame*16, 0, 16, 16, -l.size/2, -l.size/2, l.size, l.size);
             }
         } else if (obj.type === 'tree') {
-            // Draw Tree
             let t = obj.d;
             if (assets[t.type].img.complete) {
                 let renderSize = 128 * t.scale;
                 ctx.setTransform(1, 0, 0, 1, t.x, t.y);
-                // Adjust drawing offset so (0,0) is at the tree trunk base
-                ctx.drawImage(
-                    assets[t.type].img, 
-                    t.sx, t.sy, 128, 128, 
-                    -renderSize/2, -renderSize + 10, renderSize, renderSize // +10 anchors base slightly lower
-                );
+                ctx.drawImage(assets[t.type].img, t.sx, t.sy, 128, 128, -renderSize/2, -renderSize + 15, renderSize, renderSize);
             }
         } else if (obj.type === 'icon') {
             let i = obj.d;
@@ -338,14 +388,13 @@ function loop(time) {
                 }
             }
         } else {
-            // Draw Dog
             if (assets.dog.img.complete) {
                 let dW = 135 * p, dH = 160 * p;
                 ctx.setTransform(1, 0, 0, 1, dog.x, dog.y);
                 ctx.drawImage(assets.dog.img, dog.col*DOG_W, dog.row*DOG_H, DOG_W, DOG_H, -dW/2, -dH*0.7, dW, dH);
             }
         }
-        ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset for next obj
+        ctx.setTransform(1, 0, 0, 1, 0, 0); 
     }
     requestAnimationFrame(loop);
 }
