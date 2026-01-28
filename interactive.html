@@ -17,30 +17,52 @@
         }
         #backToNormal:hover { background: rgba(255, 255, 255, 0.2); }
 
-        #resetBtn {
-            position: absolute; bottom: 12%; right: 20px;
-            padding: 8px 12px; background: rgba(255,255,255,0.1);
-            color: white; border: 1px solid rgba(255,255,255,0.3);
-            font-family: sans-serif; cursor: pointer; border-radius: 4px; z-index: 101;
-        }
-
-        /* NEW FOOTER STYLING */
+        /* FOOTER STYLING */
         #footer {
             position: absolute; bottom: 0; left: 0; width: 100%; height: 10%;
-            background: #1c2124; /* Nice dark slate color */
-            border-top: 1px solid #333;
+            background: #b8a47e; /* Sand Tan Color */
+            border-top: 1px solid #8f7d5c;
             display: flex; align-items: center; justify-content: center;
-            gap: 15px; z-index: 100; pointer-events: none; /* Let clicks pass through if needed, though usually not for footer */
+            gap: 50px; /* Spread out elements */
+            z-index: 100;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.3);
         }
+
+        /* Footer Text */
         #footer span {
-            color: #b0b0b0; font-family: 'Georgia', serif; font-style: italic; font-size: 1rem;
+            color: #ffffff; 
+            font-family: 'Georgia', serif; 
+            font-style: italic; 
+            font-size: 1.1rem; /* Slightly bigger */
             letter-spacing: 1px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.4); /* Shadow to make white pop on sand */
         }
-        .legend-icons { display: flex; gap: 15px; align-items: center; }
+
+        /* Icons Container */
+        .legend-icons { display: flex; gap: 40px; align-items: center; } /* Spread out icons */
         .legend-icons img {
-            height: 32px; width: auto; opacity: 0.7; 
-            filter: drop-shadow(0 0 2px rgba(255,255,255,0.2));
+            height: 36px; width: auto; opacity: 0.85; 
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
+            transition: transform 0.2s;
+            cursor: pointer;
         }
+        .legend-icons img:hover { transform: scale(1.1); opacity: 1; }
+
+        /* Reset Button (Now inside footer) */
+        #resetBtn {
+            padding: 8px 16px; 
+            background: rgba(255,255,255,0.2);
+            color: #fff; 
+            border: 1px solid rgba(255,255,255,0.6);
+            font-family: 'Georgia', serif; 
+            font-size: 0.9rem;
+            cursor: pointer; 
+            border-radius: 4px; 
+            transition: background 0.2s;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+        #resetBtn:hover { background: rgba(255,255,255,0.4); }
+
     </style>
 </head>
 <body>
@@ -49,15 +71,17 @@
 
 <div id="footer">
     <span>Find and click on these items:</span>
+    
     <div class="legend-icons">
-        <img src="assets/car.png" alt="Racing">
-        <img src="assets/gamma.png" alt="Research">
-        <img src="assets/racket.png" alt="Tennis">
-        <img src="assets/stock.png" alt="Finance">
+        <img src="assets/car.png" alt="Racing" title="Racing">
+        <img src="assets/gamma.png" alt="Research" title="Research">
+        <img src="assets/racket.png" alt="Tennis" title="Tennis">
+        <img src="assets/stock.png" alt="Finance" title="Finance">
     </div>
+
+    <button id="resetBtn">Reset Leaves</button>
 </div>
 
-<button id="resetBtn">Reset Leaves</button>
 <canvas id="gameCanvas"></canvas>
 
 <script>
@@ -89,7 +113,6 @@ const assets = {
     springLeaf: { src: 'assets/spring_leaf.png', img: new Image() },
     treeGreen: { src: 'assets/tree_green.png', img: new Image() },
     treeFall: { src: 'assets/tree_fall.png', img: new Image() },
-    // Pre-generated static floor
     complete_floor: { src: 'assets/complete_floor.png', img: new Image() },
     
     car: { src: 'assets/car.png', img: new Image(), path: 'racing.html' },
@@ -131,20 +154,17 @@ function initEnvironment() {
     const topLimit = canvas.height * HORIZON_RATIO;
     const botLimit = canvas.height * (1 - BOTTOM_MARGIN);
     
-    // Create exactly 5 trees placed RANDOMLY within the ground zone
     for(let i=0; i<5; i++) {
         const isFall = Math.random() > 0.5;
         const type = isFall ? 'treeFall' : 'treeGreen';
         const frameIndex = Math.floor(Math.random() * 15);
         const sx = (frameIndex % 4) * 128;
         const sy = Math.floor(frameIndex / 4) * 128;
-
         const pad = 50;
         trees.push({
             type: type, sx: sx, sy: sy,
             x: pad + Math.random() * (canvas.width - pad*2),
             y: topLimit + pad + Math.random() * (botLimit - topLimit - pad), 
-            // Base scale (will be multiplied by perspective 'p' in render loop)
             scale: 2.5 + Math.random() * 1.5, 
             collisionRadius: 40
         });
@@ -169,7 +189,6 @@ function init() {
     window.addEventListener('mousedown', e => {
         const topLimit = canvas.height * HORIZON_RATIO;
         const botLimit = canvas.height * (1 - BOTTOM_MARGIN);
-        // Allow clicks in the play area (footer region is handled by UI overlay)
         if (e.clientY < topLimit || e.clientY > botLimit) return;
         let clickedIcon = icons.find(i => Math.hypot(mouse.x - i.x, mouse.y - i.y) < 80);
         dog.targetAction = { x: mouse.x, y: mouse.y, icon: clickedIcon };
@@ -178,6 +197,7 @@ function init() {
     requestAnimationFrame(loop);
 }
 
+// RESTORED: Original physics logic
 function triggerSitExplosion(x, y, icon) {
     dog.sitLock = true;
     dog.vx = 0; dog.vy = 0; dog.x = x; dog.y = y;
@@ -200,6 +220,19 @@ function triggerSitExplosion(x, y, icon) {
             l.layer = 1.0; 
         }
     });
+}
+
+// RESTORED: Soft boundary targeting
+function getSoftTargetY(mouseY, topLimit, botLimit) {
+    if (mouseY >= topLimit && mouseY <= botLimit) return mouseY;
+    let factor = 0.15;
+    if (mouseY < topLimit) {
+        let over = (topLimit - mouseY) * factor;
+        return topLimit - (Math.atan(over / 50) * 15); 
+    } else {
+        let over = (mouseY - botLimit) * factor;
+        return botLimit + (Math.atan(over / 50) * 15);
+    }
 }
 
 function drawSkyLayer(layer, dt, time) {
@@ -233,10 +266,8 @@ function loop(time) {
 
     // 2. GROUND BACKGROUND
     if (assets.complete_floor.img.complete) {
-        // Draw the static floor image into the leaf zone
         ctx.drawImage(assets.complete_floor.img, 0, topLimit, canvas.width, botLimit - topLimit);
     } else {
-        // Fallback if image missing
         ctx.fillStyle = '#11150d'; 
         ctx.fillRect(0, topLimit, canvas.width, botLimit - topLimit);
     }
@@ -245,9 +276,11 @@ function loop(time) {
     ctx.fillStyle = '#000000'; 
     ctx.fillRect(0, botLimit, canvas.width, canvas.height - botLimit);
 
-    // --- DOG LOGIC ---
+    // --- DOG LOGIC (Restored Soft Target Y) ---
     let targetX = dog.targetAction ? dog.targetAction.x : mouse.x;
-    let targetY = Math.max(topLimit + 5, Math.min(botLimit - 5, dog.targetAction ? dog.targetAction.y : mouse.y));
+    let rawTargetY = dog.targetAction ? dog.targetAction.y : getSoftTargetY(mouse.y, topLimit, botLimit);
+    let targetY = Math.max(topLimit + 5, Math.min(botLimit - 5, rawTargetY));
+
     let dx = targetX - dog.x, dy = targetY - dog.y;
     let dist = Math.hypot(dx, dy);
     
@@ -257,17 +290,20 @@ function loop(time) {
         if (dog.targetAction) {
             let angle = Math.atan2(dy, dx);
             dog.vx = Math.cos(angle) * 9; dog.vy = Math.sin(angle) * 9;
+            dog.facing = dog.vx > 0 ? 'right' : 'left';
         } else if (dist > DEAD_ZONE) {
             dog.vx = dx * 0.05; dog.vy = dy * 0.05;
+            dog.facing = dog.vx > 0 ? 'right' : 'left';
         } else {
             dog.vx *= 0.8; dog.vy *= 0.8;
+            // Only update facing if user is actively moving mouse
+            if(Math.abs(mouse.x - dog.x) > 10) dog.facing = (mouse.x > dog.x) ? 'right' : 'left';
         }
         
         // --- TREE COLLISION CHECK ---
         let nextX = dog.x + dog.vx * dt;
         let nextY = dog.y + dog.vy * dt;
         let collided = false;
-        
         for(let t of trees) {
             let dTree = Math.hypot(nextX - t.x, nextY - t.y);
             if(dTree < t.collisionRadius) {
@@ -278,10 +314,6 @@ function loop(time) {
                 dog.y = t.y + Math.sin(angle) * (t.collisionRadius + 1);
             }
         }
-
-        if (!collided) {
-             if (Math.abs(dog.vx) > 0.1) dog.facing = dog.vx > 0 ? 'right' : 'left';
-        }
     }
     
     if (!dog.sitLock) {
@@ -290,9 +322,13 @@ function loop(time) {
 
     let moving = Math.hypot(dog.vx, dog.vy) > 0.4;
     
-    if (dog.sitLock) { dog.row = 3; dog.col = (dog.facing === 'right' ? 0 : 2) + Math.floor(Date.now()/300)%2; }
-    else if (!moving) { dog.row = 1; dog.col = (dog.facing === 'right' ? 0 : 2) + Math.floor(Date.now()/500)%2; }
-    else { dog.row = (dog.facing === 'right' ? 6 : 7); dog.col = Math.floor(Date.now() / 100) % 4; }
+    if (dog.sitLock) { 
+        dog.row = 3; dog.col = (dog.facing === 'right' ? 0 : 2) + Math.floor(Date.now()/300)%2; 
+    } else if (!moving) { 
+        dog.row = 1; dog.col = (dog.facing === 'right' ? 0 : 2) + Math.floor(Date.now()/500)%2; 
+    } else { 
+        dog.row = (dog.facing === 'right' ? 6 : 7); dog.col = Math.floor(Date.now() / 100) % 4; 
+    }
 
     // --- RENDER SORTING ---
     let renderList = [
@@ -308,6 +344,7 @@ function loop(time) {
         if (obj.type === 'leaf') {
             let l = obj.d;
             let dDog = Math.hypot(l.x - dog.x, l.y - (dog.y + 10));
+            // Interaction
             if (dDog < 50*p && moving && !dog.sitLock) {
                 if (l.layer > 0.7) { 
                     let pushAngle = Math.atan2(l.y - dog.y, l.x - dog.x);
@@ -318,6 +355,7 @@ function loop(time) {
                 }
                 if (Math.random() > 0.5) l.layer = Math.min(1.0, l.layer + 0.08); 
             }
+            // Physics Update (Restored exact damping factors)
             if (l.z > 0 || Math.abs(l.vx) > 0.1) {
                 l.x += l.vx * dt; l.y += l.vy * dt; l.z += l.vz * dt;
                 l.rotX += l.vrX * dt; l.rotY += l.vrY * dt;
@@ -339,7 +377,6 @@ function loop(time) {
         } else if (obj.type === 'tree') {
             let t = obj.d;
             if (assets[t.type].img.complete) {
-                // FIXED: Trees now scale with depth (p) just like icons and the dog
                 let renderSize = 128 * t.scale * p;
                 ctx.setTransform(1, 0, 0, 1, t.x, t.y);
                 ctx.drawImage(
