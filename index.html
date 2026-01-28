@@ -2,74 +2,100 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Floor Generator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roy R. Liu | Resume</title>
     <style>
-        body { background: #333; color: white; text-align: center; font-family: sans-serif; }
-        canvas { border: 2px solid white; max-width: 90%; margin-top: 20px; }
-        button { padding: 15px 30px; font-size: 1.2rem; cursor: pointer; background: #4CAF50; color: white; border: none; border-radius: 5px; margin-top: 20px;}
-        button:hover { background: #45a049; }
+        :root { --bg: #ffffff; --text: #1a1a1a; --accent: #2563eb; --gray: #666; }
+        body { font-family: 'Inter', -apple-system, sans-serif; line-height: 1.6; color: var(--text); background: var(--bg); margin: 0; padding: 0; }
+        .container { max-width: 800px; margin: 0 auto; padding: 60px 20px; }
+        
+        /* Interactive Toggle Button */
+        #toggle-ui {
+            position: fixed; top: 20px; left: 20px;
+            padding: 8px 16px; background: #000; color: #fff;
+            text-decoration: none; border-radius: 20px; font-size: 0.85rem;
+            font-weight: 600; transition: transform 0.2s; z-index: 1000;
+        }
+        #toggle-ui:hover { transform: scale(1.05); background: var(--accent); }
+
+        header { border-bottom: 2px solid #eee; padding-bottom: 20px; margin-bottom: 30px; }
+        h1 { margin: 0; font-size: 2.5rem; letter-spacing: -1px; }
+        .contact { color: var(--gray); font-size: 0.95rem; margin-top: 5px; }
+        
+        h2 { font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 40px; }
+        .item { margin-bottom: 25px; }
+        .item-head { display: flex; justify-content: space-between; font-weight: 700; }
+        .sub-head { display: flex; justify-content: space-between; font-style: italic; color: var(--gray); font-size: 0.95rem; }
+        ul { margin: 5px 0; padding-left: 20px; }
+        li { margin-bottom: 6px; }
+        
+        .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .skills-tag { font-weight: 600; color: var(--accent); }
     </style>
 </head>
 <body>
-    <h1>Floor Generator</h1>
-    <p>1. Wait for the image below to appear.</p>
-    <p>2. Click "Download Floor" and save it as <b>complete_floor.png</b> in your <b>assets</b> folder.</p>
-    
-    <button id="downloadBtn" style="display:none;">Download Floor</button>
-    <br>
-    <canvas id="canvas"></canvas>
 
-    <script>
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        const img = new Image();
-        img.src = 'assets/floor.png'; // Make sure floor.png is in assets folder relative to this file
+<a href="interactive.html" id="toggle-ui">✨ Interactive Mode</a>
 
-        // Settings for the output image
-        // 3000x1200 should cover most monitor widths and the height of the leaf zone
-        const WIDTH = 3000;
-        const HEIGHT = 1200; 
-        const TILE_SIZE = 600; 
+<div class="container">
+    <header>
+        <h1>Roy Liu</h1>
+        <div class="contact">609-721-0429 | royrliu@utexas.edu | Austin, TX</div>
+    </header>
 
-        img.onload = () => {
-            canvas.width = WIDTH;
-            canvas.height = HEIGHT;
+    <section>
+        <h2>Education</h2>
+        <div class="item">
+            <div class="item-head">University of Texas at Austin</div>
+            <div class="sub-head">Bachelor of Science in Computer Science, GPA: 3.94/4.0 <span>Expected May 2028</span></div>
+            <p><strong>Relevant Coursework:</strong> Data Structures, Discrete Mathematics, Statistics, Multivariable Calculus</p>
+        </div>
+    </section>
 
-            // 1. Draw tiles with random rotation
-            const cols = Math.ceil(WIDTH / TILE_SIZE) + 1;
-            const rows = Math.ceil(HEIGHT / TILE_SIZE) + 1;
+    <section>
+        <h2>Experience</h2>
+        <div class="item">
+            <div class="item-head">Undergraduate Researcher, GAMMA Lab</div>
+            <div class="sub-head">University of Texas at Austin <span>Oct 2025 – Present</span></div>
+            <ul>
+                <li>Developed a Bayesian inference framework using Physics-Informed SGLD to reconstruct 9D Hamiltonian parameters from experimental data.</li>
+                <li>Architected a differentiable Modulated SIREN surrogate with 13 inputs, leveraging a global latent conditioning space to achieve ∼0.02 MSE.</li>
+                <li>Engineered a high-throughput data generation pipeline in Julia on TACC supercomputers, producing 30GB of data.</li>
+            </ul>
+        </div>
 
-            for (let r = 0; r < rows; r++) {
-                for (let c = 0; c < cols; c++) {
-                    ctx.save();
-                    // Center of the tile
-                    let cx = c * TILE_SIZE; 
-                    let cy = r * TILE_SIZE;
+        <div class="item">
+            <div class="item-head">Simulation & Validation Team, Longhorn Racing</div>
+            <div class="sub-head">Longhorn Racing Combustion <span>Sep 2025 – Present</span></div>
+            <ul>
+                <li>Modeled limited-slip differential torque behavior using custom differential-algebraic equations in Julia.</li>
+                <li>Analyzed damping curve data and performed interpolation to optimize vehicle performance.</li>
+                <li>Developed kinematics model features in Python/Matplotlib, including anti-roll bar angles.</li>
+            </ul>
+        </div>
+    </section>
 
-                    // Random 90-degree rotation (0, 90, 180, 270)
-                    const angle = Math.floor(Math.random() * 4) * (Math.PI / 2);
-                    
-                    ctx.translate(cx, cy);
-                    ctx.rotate(angle);
-                    ctx.drawImage(img, -TILE_SIZE/2, -TILE_SIZE/2, TILE_SIZE, TILE_SIZE);
-                    ctx.restore();
-                }
-            }
+    <section>
+        <h2>Projects</h2>
+        <div class="item">
+            <div class="item-head">Short-term Financial Stock Modeler</div>
+            <div class="sub-head">Python, XGBoost, Machine Learning <span>2024 – 2025</span></div>
+            <ul>
+                <li>Engineered ML models (XGBoost, CNNs, SVMs) to predict stock movements with 86% accuracy.</li>
+                <li>Integrated model with Alpaca API for real-time automated trading simulations.</li>
+            </ul>
+        </div>
+    </section>
 
-            // 2. Darken the result
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.4)'; // 40% darkness overlay
-            ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    <section>
+        <h2>Technical Skills</h2>
+        <div class="skills-grid">
+            <div><span class="skills-tag">Languages:</span> Java, Python, Julia</div>
+            <div><span class="skills-tag">Libraries:</span> PyTorch, scikit-learn, NumPy, HDF5</div>
+            <div><span class="skills-tag">Systems:</span> Linux, Git, MySQL, TACC</div>
+        </div>
+    </section>
+</div>
 
-            // Enable download
-            const btn = document.getElementById('downloadBtn');
-            btn.style.display = 'inline-block';
-            btn.onclick = () => {
-                const link = document.createElement('a');
-                link.download = 'complete_floor.png';
-                link.href = canvas.toDataURL();
-                link.click();
-            };
-        };
-    </script>
 </body>
 </html>
