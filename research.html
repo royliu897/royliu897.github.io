@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Project | GAMMA Lab</title>
+    <style>
+        :root {
+            --bg: #f8f9fa;
+            --text: #1a1a1a;
+            --accent: #2563eb;
+            --gray: #666;
+            --light-gray: #e9ecef;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.7;
+            color: var(--text);
+            background: var(--bg);
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+        #back-to-home {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            background: #000;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        #back-to-home:hover {
+            transform: scale(1.05);
+            background: var(--accent);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+        .project-image {
+            width: 100%;
+            max-width: 800px;
+            display: block;
+            margin: 0 auto 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .content-section {
+            background: #fff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+        p {
+            margin-bottom: 20px;
+        }
+        .highlight {
+            font-weight: 600;
+            color: var(--accent);
+        }
+        ul {
+            padding-left: 20px;
+            list-style-type: disc;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<a href="index.html" id="back-to-home">← Back to Home</a>
+
+<div class="container">
+    <header>
+        <h1>Physics-Informed Deep Learning for Materials</h1>
+        <p class="subtitle">Reconstructing 9D Hamiltonian Parameters at GAMMA Lab</p>
+    </header>
+
+    <img src="assets/research.png" alt="Comparison of Ground Truth vs SIREN Prediction" class="project-image">
+
+    <section class="content-section">
+        <h2>Project Overview</h2>
+        <p>
+            This project focused on developing a surrogate model to predict the scattering intensity of materials based on their Hamiltonian parameters and energy-momentum coordinates. The core challenge was to create a model that was both highly accurate and differentiable, enabling its use in an inverse problem framework to reconstruct 9D Hamiltonian parameters from experimental data.
+        </p>
+    </section>
+
+    <section class="content-section">
+        <h2>Key Achievements & Methodology</h2>
+        <ul>
+            <li>
+                <span class="highlight">Custom Modulated SIREN Model:</span> Architected a differentiable Modulated SIREN surrogate model with 13 inputs (9 Hamiltonian, 4 energy-momentum). This architecture was chosen for its ability to represent complex, high-frequency signals.
+            </li>
+            <li>
+                <span class="highlight">30GB Julia-to-Python Pipeline:</span> Engineered a robust data pipeline to handle the generation of a 30GB dataset (7.5 billion points) using Latin Hypercube Sampling in Julia on TACC supercomputers. I resolved the notoriously difficult Julia-to-Python memory layout interoperability issues to seamlessly transport and transpose data for training in PyTorch.
+            </li>
+            <li>
+                <span class="highlight">Custom Weighted Loss Function:</span> A critical innovation was the design of a custom loss function. The data is highly sparse, with significant information concentrated in narrow peaks. A standard Mean Squared Error (MSE) loss would cause the model to "collapse" and predict the background, ignoring the peaks. I designed a <span class="highlight">weighted loss that emphasizes the peaks</span>, preventing this collapse and ensuring high accuracy on the critical features. The loss function was carefully balanced to remain robust against outliers.
+            </li>
+            <li>
+                <span class="highlight">HPC Training Environment:</span> Configured and managed a high-performance computing environment on the Texas Advanced Computing Center (TACC). I wrote efficient Bash Slurm scripts to handle data loading and distributed training on powerful NVIDIA A100 GPUs.
+            </li>
+        </ul>
+    </section>
+</div>
+
+</body>
+</html>
