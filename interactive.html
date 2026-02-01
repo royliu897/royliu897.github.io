@@ -197,36 +197,20 @@ function init() {
     requestAnimationFrame(loop);
 }
 
-// RESTORED: Original physics logic with Preloading fix
+// RESTORED & BOOSTED: Physics force multiplied by ~15x to compensate for single-trigger fix
 function triggerSitExplosion(x, y, icon) {
     dog.sitLock = true;
     dog.vx = 0; dog.vy = 0; dog.x = x; dog.y = y;
 
     if (icon) {
         icon.revealed = true;
-        
-        // 1. Fetch the page (Preload)
-        const loadPage = fetch(icon.path)
-            .then(response => {
-                if (!response.ok) throw new Error("Network response was not ok");
-                return response;
-            })
-            .catch(error => {
-                console.log("Preload failed or local file, proceeding anyway");
-            });
-
-        // 2. Minimum wait time for animation (500ms)
+        // Preload & Delay logic
+        const loadPage = fetch(icon.path).then(res => res).catch(e => console.log(e));
         const minWait = new Promise(resolve => setTimeout(resolve, 500));
-
-        // 3. Wait for BOTH loading to finish and animation to finish
         Promise.all([loadPage, minWait]).then(() => {
             window.location.href = icon.path;
         });
-        
-        // Note: We do NOT unlock the dog here if it's an icon, 
-        // because we are about to leave the page.
     } else {
-        // Only unlock if it wasn't an icon click
         setTimeout(() => { dog.sitLock = false; dog.targetAction = null; }, 500);
     }
 
@@ -236,16 +220,19 @@ function triggerSitExplosion(x, y, icon) {
         let d = Math.hypot(dx, dy);
         if (d < sitRadius) {
             let angle = Math.atan2(dy, dx);
-            l.vx += (Math.cos(angle) * 0.6) + (Math.random() - 0.5) * 0.3;
-            l.vy += Math.sin(angle) * 0.4;
-            l.vz += (0.8 + Math.random() * 0.2) * V_SCALE; 
-            l.vrX = (Math.random() - 0.5) * 0.2; 
+            
+            // --- PHYSICS BOOST HERE ---
+            // Previously: Math.cos(angle) * 0.6
+            // Now: Multiplied by ~15 because we only trigger ONCE now instead of 60 times/sec
+            l.vx += (Math.cos(angle) * 10) + (Math.random() - 0.5) * 2;
+            l.vy += Math.sin(angle) * 8; 
+            l.vz += (6 + Math.random() * 3) * V_SCALE; 
+            l.vrX = (Math.random() - 0.5) * 1.5; 
             l.layer = 1.0; 
         }
     });
 }
 
-// RESTORED: Soft boundary targeting
 function getSoftTargetY(mouseY, topLimit, botLimit) {
     if (mouseY >= topLimit && mouseY <= botLimit) return mouseY;
     let factor = 0.15;
@@ -279,7 +266,6 @@ function loop(time) {
     const topLimit = canvas.height * HORIZON_RATIO;
     const botLimit = canvas.height * (1 - BOTTOM_MARGIN);
 
-    // 1. SKY (Background Layers)
     ctx.fillStyle = '#87CEEB'; 
     ctx.fillRect(0, 0, canvas.width, topLimit);
     drawSkyLayer(assets.sky1, dt, time);
@@ -287,7 +273,6 @@ function loop(time) {
     drawSkyLayer(assets.sky3, dt, time);
     drawSkyLayer(assets.sky4, dt, time);
 
-    // 2. GROUND BACKGROUND
     if (assets.complete_floor.img.complete) {
         ctx.drawImage(assets.complete_floor.img, 0, topLimit, canvas.width, botLimit - topLimit);
     } else {
@@ -295,11 +280,9 @@ function loop(time) {
         ctx.fillRect(0, topLimit, canvas.width, botLimit - topLimit);
     }
     
-    // Black bar at bottom (behind the UI Footer)
     ctx.fillStyle = '#000000'; 
     ctx.fillRect(0, botLimit, canvas.width, canvas.height - botLimit);
 
-    // --- DOG LOGIC (Restored Soft Target Y) ---
     let targetX = dog.targetAction ? dog.targetAction.x : mouse.x;
     let rawTargetY = dog.targetAction ? dog.targetAction.y : getSoftTargetY(mouse.y, topLimit, botLimit);
     let targetY = Math.max(topLimit + 5, Math.min(botLimit - 5, rawTargetY));
@@ -307,7 +290,7 @@ function loop(time) {
     let dx = targetX - dog.x, dy = targetY - dog.y;
     let dist = Math.hypot(dx, dy);
     
-    // CRITICAL FIX: Added !dog.sitLock check to prevent loop spasm
+    // The !dog.sitLock ensures we only call triggerSitExplosion ONCE
     if (dog.targetAction && dist < 15 && !dog.sitLock) {
         triggerSitExplosion(dog.targetAction.x, dog.targetAction.y, dog.targetAction.icon);
     }
@@ -322,11 +305,9 @@ function loop(time) {
             dog.facing = dog.vx > 0 ? 'right' : 'left';
         } else {
             dog.vx *= 0.8; dog.vy *= 0.8;
-            // Only update facing if user is actively moving mouse
             if(Math.abs(mouse.x - dog.x) > 10) dog.facing = (mouse.x > dog.x) ? 'right' : 'left';
         }
         
-        // --- TREE COLLISION CHECK ---
         let nextX = dog.x + dog.vx * dt;
         let nextY = dog.y + dog.vy * dt;
         let collided = false;
@@ -356,7 +337,6 @@ function loop(time) {
         dog.row = (dog.facing === 'right' ? 6 : 7); dog.col = Math.floor(Date.now() / 100) % 4; 
     }
 
-    // --- RENDER SORTING ---
     let renderList = [
         ...leaves.map(l => ({ type: 'leaf', y: l.y, d: l })),
         ...icons.map(i => ({ type: 'icon', y: i.y, d: i })),
@@ -370,7 +350,7 @@ function loop(time) {
         if (obj.type === 'leaf') {
             let l = obj.d;
             let dDog = Math.hypot(l.x - dog.x, l.y - (dog.y + 10));
-            // Interaction
+            // Interaction (Walking)
             if (dDog < 50*p && moving && !dog.sitLock) {
                 if (l.layer > 0.7) { 
                     let pushAngle = Math.atan2(l.y - dog.y, l.x - dog.x);
