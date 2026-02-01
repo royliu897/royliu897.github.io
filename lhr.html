@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Racing Analysis | LHR Combustion</title>
+    <style>
+        :root {
+            --bg: #f8f9fa;
+            --text: #1a1a1a;
+            --accent: #d90429; /* Racing Red Accent */
+            --gray: #666;
+            --light-gray: #e9ecef;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.7;
+            color: var(--text);
+            background: var(--bg);
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+        #back-to-home {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            background: #000;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        #back-to-home:hover {
+            transform: scale(1.05);
+            background: var(--accent);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+        .project-image {
+            width: 100%;
+            max-width: 800px;
+            display: block;
+            margin: 0 auto 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            background: #fff;
+            padding: 10px;
+        }
+        .content-section {
+            background: #fff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+        p {
+            margin-bottom: 20px;
+        }
+        .highlight {
+            font-weight: 600;
+            color: var(--accent);
+        }
+        ul {
+            padding-left: 20px;
+            list-style-type: disc;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .tech-stack {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .tech-badge {
+            background: var(--light-gray);
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+
+<a href="interactive.html" id="back-to-home">← Back to Interactive</a>
+
+<div class="container">
+    <header>
+        <h1>Formula Student Data Analysis</h1>
+        <p class="subtitle">Vehicle Dynamics & Telemetry at Longhorn Racing Combustion</p>
+    </header>
+
+    <img src="assets/lhr.png" alt="Laptime Sensitivity Analysis" class="project-image">
+
+    <section class="content-section">
+        <h2>Context: FSAE & LHR Combustion</h2>
+        <p>
+            Longhorn Racing (LHR) Combustion is a student-led engineering team that designs, builds, and races a Formula-style race car to compete in the global Formula SAE (Society of Automotive Engineers) competition. In this high-performance environment, design choices—such as adding an aerodynamic package or reducing chassis weight—must be justified by rigorous simulation rather than intuition.
+        </p>
+    </section>
+
+    <section class="content-section">
+        <h2>Simulation: Lap Time Sensitivity</h2>
+        <p>
+            The 3D surface plot above visualizes a <strong>Lap Time Sensitivity Analysis</strong> performed to guide high-level design architecture.
+        </p>
+        <ul>
+            <li><span class="highlight">The Variables:</span> The plot correlates <strong>Coefficient of Drag (Cd)</strong> on the X-axis, <strong>Added Weight</strong> (lbs) on the Y-axis, and the resulting <strong>Lap Time</strong> (seconds) on the Z-axis (represented by color).</li>
+            <li><span class="highlight">The Trade-off:</span> In vehicle dynamics, adding aerodynamic devices (like wings) increases cornering speed but adds both weight and drag. This simulation helps determine the "break-even" point.</li>
+            <li><span class="highlight">The Insight:</span> The "Endurance Mode" simulation reveals that lap time is highly sensitive to weight penalties. The gradient shows that even with low drag (low Cd), adding weight pushes the lap time from the efficient purple region (approx 162s) into the slower yellow region (166s+). This data quantified the value of every pound saved on the chassis, influencing our decision to prioritize lightweighting over complex, high-drag aero structures for specific event configurations.</li>
+        </ul>
+    </section>
+
+    <section class="content-section">
+        <h2>Data Engineering & Pipeline Development</h2>
+        <p>
+            Beyond simulation, my role involved building robust pipelines to process the immense amount of data generated during testing and design validation.
+        </p>
+        <ul>
+            <li>
+                <span class="highlight">Damper Curve Interpolation:</span> I developed algorithms to process force-velocity data from shock dynamometers. Using custom interpolation techniques, I mapped non-linear damper behaviors into our full-vehicle simulations, allowing us to predict transient response over bumps and curbs with high fidelity.
+            </li>
+            <li>
+                <span class="highlight">Haltech Dyno Data Parsing:</span> I automated the extraction of engine performance data from our Haltech ECU logs. This involved writing scripts to parse raw CSV and binary logs, clean the noisy sensor signals, and inject them into our SQL database for historical trend analysis.
+            </li>
+        </ul>
+    </section>
+
+    <section class="content-section">
+        <h2>Technologies Used</h2>
+        <div class="tech-stack">
+            <span class="tech-badge">Python (Pandas, Numpy, Matplotlib)</span>
+            <span class="tech-badge">Julia</span>
+            <span class="tech-badge">SQL</span>
+            <span class="tech-badge">CSV Parsing</span>
+            <span class="tech-badge">Vehicle Dynamics Simulation</span>
+        </div>
+    </section>
+</div>
+
+</body>
+</html>
