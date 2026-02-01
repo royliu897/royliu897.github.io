@@ -70,7 +70,7 @@
 <a href="index.html" id="backToNormal">← Professional View</a>
 
 <div id="footer">
-    <span>Click on these to learn more:</span>
+    <span>Find and click on these items:</span>
     
     <div class="legend-icons">
         <img src="assets/car.png" alt="Racing" title="Racing">
@@ -284,10 +284,7 @@ function loop(time) {
     let dx = targetX - dog.x, dy = targetY - dog.y;
     let dist = Math.hypot(dx, dy);
     
-    // FIX APPLIED HERE: Added !dog.sitLock check to prevent spamming the trigger
-    if (dog.targetAction && dist < 15 && !dog.sitLock) {
-        triggerSitExplosion(dog.targetAction.x, dog.targetAction.y, dog.targetAction.icon);
-    }
+    if (dog.targetAction && dist < 15) triggerSitExplosion(dog.targetAction.x, dog.targetAction.y, dog.targetAction.icon);
 
     if (!dog.sitLock) {
         if (dog.targetAction) {
