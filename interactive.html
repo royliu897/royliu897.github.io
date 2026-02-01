@@ -101,7 +101,8 @@ const V_SCALE = 0.8;
 const SKY_ID = Math.ceil(Math.random() * 8);
 
 let mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
-let dog = { x: 200, y: 0, vx: 0, vy: 0, row: 1, col: 0, facing: 'right', sitLock: false, targetAction: null };
+// Added 'navigating' flag to fix the infinite reload loop
+let dog = { x: 200, y: 0, vx: 0, vy: 0, row: 1, col: 0, facing: 'right', sitLock: false, targetAction: null, navigating: false };
 let leaves = [];
 let icons = [];
 let trees = []; 
@@ -197,37 +198,43 @@ function init() {
     requestAnimationFrame(loop);
 }
 
-// RESTORED & BOOSTED: Physics force multiplied by ~15x to compensate for single-trigger fix
+// RESTORED: Continuous Physics Force
+// MODIFIED: Navigation trigger is now guarded by !dog.navigating so it only happens once
 function triggerSitExplosion(x, y, icon) {
     dog.sitLock = true;
     dog.vx = 0; dog.vy = 0; dog.x = x; dog.y = y;
 
     if (icon) {
-        icon.revealed = true;
-        // Preload & Delay logic
-        const loadPage = fetch(icon.path).then(res => res).catch(e => console.log(e));
-        const minWait = new Promise(resolve => setTimeout(resolve, 500));
-        Promise.all([loadPage, minWait]).then(() => {
-            window.location.href = icon.path;
-        });
+        // Only queue the navigation ONE time.
+        if (!dog.navigating) {
+            dog.navigating = true; // Lock it so we don't spam the browser
+            icon.revealed = true;
+
+            // Preload to ensure smooth transition
+            fetch(icon.path).catch(() => {}); 
+            
+            setTimeout(() => {
+                window.location.href = icon.path;
+            }, 600); // 600ms delay to let the explosion happen
+        }
     } else {
-        setTimeout(() => { dog.sitLock = false; dog.targetAction = null; }, 500);
+        // If just sitting on ground (no icon), release lock after delay
+        if(!dog.navigating) {
+            setTimeout(() => { dog.sitLock = false; dog.targetAction = null; }, 500);
+        }
     }
 
+    // PHYSICS (This runs every frame now, restoring the strong effect)
     const sitRadius = 85; 
     leaves.forEach(l => {
         let dx = l.x - x; let dy = l.y - y;
         let d = Math.hypot(dx, dy);
         if (d < sitRadius) {
             let angle = Math.atan2(dy, dx);
-            
-            // --- PHYSICS BOOST HERE ---
-            // Previously: Math.cos(angle) * 0.6
-            // Now: Multiplied by ~15 because we only trigger ONCE now instead of 60 times/sec
-            l.vx += (Math.cos(angle) * 10) + (Math.random() - 0.5) * 2;
-            l.vy += Math.sin(angle) * 8; 
-            l.vz += (6 + Math.random() * 3) * V_SCALE; 
-            l.vrX = (Math.random() - 0.5) * 1.5; 
+            l.vx += (Math.cos(angle) * 0.6) + (Math.random() - 0.5) * 0.3;
+            l.vy += Math.sin(angle) * 0.4; 
+            l.vz += (0.8 + Math.random() * 0.2) * V_SCALE; 
+            l.vrX = (Math.random() - 0.5) * 0.2; 
             l.layer = 1.0; 
         }
     });
@@ -290,8 +297,8 @@ function loop(time) {
     let dx = targetX - dog.x, dy = targetY - dog.y;
     let dist = Math.hypot(dx, dy);
     
-    // The !dog.sitLock ensures we only call triggerSitExplosion ONCE
-    if (dog.targetAction && dist < 15 && !dog.sitLock) {
+    // RESTORED: This condition now runs EVERY FRAME when close, causing the explosion force to build up
+    if (dog.targetAction && dist < 15) {
         triggerSitExplosion(dog.targetAction.x, dog.targetAction.y, dog.targetAction.icon);
     }
 
