@@ -197,16 +197,27 @@ function init() {
     requestAnimationFrame(loop);
 }
 
-// RESTORED: Original physics logic
+// RESTORED & MODIFIED: Original physics logic with Preloading
 function triggerSitExplosion(x, y, icon) {
     dog.sitLock = true;
     dog.vx = 0; dog.vy = 0; dog.x = x; dog.y = y;
-    if (icon) {
-        setTimeout(() => { window.location.href = icon.path; }, 500);
-        icon.revealed = true;
-    }
-    setTimeout(() => { dog.sitLock = false; dog.targetAction = null; }, 500);
 
+    if (icon) {
+        icon.revealed = true;
+        // Preload Logic: Fetch the page, wait for both fetch AND animation (500ms) to finish
+        Promise.all([
+            fetch(icon.path).catch(e => console.log('Preload failed, continuing anyway')),
+            new Promise(resolve => setTimeout(resolve, 500)) 
+        ]).then(() => {
+            window.location.href = icon.path;
+        });
+        // Note: We DO NOT unlock sitLock here. The dog stays sitting until the page switches.
+    } else {
+        // Only unlock if we aren't navigating to a new page
+        setTimeout(() => { dog.sitLock = false; dog.targetAction = null; }, 500);
+    }
+
+    // --- LEAF PHYSICS (UNTOUCHED) ---
     const sitRadius = 85; 
     leaves.forEach(l => {
         let dx = l.x - x; let dy = l.y - y;
