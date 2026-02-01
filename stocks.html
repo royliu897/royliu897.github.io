@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Modeling | Algorithmic Trading</title>
+    <style>
+        :root {
+            --bg: #f8f9fa;
+            --text: #1a1a1a;
+            --accent: #10b981; /* Financial Green Accent */
+            --gray: #666;
+            --light-gray: #e9ecef;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.7;
+            color: var(--text);
+            background: var(--bg);
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+        #back-to-home {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            background: #000;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        #back-to-home:hover {
+            transform: scale(1.05);
+            background: var(--accent);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+        .project-image {
+            width: 100%;
+            max-width: 850px;
+            display: block;
+            margin: 0 auto 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        .content-section {
+            background: #fff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+        p {
+            margin-bottom: 20px;
+        }
+        .highlight {
+            font-weight: 600;
+            color: var(--accent);
+        }
+        ul {
+            padding-left: 20px;
+            list-style-type: disc;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .tech-stack {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .tech-badge {
+            background: var(--light-gray);
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+
+<a href="interactive.html" id="back-to-home">← Back to Interactive</a>
+
+<div class="container">
+    <header>
+        <h1>Algorithmic Trading & ML</h1>
+        <p class="subtitle">Predictive Modeling for Large Cap Stocks</p>
+    </header>
+
+    <img src="assets/stocks.png" alt="Model Output Terminal" class="project-image">
+
+    <section class="content-section">
+        <h2>Project Philosophy: Interpretability First</h2>
+        <p>
+            The screenshot above shows the live output of my model generating buy signals for the day. This project was not just about predicting price movements, but about understanding the drivers behind them. I adopted a strategy of <span class="highlight">prioritizing interpretability during experimentation</span>, and only switching to aggressive optimization once the underlying features were proven.
+        </p>
+    </section>
+
+    <section class="content-section">
+        <h2>Methodology & Architecture</h2>
+        <ul>
+            <li>
+                <span class="highlight">Model Selection Journey:</span> I experimented with a wide range of architectures, including CNNs (treating charts as images), Linear Regression, SVD, and classification models. I initially settled on a <strong>Random Forest</strong> regressor. Unlike neural networks, Random Forest is a "white box" model. It allowed me to use feature importance metrics to verify which financial indicators (e.g., RSI, MACD, Volume Delta) were actually driving predictions, rather than blindly trusting a black box.
+            </li>
+            <li>
+                <span class="highlight">Optimization with XGBoost:</span> Once I was confident in my feature set, I migrated the architecture to <strong>XGBoost</strong> to maximize predictive performance and execution speed.
+            </li>
+            <li>
+                <span class="highlight">Advanced Tuning Strategy:</span> I implemented a custom two-stage hyperparameter tuning loop. I first used <strong>Random Search</strong> to explore the global parameter space and identify regions of interest. Once a promising region was found, the system automatically switched to a fine-grained <strong>Grid Search</strong> to mathematically optimize the model configuration.
+            </li>
+            <li>
+                <span class="highlight">Data Engineering:</span> I designed a hybrid data storage system. I utilized <strong>Parquet files</strong> for high-performance I/O during heavy training loads, while maintaining <strong>CSV mirrors</strong> for easy human readability and debugging during the development phase.
+            </li>
+        </ul>
+    </section>
+
+    <section class="content-section">
+        <h2>Integration & Deployment</h2>
+        <p>
+            The model is not a static script; it is integrated directly with the <strong>Alpaca API</strong>. This allows the system to function as a fully autonomous paper-trading bot, pulling live market data, generating inference, and executing buy/sell orders in real-time to validate the strategy against live market conditions.
+        </p>
+    </section>
+
+    <section class="content-section">
+        <h2>Technologies Used</h2>
+        <div class="tech-stack">
+            <span class="tech-badge">Python (Pandas, Numpy)</span>
+            <span class="tech-badge">Scikit-Learn</span>
+            <span class="tech-badge">XGBoost</span>
+            <span class="tech-badge">PyTorch</span>
+            <span class="tech-badge">Alpaca API</span>
+            <span class="tech-badge">Parquet</span>
+        </div>
+    </section>
+</div>
+
+</body>
+</html>
