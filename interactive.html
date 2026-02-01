@@ -33,13 +33,13 @@
             color: #ffffff; 
             font-family: 'Georgia', serif; 
             font-style: italic; 
-            font-size: 1.1rem; /* Slightly bigger */
+            font-size: 1.1rem; 
             letter-spacing: 1px;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.4); /* Shadow to make white pop on sand */
+            text-shadow: 0 1px 3px rgba(0,0,0,0.4); 
         }
 
         /* Icons Container */
-        .legend-icons { display: flex; gap: 40px; align-items: center; } /* Spread out icons */
+        .legend-icons { display: flex; gap: 40px; align-items: center; } 
         .legend-icons img {
             height: 36px; width: auto; opacity: 0.85; 
             filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
@@ -48,7 +48,7 @@
         }
         .legend-icons img:hover { transform: scale(1.1); opacity: 1; }
 
-        /* Reset Button (Now inside footer) */
+        /* Reset Button */
         #resetBtn {
             padding: 8px 16px; 
             background: rgba(255,255,255,0.2);
@@ -70,7 +70,7 @@
 <a href="index.html" id="backToNormal">← Professional View</a>
 
 <div id="footer">
-    <span>Find and click on these items:</span>
+    <span>Click on these to learn more:</span>
     
     <div class="legend-icons">
         <img src="assets/car.png" alt="Racing" title="Racing">
@@ -202,6 +202,8 @@ function triggerSitExplosion(x, y, icon) {
     dog.sitLock = true;
     dog.vx = 0; dog.vy = 0; dog.x = x; dog.y = y;
     if (icon) {
+        // This timeout was firing multiple times before. 
+        // We fixed it by checking sitLock in the loop.
         setTimeout(() => { window.location.href = icon.path; }, 500);
         icon.revealed = true;
     }
@@ -284,7 +286,11 @@ function loop(time) {
     let dx = targetX - dog.x, dy = targetY - dog.y;
     let dist = Math.hypot(dx, dy);
     
-    if (dog.targetAction && dist < 15) triggerSitExplosion(dog.targetAction.x, dog.targetAction.y, dog.targetAction.icon);
+    // FIXED: Added check for !dog.sitLock here.
+    // This prevents triggerSitExplosion from firing every frame while he's sitting.
+    if (dog.targetAction && dist < 15 && !dog.sitLock) {
+        triggerSitExplosion(dog.targetAction.x, dog.targetAction.y, dog.targetAction.icon);
+    }
 
     if (!dog.sitLock) {
         if (dog.targetAction) {
