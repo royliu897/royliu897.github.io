@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap');
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { --bg:#f4f3ed; --text:#17221d; --gray:#65716c; --light-gray:#e6e7e0; margin:0; background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; }
+body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity:.3; background-image:radial-gradient(rgba(21,34,29,.12) .55px,transparent .55px); background-size:6px 6px; }
+#back-to-home { position:fixed; top:22px; left:24px; z-index:10; padding:10px 16px; border:1px solid rgba(23,34,29,.2); border-radius:99px; background:rgba(255,255,255,.78); backdrop-filter:blur(12px); color:var(--text); font-size:.82rem; font-weight:700; text-decoration:none; box-shadow:0 6px 20px rgba(20,35,28,.06); }
+#back-to-home:hover { color:white; background:var(--text); transform:translateY(-2px); }
+.container { width:min(1050px,calc(100% - 40px)); max-width:none; padding:130px 0 90px; }
+header { max-width:850px; margin:0 auto 58px; text-align:left; }
+header::before { content:'SELECTED WORK  /  CASE STUDY'; display:block; margin-bottom:20px; color:var(--accent); font:700 .72rem 'Manrope'; letter-spacing:.14em; }
+h1 { margin:0 0 18px; font:800 clamp(3rem,7vw,5.8rem)/.95 'Manrope'; letter-spacing:-.065em; }
+.subtitle { max-width:650px; margin:0; color:var(--gray); font-size:1.15rem; }
+.project-image { width:100%; max-width:none; max-height:620px; object-fit:contain; margin:0 auto 34px; padding:18px; border:1px solid #dcded6; border-radius:24px; background:#fff; box-shadow:0 25px 70px rgba(29,45,37,.11); }
+.content-section { display:grid; grid-template-columns:240px 1fr; gap:50px; margin:0; padding:48px 10px; border-bottom:1px solid #d7dad2; border-radius:0; background:transparent; box-shadow:none; }
+.content-section h2 { margin:0; color:var(--text); font:750 1.3rem/1.25 'Manrope'; letter-spacing:-.03em; }
+.content-section > p, .content-section > ul, .content-section > div { margin-top:0; }
+p, li { color:#3f4c46; }
+ul { margin-bottom:0; padding-left:20px; }
+li { margin-bottom:14px; }
+.highlight { color:var(--accent); }
+.tech-stack { gap:9px; }
+.tech-badge, .achievement-badge { padding:8px 12px; border:1px solid #d9dcd4; border-radius:99px; background:rgba(255,255,255,.65); color:#35423c; font-size:.82rem; }
+@media(max-width:700px){ #back-to-home{position:absolute;top:15px;left:14px}.container{width:min(100% - 28px,1050px);padding-top:100px}header{margin-bottom:35px}.project-image{padding:8px;border-radius:16px}.content-section{grid-template-columns:1fr;gap:16px;padding:34px 2px} }

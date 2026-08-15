@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roy R. Liu | Interactive Portfolio</title>
     <style>
-        body, html { margin: 0; padding: 0; overflow: hidden; background: #050704; }
+        body, html { margin: 0; padding: 0; overflow: hidden; background: #050704; font-family: Arial, sans-serif; }
         canvas { display: block; }
         
         #backToNormal {
@@ -13,19 +13,19 @@
             padding: 10px 18px; background: rgba(255, 255, 255, 0.1);
             color: #f0f0f0; text-decoration: none; font-family: 'Georgia', serif;
             font-style: italic; font-size: 0.9rem; border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 4px; backdrop-filter: blur(5px); z-index: 200; transition: background 0.3s;
+            border-radius: 999px; backdrop-filter: blur(10px); z-index: 200; transition: background 0.3s;
         }
         #backToNormal:hover { background: rgba(255, 255, 255, 0.2); }
 
         /* FOOTER STYLING */
         #footer {
             position: absolute; bottom: 0; left: 0; width: 100%; height: 10%;
-            background: #b8a47e; /* Sand Tan Color */
-            border-top: 1px solid #8f7d5c;
+            background: rgba(29, 35, 25, .88);
+            border-top: 1px solid rgba(255,255,255,.14);
             display: flex; align-items: center; justify-content: center;
             gap: 50px; /* Spread out elements */
             z-index: 100;
-            box-shadow: 0 -5px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 -8px 30px rgba(0,0,0,0.25); backdrop-filter: blur(14px);
         }
 
         /* Footer Text */
@@ -57,17 +57,31 @@
             font-family: 'Georgia', serif; 
             font-size: 0.9rem;
             cursor: pointer; 
-            border-radius: 4px; 
+            border-radius: 999px; 
             transition: background 0.2s;
             text-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
         #resetBtn:hover { background: rgba(255,255,255,0.4); }
+
+        #world-title { position:absolute; top:22px; right:24px; z-index:150; color:white; text-align:right; text-shadow:0 2px 8px rgba(0,0,0,.35); }
+        #world-title strong { display:block; font:italic 1.15rem Georgia,serif; }
+        #world-title small { opacity:.7; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; }
+        @media (max-width: 700px) {
+            #world-title { display:none; }
+            #footer { height:88px; gap:14px; padding:0 12px; }
+            #footer span { display:none; }
+            .legend-icons { gap:14px; }
+            .legend-icons img { height:28px; }
+            #resetBtn { padding:7px 11px; font-size:.75rem; }
+        }
 
     </style>
 </head>
 <body>
 
 <a href="index.html" id="backToNormal">← Professional View</a>
+
+<div id="world-title"><strong>Roy's field notes</strong><small>Click the ground to explore</small></div>
 
 <div id="footer">
     <span>Find and click on these items:</span>
@@ -89,7 +103,13 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d', { alpha: false });
 
 // --- ENGINE TUNING ---
-const LEAF_COUNT = 3500;    
+// Scale simulation density to the screen and device instead of paying for a
+// desktop-sized scene everywhere. This keeps the field lush without wasting frames.
+const getLeafCount = () => {
+    const areaScale = (innerWidth * innerHeight) / (1440 * 900);
+    const memoryScale = navigator.deviceMemory && navigator.deviceMemory <= 4 ? 0.72 : 1;
+    return Math.round(Math.max(1100, Math.min(2600, 2200 * areaScale * memoryScale)));
+};
 const HORIZON_RATIO = 0.45; 
 const BOTTOM_MARGIN = 0.1;  
 const DEAD_ZONE = 100;       
@@ -107,6 +127,15 @@ let leaves = [];
 let icons = [];
 let trees = []; 
 let lastTime = 0;
+let effects = [];
+let hoveredIcon = null;
+let vignette = null;
+
+function updateVignette() {
+    vignette = ctx.createRadialGradient(canvas.width/2, canvas.height/2, canvas.height*.15, canvas.width/2, canvas.height/2, canvas.width*.72);
+    vignette.addColorStop(0, 'rgba(10,18,12,0)');
+    vignette.addColorStop(1, 'rgba(7,12,8,.22)');
+}
 
 const assets = {
     dog: { src: 'assets/dog.png', img: new Image() },
@@ -132,7 +161,8 @@ function initLeaves() {
     leaves = [];
     const topLimit = canvas.height * HORIZON_RATIO;
     const botLimit = canvas.height * (1 - BOTTOM_MARGIN);
-    for(let i=0; i<LEAF_COUNT; i++) {
+    const leafCount = getLeafCount();
+    for(let i=0; i<leafCount; i++) {
         leaves.push({
             x: Math.random() * canvas.width,
             y: topLimit + Math.random() * (botLimit - topLimit),
@@ -175,6 +205,7 @@ function initEnvironment() {
 function init() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    updateVignette();
     dog.y = canvas.height * 0.7;
     Object.keys(assets).forEach(key => assets[key].img.src = assets[key].src);
     initLeaves();
@@ -192,11 +223,29 @@ function init() {
         const botLimit = canvas.height * (1 - BOTTOM_MARGIN);
         if (e.clientY < topLimit || e.clientY > botLimit) return;
         let clickedIcon = icons.find(i => Math.hypot(mouse.x - i.x, mouse.y - i.y) < 80);
+        effects.push({ x: mouse.x, y: mouse.y, born: performance.now(), color: clickedIcon ? '#f2f5b5' : '#ffffff' });
         dog.targetAction = { x: mouse.x, y: mouse.y, icon: clickedIcon };
     });
     document.getElementById('resetBtn').onclick = (e) => { e.stopPropagation(); initLeaves(); };
     requestAnimationFrame(loop);
 }
+
+let resizeTimer;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        updateVignette();
+        dog.x = Math.min(dog.x, canvas.width - 30);
+        dog.y = Math.min(dog.y, canvas.height * (1 - BOTTOM_MARGIN) - 10);
+        initLeaves();
+        initEnvironment();
+        const top = canvas.height * HORIZON_RATIO;
+        const bottom = canvas.height * (1 - BOTTOM_MARGIN);
+        icons.forEach((icon, i) => { icon.x = (i + 1) * (canvas.width / 5); icon.y = top + (bottom - top) * .4; });
+    }, 180);
+});
 
 // RESTORED: Continuous Physics Force
 // MODIFIED: Navigation trigger is now guarded by !dog.navigating so it only happens once
@@ -268,7 +317,7 @@ function drawSkyLayer(layer, dt, time) {
 }
 
 function loop(time) {
-    const dt = Math.min((time - lastTime) / 16.67, 2) || 1;
+    const dt = Math.min((time - lastTime) / 16.67, 1.5) || 1;
     lastTime = time;
     const topLimit = canvas.height * HORIZON_RATIO;
     const botLimit = canvas.height * (1 - BOTTOM_MARGIN);
@@ -296,6 +345,8 @@ function loop(time) {
 
     let dx = targetX - dog.x, dy = targetY - dog.y;
     let dist = Math.hypot(dx, dy);
+    hoveredIcon = icons.find(i => Math.hypot(mouse.x - i.x, mouse.y - i.y) < 72) || null;
+    canvas.style.cursor = hoveredIcon ? 'pointer' : 'crosshair';
     
     // RESTORED: This condition now runs EVERY FRAME when close, causing the explosion force to build up
     if (dog.targetAction && dist < 15) {
@@ -401,7 +452,14 @@ function loop(time) {
         } else if (obj.type === 'icon') {
             let i = obj.d;
             if (assets[i.id].img.complete) {
-                ctx.setTransform(p, 0, 0, p, i.x, i.y); ctx.rotate(i.rot);
+                const isHovered = hoveredIcon === i;
+                const pulse = isHovered ? 1.06 + Math.sin(time * .008) * .025 : 1;
+                ctx.setTransform(p, 0, 0, p, i.x, i.y);
+                ctx.globalAlpha = isHovered ? .32 : .14;
+                ctx.fillStyle = isHovered ? '#f3f6b0' : '#ffffff';
+                ctx.beginPath(); ctx.ellipse(0, 42, 70 * pulse, 25 * pulse, 0, 0, Math.PI * 2); ctx.fill();
+                ctx.globalAlpha = 1;
+                ctx.scale(pulse, pulse); ctx.rotate(i.rot);
                 ctx.drawImage(assets[i.id].img, -60, -60, 120, 120);
                 if (i.revealed) {
                     ctx.setTransform(1, 0, 0, 1, i.x, i.y + 80*p);
@@ -413,11 +471,32 @@ function loop(time) {
             if (assets.dog.img.complete) {
                 let dW = 135 * p, dH = 160 * p;
                 ctx.setTransform(1, 0, 0, 1, dog.x, dog.y);
+                ctx.globalAlpha = .22;
+                ctx.fillStyle = '#10140e';
+                ctx.beginPath(); ctx.ellipse(0, 3, dW * .3, dH * .1, 0, 0, Math.PI * 2); ctx.fill();
+                ctx.globalAlpha = 1;
                 ctx.drawImage(assets.dog.img, dog.col*DOG_W, dog.row*DOG_H, DOG_W, DOG_H, -dW/2, -dH*0.7, dW, dH);
             }
         }
         ctx.setTransform(1, 0, 0, 1, 0, 0); 
     }
+
+    // Crisp click ripples make commands feel immediate while the dog travels.
+    effects = effects.filter(effect => time - effect.born < 650);
+    effects.forEach(effect => {
+        const age = (time - effect.born) / 650;
+        ctx.globalAlpha = (1 - age) * .65;
+        ctx.strokeStyle = effect.color;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.ellipse(effect.x, effect.y, 12 + age * 48, 5 + age * 18, 0, 0, Math.PI * 2);
+        ctx.stroke();
+    });
+    ctx.globalAlpha = 1;
+
+    // Subtle grade ties the separate pixel assets into one scene.
+    ctx.fillStyle = vignette;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     requestAnimationFrame(loop);
 }
 init();

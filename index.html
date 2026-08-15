@@ -1,270 +1,100 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roy R. Liu | Resume</title>
-    <style>
-        :root { 
-            --bg: #ffffff; 
-            --text: #1a1a1a; 
-            --accent: #2563eb; 
-            --gray: #666; 
-        }
-        body { 
-            font-family: 'Inter', -apple-system, sans-serif; 
-            line-height: 1.6; 
-            color: var(--text); 
-            background: var(--bg); 
-            margin: 0; 
-            padding: 0; 
-            overflow-x: hidden; /* Prevent horizontal scroll from animations */
-        }
-        .container { 
-            max-width: 800px; 
-            margin: 0 auto; 
-            padding: 60px 20px; 
-            /* create space on right for the popup on large screens */
-            padding-right: 20px; 
-        }
-
-        /* Interactive Toggle Button */
-        #toggle-ui {
-            position: fixed; top: 20px; left: 20px;
-            padding: 8px 16px; background: #000; color: #fff;
-            text-decoration: none; border-radius: 20px; font-size: 0.85rem;
-            font-weight: 600; transition: transform 0.2s; z-index: 1000;
-        }
-        #toggle-ui:hover { transform: scale(1.05); background: var(--accent); }
-
-        /* Resume Styling */
-        header { border-bottom: 2px solid #eee; padding-bottom: 20px; margin-bottom: 30px; }
-        h1 { margin: 0; font-size: 2.5rem; letter-spacing: -1px; }
-        .contact { color: var(--gray); font-size: 0.95rem; margin-top: 5px; }
-        
-        h2 { 
-            font-size: 1.2rem; 
-            text-transform: uppercase; 
-            letter-spacing: 1px; 
-            color: var(--accent); 
-            border-bottom: 1px solid #eee; 
-            padding-bottom: 5px; 
-            margin-top: 40px; 
-        }
-        .item { margin-bottom: 25px; position: relative; } /* Relative for observer */
-        .item-head { display: flex; justify-content: space-between; font-weight: 700; }
-        .sub-head { display: flex; justify-content: space-between; font-style: italic; color: var(--gray); font-size: 0.95rem; }
-        ul { margin: 5px 0; padding-left: 20px; }
-        li { margin-bottom: 6px; }
-        
-        .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-        .skills-tag { font-weight: 600; color: var(--accent); }
-
-        /* --- THE MAGIC POPUP --- */
-        #context-popup {
-            position: fixed;
-            top: 50%;
-            right: 5%; /* Positioned to the right */
-            transform: translateY(-50%) translateX(20px);
-            width: 220px;
-            background: white;
-            padding: 10px;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-            opacity: 0; /* Hidden by default */
-            visibility: hidden;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: 100;
-            text-align: center;
-            cursor: pointer;
-            border: 1px solid #eee;
-        }
-
-        #context-popup.visible {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(-50%) translateX(0);
-        }
-
-        #context-popup:hover {
-            transform: translateY(-50%) scale(1.05);
-            box-shadow: 0 15px 50px rgba(0,0,0,0.2);
-        }
-
-        #context-popup img {
-            width: 100%;
-            height: 140px; /* Fixed height for consistency */
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            border: 1px solid #f0f0f0;
-        }
-
-        #context-popup p {
-            margin: 0;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--accent);
-        }
-        
-        /* Mobile Adjustment: Hide popup on small screens to avoid covering text */
-        @media (max-width: 1100px) {
-            #context-popup {
-                display: none;
-            }
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Roy Liu — computer science student, researcher, and builder at UT Austin.">
+  <title>Roy Liu — Researcher & Builder</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <nav class="site-nav shell" aria-label="Main navigation">
+    <a class="brand" href="index.html"><span class="brand-mark">RL</span> Roy Liu</a>
+    <div class="nav-links">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="mailto:royrliu@utexas.edu">Contact</a>
+      <a class="mode-link" href="interactive.html">Explore the world ↗</a>
+    </div>
+  </nav>
 
-<a href="interactive.html" id="toggle-ui">✨ Interactive Mode</a>
-
-<div id="context-popup" onclick="navigateToContext()">
-    <img id="popup-img" src="" alt="Context">
-    <p id="popup-text">View Details →</p>
-</div>
-
-<div class="container">
-    <header>
-        <h1>Roy Liu</h1>
-        <div class="contact">609-721-0429 | royrliu@utexas.edu | Austin, TX</div>
-    </header>
-
-    <section>
-        <h2>Education</h2>
-        <div class="item">
-            <div class="item-head">University of Texas at Austin</div>
-            <div class="sub-head">Bachelor of Science in Computer Science, GPA: 3.94/4.0 <span>Expected May 2028</span></div>
-            <p><strong>Relevant Coursework:</strong> Data Structures, Discrete Mathematics, Statistics, Multivariable Calculus</p>
+  <main>
+    <section class="hero shell reveal">
+      <div>
+        <p class="eyebrow">Computer Science · UT Austin</p>
+        <h1>I build models for the <span class="accent-word">real world.</span></h1>
+      </div>
+      <div class="hero-aside">
+        <p>I’m Roy—a researcher and engineer working where machine learning, simulation, and physical systems meet.</p>
+        <div class="contact-links">
+          <a href="mailto:royrliu@utexas.edu">Email me ↗</a>
+          <a href="tel:+16097210429">609 721 0429</a>
+          <a href="#about">Résumé ↓</a>
         </div>
+      </div>
     </section>
 
-    <section>
-        <h2>Experience</h2>
-        
-        <div class="item" id="section-research" data-img="assets/research.png" data-link="research.html">
-            <div class="item-head">Undergraduate Researcher, GAMMA Lab</div>
-            <div class="sub-head">University of Texas at Austin <span>Oct 2025 – Present</span></div>
-            <ul>
-                <li>Developed a Bayesian inference framework using Physics-Informed SGLD to reconstruct 9D Hamiltonian parameters from experimental data.</li>
-                <li>Architected a differentiable Modulated SIREN surrogate with 13 inputs, leveraging a global latent conditioning space to achieve ∼0.02 MSE.</li>
-                <li>Engineered a high-throughput data generation pipeline in Julia on TACC supercomputers, producing 30GB of data.</li>
-            </ul>
-        </div>
-
-        <div class="item" id="section-lhr" data-img="assets/lhr.png" data-link="lhr.html">
-            <div class="item-head">Simulation & Validation Team, Longhorn Racing</div>
-            <div class="sub-head">Longhorn Racing Combustion <span>Sep 2025 – Present</span></div>
-            <ul>
-                <li>Modeled limited-slip differential torque behavior using custom differential-algebraic equations in Julia.</li>
-                <li>Analyzed damping curve data and performed interpolation to optimize vehicle performance.</li>
-                <li>Developed kinematics model features in Python/Matplotlib, including anti-roll bar angles.</li>
-            </ul>
-        </div>
+    <section class="statement shell reveal">
+      <span class="statement-number">NOW / 2026</span>
+      <p>Reconstructing material parameters with physics-informed deep learning—and modeling vehicle dynamics for Longhorn Racing.</p>
     </section>
 
-    <section>
-        <h2>Projects</h2>
-        
-        <div class="item" id="section-stocks" data-img="assets/stocks.png" data-link="stocks.html">
-            <div class="item-head">Short-term Financial Stock Modeler</div>
-            <div class="sub-head">Python, XGBoost, Machine Learning <span>2024 – 2025</span></div>
-            <ul>
-                <li>Engineered ML models (XGBoost, CNNs, SVMs) to predict stock movements with 86% accuracy.</li>
-                <li>Integrated model with Alpaca API for real-time automated trading simulations.</li>
-            </ul>
-        </div>
+    <section id="work" class="shell">
+      <div class="section-head reveal">
+        <h2>Selected work</h2>
+        <span>Research, engineering & experiments</span>
+      </div>
+      <div class="work-grid">
+        <a class="project-card research reveal" href="research.html">
+          <div class="card-top"><div><span class="card-index">01 / RESEARCH</span><h3>Physics-informed deep learning</h3><p>Reconstructing 9D Hamiltonian parameters with a differentiable neural surrogate.</p></div><span class="arrow">↗</span></div>
+          <div class="visual"><img src="assets/research.png" alt="Ground truth and SIREN model prediction comparison"></div>
+        </a>
+        <a class="project-card racing reveal" href="lhr.html">
+          <div class="card-top"><div><span class="card-index">02 / ENGINEERING</span><h3>Formula Student simulation</h3><p>Turning vehicle dynamics and telemetry into faster design decisions.</p></div><span class="arrow">↗</span></div>
+          <div class="visual"><img src="assets/lhr.png" alt="Lap time sensitivity visualization"></div>
+        </a>
+        <a class="project-card finance reveal" href="stocks.html">
+          <div class="card-top"><div><span class="card-index">03 / MACHINE LEARNING</span><h3>Short-term market modeling</h3><p>An interpretable ML pipeline for live paper-trading experiments.</p></div><span class="arrow">↗</span></div>
+          <div class="visual"><img src="assets/stocks.png" alt="Stock model terminal output"></div>
+        </a>
+        <a class="project-card tennis reveal" href="tennis.html">
+          <div class="card-top"><div><span class="card-index">04 / ATHLETICS</span><h3>Competitive tennis</h3><p>Years of pressure-tested lessons in resilience, focus, and leadership.</p></div><span class="arrow">↗</span></div>
+          <div class="visual"><img src="assets/tennis.png" alt="Roy Liu serving during a tennis match"></div>
+        </a>
+      </div>
     </section>
 
-    <section>
-        <h2>Leadership & Athletics</h2>
-        
-        <div class="item" id="section-tennis" data-img="assets/tennis.png" data-link="tennis.html">
-            <div class="item-head">Competitive Tennis</div>
-            <div class="sub-head">USTA / WW-P High School South <span>2018 – 2024</span></div>
-            <ul>
-                <li>Ranked 3rd at USTA Zonal National Competition.</li>
-                <li>Played 1st Singles, leading high school team to State Finals and County Championship.</li>
-                <li>Developed resilience and time management skills through rigorous daily training.</li>
-            </ul>
+    <section id="about" class="resume shell">
+      <div class="section-head reveal"><h2>Experience</h2><span>The concise version</span></div>
+      <div class="resume-grid reveal">
+        <div class="resume-label">Education</div>
+        <div>
+          <div class="resume-row"><div><h3>University of Texas at Austin</h3><p>B.S. Computer Science · GPA 3.94/4.0</p></div><time>Expected May 2028</time></div>
         </div>
-    </section>
-
-    <section>
-        <h2>Technical Skills</h2>
-        <div class="skills-grid">
-            <div><span class="skills-tag">Languages:</span> Java, Python, Julia</div>
-            <div><span class="skills-tag">Libraries:</span> PyTorch, scikit-learn, NumPy, HDF5</div>
-            <div><span class="skills-tag">Systems:</span> Linux, Git, MySQL, TACC</div>
+        <div class="resume-label">Experience</div>
+        <div>
+          <div class="resume-row"><div><h3>Undergraduate Researcher · GAMMA Lab</h3><p>Physics-informed Bayesian inference, neural surrogates, and high-throughput scientific data pipelines.</p></div><time>Oct 2025 — Now</time></div>
+          <div class="resume-row"><div><h3>Simulation & Validation · Longhorn Racing</h3><p>Vehicle dynamics models, damper curve analysis, and kinematics tooling.</p></div><time>Sep 2025 — Now</time></div>
         </div>
+        <div class="resume-label">Toolkit</div>
+        <div class="skill-list">
+          <span>Python</span><span>Julia</span><span>Java</span><span>PyTorch</span><span>scikit-learn</span><span>NumPy</span><span>Linux</span><span>Git</span><span>MySQL</span><span>TACC / HPC</span>
+        </div>
+      </div>
     </section>
-</div>
+  </main>
 
-<script>
-    // Configuration
-    const popup = document.getElementById('context-popup');
-    const popupImg = document.getElementById('popup-img');
-    let currentLink = '';
-
-    // Logic to update the popup
-    function updatePopup(entry) {
-        if (entry.isIntersecting) {
-            const img = entry.target.getAttribute('data-img');
-            const link = entry.target.getAttribute('data-link');
-            
-            if (img && link) {
-                popupImg.src = img;
-                currentLink = link;
-                popup.classList.add('visible');
-            }
-        } else {
-            // Only hide if we are scrolling OUT of a tracked section and NOT into another one immediately
-            // But for simplicity, we let the next observer triggering handle the transition,
-            // or we hide it if nothing is active.
-            // A simple approach: we check if any tracked element is intersecting.
-        }
+  <footer class="shell"><span>Roy Liu · Austin, Texas</span><span>Built with curiosity © 2026</span></footer>
+  <script>
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const items = document.querySelectorAll('.reveal');
+    if (reduced || !('IntersectionObserver' in window)) items.forEach(item => item.classList.add('visible'));
+    else {
+      const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+        if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+      }), { threshold: .12 });
+      items.forEach(item => observer.observe(item));
     }
-
-    // Navigation function
-    function navigateToContext() {
-        if (currentLink) window.location.href = currentLink;
-    }
-
-    // Set up the Intersection Observer
-    const observerOptions = {
-        root: null,
-        rootMargin: '-20% 0px -20% 0px', // Active when element is in the middle 60% of screen
-        threshold: 0.2
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                updatePopup(entry);
-            }
-        });
-    }, observerOptions);
-
-    // Watch specific sections
-    const trackedSections = document.querySelectorAll('.item[data-img]');
-    trackedSections.forEach(section => observer.observe(section));
-
-    // Optional: Hide popup when scrolling way past everything (e.g. to footer)
-    // You can refine this logic based on preference.
-    window.addEventListener('scroll', () => {
-        let active = false;
-        trackedSections.forEach(section => {
-            const rect = section.getBoundingClientRect();
-            // If section is roughly in middle of screen
-            if (rect.top < window.innerHeight * 0.7 && rect.bottom > window.innerHeight * 0.3) {
-                active = true;
-            }
-        });
-        if (!active) {
-            popup.classList.remove('visible');
-        }
-    });
-</script>
-
+  </script>
 </body>
 </html>
