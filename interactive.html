@@ -123,8 +123,7 @@ const SKY_ID = Math.ceil(Math.random() * 8);
 let mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
 // Added 'navigating' flag to fix the infinite reload loop
 let dog = { kind: 'dog', x: 200, y: 0, vx: 0, vy: 0, row: 1, col: 0, facing: 'right', sitLock: false, targetAction: null, navigating: false };
-let leaves = []; // Short-lived, actively simulated VFX particles.
-let groundLeaves = []; // Dense scenery, rendered once across three depth strata.
+let leaves = [];
 let icons = [];
 let trees = []; 
 let lastTime = 0;
@@ -133,14 +132,7 @@ let hoveredIcon = null;
 let vignette = null;
 const DEPTH_BUCKET_COUNT = 40;
 const depthBuckets = Array.from({ length: DEPTH_BUCKET_COUNT }, () => []);
-const GROUND_LAYER_COUNT = 3;
-const groundCanvases = Array.from({length:GROUND_LAYER_COUNT}, () => document.createElement('canvas'));
-const groundContexts = groundCanvases.map(layer => layer.getContext('2d'));
-const disturbanceVisits = new Map();
-let lastDisturbanceCell = '';
-const MAX_ACTIVE_LEAVES = 560;
-const ACTIVE_GRAVITY = .145;
-let trailDistance = 0;
+const GRAVITY = .39;
 
 function updateVignette() {
     vignette = ctx.createRadialGradient(canvas.width/2, canvas.height/2, canvas.height*.15, canvas.width/2, canvas.height/2, canvas.width*.72);
@@ -168,113 +160,29 @@ const assets = {
     sky4: { src: `assets/Clouds/Clouds ${SKY_ID}/4.png`, img: new Image(), speed: 0.2 }
 };
 
-function renderGroundLeaves() {
-    for (const context of groundContexts) context.clearRect(0, 0, canvas.width, canvas.height);
-    for (const l of groundLeaves) {
-        const image = assets[l.type].img;
-        if (!image.complete || !image.naturalWidth) continue;
-        const p = .5 + l.y / canvas.height;
-        const context = groundContexts[l.layer];
-        context.setTransform(p * Math.sin(l.rotX), l.skew, 0, p * Math.cos(l.rotY), l.x, l.y);
-        context.drawImage(image, l.frame*16, 0, 16, 16, -l.size/2, -l.size/2, l.size, l.size);
-    }
-    for (const context of groundContexts) context.setTransform(1, 0, 0, 1, 0, 0);
-}
-
-function disturbGround(x, y, radius = 28, force = false) {
-    const cellSize = 44;
-    const key = `${Math.floor(x/cellSize)}:${Math.floor(y/cellSize)}`;
-    if (!force && key === lastDisturbanceCell) return;
-    lastDisturbanceCell = key;
-    const visits = disturbanceVisits.get(key) || 0;
-    const layer = GROUND_LAYER_COUNT - 1 - Math.min(visits, GROUND_LAYER_COUNT-1);
-    disturbanceVisits.set(key, visits + 1);
-    const context = groundContexts[layer];
-    context.save();
-    context.globalCompositeOperation = 'destination-out';
-    context.beginPath();
-    context.ellipse(x, y, radius, radius*.52, 0, 0, Math.PI*2);
-    context.fill();
-    context.restore();
-}
-
 function initLeaves() {
-    leaves.length = 0;
-    groundLeaves = [];
-    disturbanceVisits.clear();
-    lastDisturbanceCell = '';
-    for (const layer of groundCanvases) { layer.width = canvas.width; layer.height = canvas.height; }
+    leaves = [];
     const topLimit = canvas.height * HORIZON_RATIO;
     const botLimit = canvas.height * (1 - BOTTOM_MARGIN);
     const leafCount = getLeafCount();
     for(let i=0; i<leafCount; i++) {
-        groundLeaves.push({
+        leaves.push({
+            kind: 'leaf',
             x: Math.random() * canvas.width,
             y: topLimit + Math.random() * (botLimit - topLimit),
+            z: 0, vz: 0, vx: 0, vy: 0,
             rotX: Math.random() * 6, rotY: Math.random() * 6,
+            vrX: 0, vrY: 0,
             type: Math.random() > 0.5 ? 'fallLeaf' : 'springLeaf',
             frame: Math.floor(Math.random()*5),
             size: 40 + Math.random() * 50, 
             skew: (Math.random() - 0.5) * 0.1,
-            layer: Math.floor(Math.random()*GROUND_LAYER_COUNT)
+            waft: Math.random()*10,
+            layer: Math.random(),
+            chaos: .5 + Math.random()
         });
     }
-    renderGroundLeaves();
-    document.getElementById('sim-status').textContent = `${leafCount.toLocaleString()} cached leaves · adaptive VFX`;
-}
-
-function spawnLeaf(x, y, vx, vy, lift, spread = 1) {
-    if (leaves.length >= MAX_ACTIVE_LEAVES) leaves.shift();
-    leaves.push({
-        kind: 'leaf', x: x + (Math.random()-.5)*28*spread, y: y + (Math.random()-.5)*18*spread,
-        z: 2 + Math.random()*5, vx: vx + (Math.random()-.5)*1.7*spread,
-        vy: vy + (Math.random()-.5)*1.15*spread, vz: lift*(.72+Math.random()*.55),
-        rotX: Math.random()*6, rotY: Math.random()*6,
-        vrX: (Math.random()-.5)*.32, vrY: (Math.random()-.5)*.22,
-        type: Math.random()>.5 ? 'fallLeaf' : 'springLeaf', frame: Math.floor(Math.random()*5),
-        size: 46 + Math.random()*42, skew: (Math.random()-.5)*.08,
-        waft: Math.random()*10, chaos: .7+Math.random()*.8,
-        life: 0, maxLife: 48 + Math.random()*38, alpha: 1
-    });
-}
-
-function emitTrail(dt) {
-    const speed = Math.hypot(dog.vx, dog.vy);
-    if (dog.sitLock || speed < 1.2) return;
-    trailDistance += speed * dt;
-    while (trailDistance >= 6) {
-        trailDistance -= 6;
-        const nx = dog.vx / speed, ny = dog.vy / speed;
-        const side = Math.random() < .5 ? -1 : 1;
-        // Stylized paw kick: mostly backward, with a readable sideways fan.
-        spawnLeaf(dog.x - nx*13, dog.y + 4, -nx*(1.4+Math.random()*1.3) - ny*side*.75,
-            -ny*(1.2+Math.random()*1.1) + nx*side*.7, 3.1+speed*.2, .8);
-        if (Math.random() < .42) {
-            spawnLeaf(dog.x - nx*9, dog.y + 5, -nx*(.9+Math.random()*1.4) + ny*side*.8,
-                -ny*(.8+Math.random()) - nx*side*.65, 2.2+speed*.16, .65);
-        }
-        disturbGround(dog.x, dog.y+5, 25);
-    }
-}
-
-function emitSitWave(x, y, impactSpeed, secondary = false) {
-    const count = secondary ? 58 : Math.min(175, 132 + Math.round(impactSpeed*4));
-    for (let i=0; i<count; i++) {
-        const angle = Math.random()*Math.PI*2;
-        const energy = secondary ? 2.2+Math.random()*3.8 : 4.0+Math.random()*6.5;
-        const lift = (secondary ? 4.0+Math.random()*4.2 : 6.2+Math.random()*6.8) * 1.67;
-        spawnLeaf(x + Math.cos(angle)*Math.random()*28, y + Math.sin(angle)*Math.random()*16,
-            Math.cos(angle)*energy, Math.sin(angle)*energy*.68, lift, secondary ? .9 : 1.25);
-    }
-}
-
-function emitSitBurst(x, y, impactSpeed) {
-    // Sitting compresses through every stratum at once.
-    for (let i=0; i<GROUND_LAYER_COUNT; i++) disturbGround(x, y, 42+i*8, true);
-    emitSitWave(x, y, impactSpeed, false);
-    // A delayed inner wave sells compression into the pile and echoes the
-    // accumulated energy of the original effect without an unbounded force.
-    setTimeout(() => emitSitWave(x, y, impactSpeed*.65, true), 85);
+    document.getElementById('sim-status').textContent = `${leafCount.toLocaleString()} interactive leaves · adaptive simulation`;
 }
 
 function initEnvironment() {
@@ -305,8 +213,6 @@ function init() {
     canvas.height = window.innerHeight;
     updateVignette();
     dog.y = canvas.height * 0.7;
-    assets.fallLeaf.img.onload = renderGroundLeaves;
-    assets.springLeaf.img.onload = renderGroundLeaves;
     Object.keys(assets).forEach(key => assets[key].img.src = assets[key].src);
     initLeaves();
     initEnvironment();
@@ -325,7 +231,7 @@ function init() {
         if (e.clientY < topLimit || e.clientY > botLimit) return;
         let clickedIcon = icons.find(i => Math.hypot(mouse.x - i.x, mouse.y - i.y) < 80);
         effects.push({ x: mouse.x, y: mouse.y, born: performance.now(), color: clickedIcon ? '#f2f5b5' : '#ffffff' });
-        dog.targetAction = { x: mouse.x, y: mouse.y, icon: clickedIcon, impacted: false };
+        dog.targetAction = { x: mouse.x, y: mouse.y, icon: clickedIcon };
     });
     document.getElementById('resetBtn').onclick = (e) => { e.stopPropagation(); initLeaves(); };
     requestAnimationFrame(loop);
@@ -348,11 +254,8 @@ window.addEventListener('resize', () => {
     }, 180);
 });
 
-// Apply a single, energy-limited impulse when the dog reaches its target.
+// Preserve the original accumulated sit force; navigation remains guarded.
 function triggerSitExplosion(x, y, icon) {
-    if (!dog.targetAction || dog.targetAction.impacted) return;
-    dog.targetAction.impacted = true;
-    const impactSpeed = Math.hypot(dog.vx, dog.vy);
     dog.sitLock = true;
     dog.vx = 0; dog.vy = 0; dog.x = x; dog.y = y;
 
@@ -367,16 +270,28 @@ function triggerSitExplosion(x, y, icon) {
             
             setTimeout(() => {
                 window.location.href = icon.path;
-            }, 900); // Keep the burst on screen before opening the case study.
+            }, 600);
         }
     } else {
         // If just sitting on ground (no icon), release lock after delay
         if(!dog.navigating) {
-            setTimeout(() => { dog.sitLock = false; dog.targetAction = null; }, 700);
+            setTimeout(() => { dog.sitLock = false; dog.targetAction = null; }, 500);
         }
     }
 
-    emitSitBurst(x, y, impactSpeed);
+    const sitRadiusSq = 85*85;
+    for (const l of leaves) {
+        const dx = l.x-x, dy = l.y-y;
+        const distSq = dx*dx+dy*dy;
+        if (distSq < sitRadiusSq) {
+            const d = Math.sqrt(distSq) || 1;
+            l.vx += dx/d*.6 + (Math.random()-.5)*.3;
+            l.vy += dy/d*.4;
+            l.vz += (.8+Math.random()*.2)*V_SCALE;
+            l.vrX = (Math.random()-.5)*.2;
+            l.layer = 1;
+        }
+    }
 }
 
 function getSoftTargetY(mouseY, topLimit, botLimit) {
@@ -429,7 +344,6 @@ function loop(time) {
     ctx.fillStyle = '#000000'; 
     ctx.fillRect(0, botLimit, canvas.width, canvas.height - botLimit);
     // Thousands of resting leaves cost one composited draw instead of thousands.
-    for (const layer of groundCanvases) ctx.drawImage(layer, 0, 0);
 
     let targetX = dog.targetAction ? dog.targetAction.x : mouse.x;
     let rawTargetY = dog.targetAction ? dog.targetAction.y : getSoftTargetY(mouse.y, topLimit, botLimit);
@@ -440,7 +354,7 @@ function loop(time) {
     hoveredIcon = icons.find(i => Math.hypot(mouse.x - i.x, mouse.y - i.y) < 72) || null;
     canvas.style.cursor = hoveredIcon ? 'pointer' : 'crosshair';
     
-    if (dog.targetAction && dist < 15 && !dog.targetAction.impacted) {
+    if (dog.targetAction && dist < 15) {
         triggerSitExplosion(dog.targetAction.x, dog.targetAction.y, dog.targetAction.icon);
     }
 
@@ -477,7 +391,6 @@ function loop(time) {
     }
 
     let moving = Math.hypot(dog.vx, dog.vy) > 0.4;
-    emitTrail(dt);
     
     if (dog.sitLock) { 
         dog.row = 3; dog.col = (dog.facing === 'right' ? 0 : 2) + Math.floor(Date.now()/300)%2; 
@@ -507,24 +420,35 @@ function loop(time) {
         
         if (obj.kind === 'leaf') {
             let l = obj;
-            l.life += dt;
-            l.x += l.vx*dt; l.y += l.vy*dt; l.z += l.vz*dt;
-            l.vz -= ACTIVE_GRAVITY*dt;
-            const flutter = Math.sin(time*.011 + l.waft)*.055*l.chaos;
-            l.vx = l.vx*Math.pow(.982,dt) + flutter*dt;
-            l.vy *= Math.pow(.985,dt);
-            l.rotX += l.vrX*dt; l.rotY += l.vrY*dt;
-            if (l.z <= 0) {
-                l.z = 0;
-                l.vz = Math.abs(l.vz)>.7 ? -l.vz*.18 : 0;
-                l.vx *= Math.pow(.82,dt); l.vy *= Math.pow(.82,dt);
+            const dogDx=l.x-dog.x, dogDy=l.y-(dog.y+10);
+            const contactRadius=50*p;
+            if (dogDx*dogDx+dogDy*dogDy < contactRadius*contactRadius && moving && !dog.sitLock) {
+                if (l.layer>.7) {
+                    const d=Math.sqrt(dogDx*dogDx+dogDy*dogDy)||1;
+                    l.vx += dogDx/d*1.5+(Math.random()-.5)*.5;
+                    l.vy += dogDy/d*.8;
+                    l.vz += (.08+Math.hypot(dog.vx,dog.vy)*.04)*V_SCALE;
+                    l.vrX *= .85;
+                }
+                if (Math.random()>.5) l.layer=Math.min(1,l.layer+.08);
             }
-            l.alpha = Math.min(1, (l.maxLife-l.life)/14);
+            if (l.z>0 || Math.abs(l.vx)>.1) {
+                l.x+=l.vx*dt; l.y+=l.vy*dt; l.z+=l.vz*dt;
+                l.rotX+=l.vrX*dt; l.rotY+=l.vrY*dt;
+                if (l.z>0) {
+                    l.vz-=GRAVITY*dt;
+                    if (l.vz>0) { l.vx*=.99; l.vy*=.99; l.vrX*=.96; }
+                    else {
+                        l.vx*=.92; l.vy*=.92;
+                        l.vx+=Math.sin(time*.003+l.waft)*(.6*l.chaos);
+                    }
+                } else { l.z=0; l.vz=0; l.vx*=.5; l.vy*=.5; l.vrX=0; }
+                if(l.x<0){l.x=0;l.vx*=-1} if(l.x>canvas.width){l.x=canvas.width;l.vx*=-1}
+                if(l.y<topLimit){l.y=topLimit;l.vy*=-1} if(l.y>botLimit){l.y=botLimit;l.vy*=-1}
+            }
             if (assets[l.type].img.complete) {
-                ctx.globalAlpha = Math.max(0,l.alpha);
                 ctx.setTransform(p * Math.sin(l.rotX), l.skew, 0, p * Math.cos(l.rotY), l.x, l.y - l.z);
                 ctx.drawImage(assets[l.type].img, l.frame*16, 0, 16, 16, -l.size/2, -l.size/2, l.size, l.size);
-                ctx.globalAlpha = 1;
             }
         } else if (obj.kind === 'tree') {
             let t = obj;
@@ -568,11 +492,6 @@ function loop(time) {
         }
         ctx.setTransform(1, 0, 0, 1, 0, 0); 
       }
-    }
-
-    // Retire expired particles in-place; the dense cached bed remains visible.
-    for (let i=leaves.length-1; i>=0; i--) {
-        if (leaves[i].life >= leaves[i].maxLife) leaves.splice(i,1);
     }
 
     // Crisp click ripples make commands feel immediate while the dog travels.
