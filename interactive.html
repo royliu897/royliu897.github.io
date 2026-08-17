@@ -124,7 +124,7 @@ let mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
 // Added 'navigating' flag to fix the infinite reload loop
 let dog = { kind: 'dog', x: 200, y: 0, vx: 0, vy: 0, row: 1, col: 0, facing: 'right', sitLock: false, targetAction: null, navigating: false };
 let leaves = []; // Short-lived, actively simulated VFX particles.
-let groundLeaves = []; // Dense scenery, rendered once to the offscreen layer.
+let groundLeaves = []; // Dense scenery, rendered once across three depth strata.
 let icons = [];
 let trees = []; 
 let lastTime = 0;
@@ -133,8 +133,11 @@ let hoveredIcon = null;
 let vignette = null;
 const DEPTH_BUCKET_COUNT = 40;
 const depthBuckets = Array.from({ length: DEPTH_BUCKET_COUNT }, () => []);
-const groundCanvas = document.createElement('canvas');
-const groundCtx = groundCanvas.getContext('2d');
+const GROUND_LAYER_COUNT = 3;
+const groundCanvases = Array.from({length:GROUND_LAYER_COUNT}, () => document.createElement('canvas'));
+const groundContexts = groundCanvases.map(layer => layer.getContext('2d'));
+const disturbanceVisits = new Map();
+let lastDisturbanceCell = '';
 const MAX_ACTIVE_LEAVES = 560;
 const ACTIVE_GRAVITY = .145;
 let trailDistance = 0;
@@ -166,22 +169,41 @@ const assets = {
 };
 
 function renderGroundLeaves() {
-    groundCtx.clearRect(0, 0, groundCanvas.width, groundCanvas.height);
+    for (const context of groundContexts) context.clearRect(0, 0, canvas.width, canvas.height);
     for (const l of groundLeaves) {
         const image = assets[l.type].img;
         if (!image.complete || !image.naturalWidth) continue;
         const p = .5 + l.y / canvas.height;
-        groundCtx.setTransform(p * Math.sin(l.rotX), l.skew, 0, p * Math.cos(l.rotY), l.x, l.y);
-        groundCtx.drawImage(image, l.frame*16, 0, 16, 16, -l.size/2, -l.size/2, l.size, l.size);
+        const context = groundContexts[l.layer];
+        context.setTransform(p * Math.sin(l.rotX), l.skew, 0, p * Math.cos(l.rotY), l.x, l.y);
+        context.drawImage(image, l.frame*16, 0, 16, 16, -l.size/2, -l.size/2, l.size, l.size);
     }
-    groundCtx.setTransform(1, 0, 0, 1, 0, 0);
+    for (const context of groundContexts) context.setTransform(1, 0, 0, 1, 0, 0);
+}
+
+function disturbGround(x, y, radius = 28, force = false) {
+    const cellSize = 44;
+    const key = `${Math.floor(x/cellSize)}:${Math.floor(y/cellSize)}`;
+    if (!force && key === lastDisturbanceCell) return;
+    lastDisturbanceCell = key;
+    const visits = disturbanceVisits.get(key) || 0;
+    const layer = GROUND_LAYER_COUNT - 1 - Math.min(visits, GROUND_LAYER_COUNT-1);
+    disturbanceVisits.set(key, visits + 1);
+    const context = groundContexts[layer];
+    context.save();
+    context.globalCompositeOperation = 'destination-out';
+    context.beginPath();
+    context.ellipse(x, y, radius, radius*.52, 0, 0, Math.PI*2);
+    context.fill();
+    context.restore();
 }
 
 function initLeaves() {
     leaves.length = 0;
     groundLeaves = [];
-    groundCanvas.width = canvas.width;
-    groundCanvas.height = canvas.height;
+    disturbanceVisits.clear();
+    lastDisturbanceCell = '';
+    for (const layer of groundCanvases) { layer.width = canvas.width; layer.height = canvas.height; }
     const topLimit = canvas.height * HORIZON_RATIO;
     const botLimit = canvas.height * (1 - BOTTOM_MARGIN);
     const leafCount = getLeafCount();
@@ -193,7 +215,8 @@ function initLeaves() {
             type: Math.random() > 0.5 ? 'fallLeaf' : 'springLeaf',
             frame: Math.floor(Math.random()*5),
             size: 40 + Math.random() * 50, 
-            skew: (Math.random() - 0.5) * 0.1
+            skew: (Math.random() - 0.5) * 0.1,
+            layer: Math.floor(Math.random()*GROUND_LAYER_COUNT)
         });
     }
     renderGroundLeaves();
@@ -230,6 +253,7 @@ function emitTrail(dt) {
             spawnLeaf(dog.x - nx*9, dog.y + 5, -nx*(.9+Math.random()*1.4) + ny*side*.8,
                 -ny*(.8+Math.random()) - nx*side*.65, 2.2+speed*.16, .65);
         }
+        disturbGround(dog.x, dog.y+5, 25);
     }
 }
 
@@ -238,13 +262,15 @@ function emitSitWave(x, y, impactSpeed, secondary = false) {
     for (let i=0; i<count; i++) {
         const angle = Math.random()*Math.PI*2;
         const energy = secondary ? 2.2+Math.random()*3.8 : 4.0+Math.random()*6.5;
-        const lift = secondary ? 4.0+Math.random()*4.2 : 6.2+Math.random()*6.8;
+        const lift = (secondary ? 4.0+Math.random()*4.2 : 6.2+Math.random()*6.8) * 1.67;
         spawnLeaf(x + Math.cos(angle)*Math.random()*28, y + Math.sin(angle)*Math.random()*16,
             Math.cos(angle)*energy, Math.sin(angle)*energy*.68, lift, secondary ? .9 : 1.25);
     }
 }
 
 function emitSitBurst(x, y, impactSpeed) {
+    // Sitting compresses through every stratum at once.
+    for (let i=0; i<GROUND_LAYER_COUNT; i++) disturbGround(x, y, 42+i*8, true);
     emitSitWave(x, y, impactSpeed, false);
     // A delayed inner wave sells compression into the pile and echoes the
     // accumulated energy of the original effect without an unbounded force.
@@ -403,7 +429,7 @@ function loop(time) {
     ctx.fillStyle = '#000000'; 
     ctx.fillRect(0, botLimit, canvas.width, canvas.height - botLimit);
     // Thousands of resting leaves cost one composited draw instead of thousands.
-    ctx.drawImage(groundCanvas, 0, 0);
+    for (const layer of groundCanvases) ctx.drawImage(layer, 0, 0);
 
     let targetX = dog.targetAction ? dog.targetAction.x : mouse.x;
     let rawTargetY = dog.targetAction ? dog.targetAction.y : getSoftTargetY(mouse.y, topLimit, botLimit);
