@@ -116,7 +116,7 @@
 <div class="container">
     <header>
         <h1>Formula Student Data Analysis</h1>
-        <p class="subtitle">Vehicle Dynamics & Telemetry at Longhorn Racing Combustion</p>
+        <p class="subtitle">Simulation and data work with Longhorn Racing Combustion</p>
     </header>
 
     <img src="assets/lhr.png" alt="Laptime Sensitivity Analysis" class="project-image">
@@ -124,33 +124,33 @@
     <section class="content-section">
         <h2>Context: FSAE & LHR Combustion</h2>
         <p>
-            Longhorn Racing (LHR) Combustion is a student-led engineering team that designs, builds, and races a Formula-style race car to compete in the global Formula SAE (Society of Automotive Engineers) competition. In this high-performance environment, design choices—such as adding an aerodynamic package or reducing chassis weight—must be justified by rigorous simulation rather than intuition.
+            Longhorn Racing Combustion is UT Austin's Formula SAE combustion team. My work there has mostly been on simulation and data tasks that help the team compare design tradeoffs with something more defensible than "this probably feels faster."
         </p>
     </section>
 
     <section class="content-section">
         <h2>Simulation: Lap Time Sensitivity</h2>
         <p>
-            The 3D surface plot above visualizes a <strong>Lap Time Sensitivity Analysis</strong> performed to guide high-level design architecture.
+            The plot above is a lap-time sensitivity study we used to reason about broad setup and design tradeoffs.
         </p>
         <ul>
-            <li><span class="highlight">The Variables:</span> The plot correlates <strong>Coefficient of Drag (Cd)</strong> on the X-axis, <strong>Added Weight</strong> (lbs) on the Y-axis, and the resulting <strong>Lap Time</strong> (seconds) on the Z-axis (represented by color).</li>
-            <li><span class="highlight">The Trade-off:</span> In vehicle dynamics, adding aerodynamic devices (like wings) increases cornering speed but adds both weight and drag. This simulation helps determine the "break-even" point.</li>
-            <li><span class="highlight">The Insight:</span> The "Endurance Mode" simulation reveals that lap time is highly sensitive to weight penalties. The gradient shows that even with low drag (low Cd), adding weight pushes the lap time from the efficient purple region (approx 162s) into the slower yellow region (166s+). This data quantified the value of every pound saved on the chassis, influencing our decision to prioritize lightweighting over complex, high-drag aero structures for specific event configurations.</li>
+            <li><span class="highlight">What it varies:</span> coefficient of drag, added vehicle mass, and the resulting simulated lap time.</li>
+            <li><span class="highlight">Why it matters:</span> aero can improve cornering performance, but it usually brings both drag and weight penalties.</li>
+            <li><span class="highlight">What we learned:</span> under some event assumptions, extra mass hurt enough that lightweighting mattered more than chasing a more aggressive aero package.</li>
         </ul>
     </section>
 
     <section class="content-section">
         <h2>Data Engineering & Pipeline Development</h2>
         <p>
-            Beyond simulation, my role involved building robust pipelines to process the immense amount of data generated during testing and design validation.
+            Outside the headline plots, a lot of the work was quieter data cleanup and tooling so the simulation stack was easier for the team to use and trust.
         </p>
         <ul>
             <li>
-                <span class="highlight">Damper Curve Interpolation:</span> I developed algorithms to process force-velocity data from shock dynamometers. Using custom interpolation techniques, I mapped non-linear damper behaviors into our full-vehicle simulations, allowing us to predict transient response over bumps and curbs with high fidelity.
+                <span class="highlight">Damper curve processing:</span> I wrote code to clean and interpolate shock dyno force-velocity data so it could be used more directly in vehicle simulations.
             </li>
             <li>
-                <span class="highlight">Haltech Dyno Data Parsing:</span> I automated the extraction of engine performance data from our Haltech ECU logs. This involved writing scripts to parse raw CSV and binary logs, clean the noisy sensor signals, and inject them into our SQL database for historical trend analysis.
+                <span class="highlight">Dyno and ECU data handling:</span> I also worked on parsing and organizing Haltech logs so engine data was easier to inspect and reuse.
             </li>
         </ul>
     </section>

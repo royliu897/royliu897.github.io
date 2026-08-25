@@ -100,7 +100,7 @@
 <div class="container">
     <header>
         <h1>Physics-Informed Deep Learning for Materials</h1>
-        <p class="subtitle">Reconstructing 9D Hamiltonian Parameters at GAMMA Lab</p>
+        <p class="subtitle">Surrogate modeling for inverse problems in the GAMMA Lab</p>
     </header>
 
     <img src="assets/research.png" alt="Comparison of Ground Truth vs SIREN Prediction" class="project-image">
@@ -108,7 +108,7 @@
     <section class="content-section">
         <h2>Project Overview</h2>
         <p>
-            This project focused on developing a surrogate model to predict the scattering intensity of materials based on their Hamiltonian parameters and energy-momentum coordinates. The core challenge was to create a model that was both highly accurate and differentiable, enabling its use in an inverse problem framework to reconstruct 9D Hamiltonian parameters from experimental data.
+            This project is about building a differentiable surrogate model for scattering data so we can use it inside an inverse problem instead of relying only on slower direct simulation.
         </p>
     </section>
 
@@ -116,16 +116,16 @@
         <h2>Key Achievements & Methodology</h2>
         <ul>
             <li>
-                <span class="highlight">Custom Modulated SIREN Model:</span> Architected a differentiable Modulated SIREN surrogate model with 13 inputs (9 Hamiltonian, 4 energy-momentum). This architecture was chosen for its ability to represent complex, high-frequency signals.
+                <span class="highlight">Surrogate model:</span> I worked on a modulated SIREN-style network with 13 inputs: 9 Hamiltonian parameters plus 4 energy-momentum coordinates.
             </li>
             <li>
-                <span class="highlight">30GB Julia-to-Python Pipeline:</span> Engineered a robust data pipeline to handle the generation of a 30GB dataset (7.5 billion points) using Latin Hypercube Sampling in Julia on TACC supercomputers. I resolved the notoriously difficult Julia-to-Python memory layout interoperability issues to seamlessly transport and transpose data for training in PyTorch.
+                <span class="highlight">Data pipeline:</span> I helped move a large Julia-generated dataset into a Python training workflow on TACC, including some of the annoying layout and interoperability issues that come with crossing that boundary.
             </li>
             <li>
-                <span class="highlight">Custom Weighted Loss Function:</span> A critical innovation was the design of a custom loss function. The data is highly sparse, with significant information concentrated in narrow peaks. A standard Mean Squared Error (MSE) loss would cause the model to "collapse" and predict the background, ignoring the peaks. I designed a <span class="highlight">weighted loss that emphasizes the peaks</span>, preventing this collapse and ensuring high accuracy on the critical features. The loss function was carefully balanced to remain robust against outliers.
+                <span class="highlight">Loss design:</span> Because the useful signal lives in narrow peaks, I experimented with weighted losses that kept the model from learning mostly background structure.
             </li>
             <li>
-                <span class="highlight">HPC Training Environment:</span> Configured and managed a high-performance computing environment on the Texas Advanced Computing Center (TACC). I wrote efficient Bash Slurm scripts to handle data loading and distributed training on powerful NVIDIA A100 GPUs.
+                <span class="highlight">HPC workflow:</span> I also worked on the training environment itself, including Slurm jobs and GPU runs on TACC systems.
             </li>
         </ul>
     </section>

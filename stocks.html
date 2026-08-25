@@ -114,16 +114,16 @@
 
 <div class="container">
     <header>
-        <h1>Algorithmic Trading & ML</h1>
-        <p class="subtitle">Predictive Modeling for Large Cap Stocks</p>
+        <h1>Short-Term Stock Modeling</h1>
+        <p class="subtitle">A student project on short-term market signals, backtesting, and feature engineering</p>
     </header>
 
     <img src="assets/stocks.png" alt="Model Output Terminal" class="project-image">
 
     <section class="content-section">
-        <h2>Project Philosophy: Interpretability First</h2>
+        <h2>Project Framing</h2>
         <p>
-            The screenshot above shows the live output of my model generating buy signals for the day. This project was not just about predicting price movements, but about understanding the drivers behind them. I adopted a strategy of <span class="highlight">prioritizing interpretability during experimentation</span>, and only switching to aggressive optimization once the underlying features were proven.
+            The screenshot above shows the live output of one of the paper-trading versions of the project generating buy and short ideas for the day. This started as a fairly open-ended question about whether short-horizon price movement could be modeled in a way that was still somewhat interpretable, and it ended up turning into a lot of data collection, feature engineering, backtesting, and trial and error with different model families.
         </p>
     </section>
 
@@ -131,24 +131,24 @@
         <h2>Methodology & Architecture</h2>
         <ul>
             <li>
-                <span class="highlight">Model Selection Journey:</span> I experimented with a wide range of architectures, including CNNs (treating charts as images), Linear Regression, SVD, and classification models. I initially settled on a <strong>Random Forest</strong> regressor. Unlike neural networks, Random Forest is a "white box" model. It allowed me to use feature importance metrics to verify which financial indicators (e.g., RSI, MACD, Volume Delta) were actually driving predictions, rather than blindly trusting a black box.
+                <span class="highlight">Model selection:</span> I tested linear baselines, random forests, SVMs, CNN-style experiments, and boosted trees. CNNs and SVMs mostly overfit the data I had, so the more useful path ended up being a simpler feature-engineering workflow with tree-based models.
             </li>
             <li>
-                <span class="highlight">Optimization with XGBoost:</span> Once I was confident in my feature set, I migrated the architecture to <strong>XGBoost</strong> to maximize predictive performance and execution speed.
+                <span class="highlight">Final direction:</span> after using random forests to sanity-check features, I moved to <strong>XGBoost</strong> as the final model family because it improved performance without making the workflow too opaque.
             </li>
             <li>
-                <span class="highlight">Advanced Tuning Strategy:</span> I implemented a custom two-stage hyperparameter tuning loop. I first used <strong>Random Search</strong> to explore the global parameter space and identify regions of interest. Once a promising region was found, the system automatically switched to a fine-grained <strong>Grid Search</strong> to mathematically optimize the model configuration.
+                <span class="highlight">Tuning:</span> I used repeated cross-validation plus parameter search to narrow down a workable configuration instead of trusting a single train/test split.
             </li>
             <li>
-                <span class="highlight">Data Engineering:</span> I designed a hybrid data storage system. I utilized <strong>Parquet files</strong> for high-performance I/O during heavy training loads, while maintaining <strong>CSV mirrors</strong> for easy human readability and debugging during the development phase.
+                <span class="highlight">Data workflow:</span> a lot of the project was ordinary but important data work: collecting bars, computing indicators, storing larger training tables in parquet, and keeping CSV copies around while debugging.
             </li>
         </ul>
     </section>
 
     <section class="content-section">
-        <h2>Integration & Deployment</h2>
+        <h2>Execution Layer</h2>
         <p>
-            The model is not a static script; it is integrated directly with the <strong>Alpaca API</strong>. This allows the system to function as a fully autonomous paper-trading bot, pulling live market data, generating inference, and executing buy/sell orders in real-time to validate the strategy against live market conditions.
+            I also connected the project to the <strong>Alpaca API</strong> for paper-trading experiments. That part was mainly a way to test the mechanics of a live pipeline. It was not used for live trading with real funds.
         </p>
     </section>
 
@@ -158,7 +158,6 @@
             <span class="tech-badge">Python (Pandas, Numpy)</span>
             <span class="tech-badge">Scikit-Learn</span>
             <span class="tech-badge">XGBoost</span>
-            <span class="tech-badge">PyTorch</span>
             <span class="tech-badge">Alpaca API</span>
             <span class="tech-badge">Parquet</span>
         </div>
