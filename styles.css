@@ -46,7 +46,7 @@ a { color: inherit; }
 h1 { max-width: 680px; margin: 0; font: 800 clamp(3.5rem, 8vw, 7rem)/.93 'Manrope'; letter-spacing: -.075em; }
 .accent-word { color: var(--green); position: relative; white-space: nowrap; }
 .accent-word::after { content: ''; position: absolute; left: 1%; right: -3%; bottom: -6px; height: 12px; border-radius: 50%; border-top: 3px solid var(--green); transform: rotate(-1.4deg); opacity: .95; }
-.hero-aside { padding: 18px 0 6px; max-width: 420px; }
+.hero-aside { padding: 34px 0 6px; max-width: 420px; }
 .hero-aside p { margin: 0 0 20px; color: var(--muted); font-size: 1.08rem; }
 .contact-links { display: flex; flex-wrap: wrap; gap: 10px; }
 .contact-links a { padding: 9px 14px; background: var(--card); border: 1px solid var(--line); border-radius: 99px; font-size: .82rem; font-weight: 600; text-decoration: none; }
