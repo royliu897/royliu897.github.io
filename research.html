@@ -66,7 +66,7 @@
         }
         .content-section {
             background: #fff;
-            padding: 40px;
+            padding: 32px 36px;
             border-radius: 16px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             margin-bottom: 30px;
@@ -78,6 +78,19 @@
         }
         p {
             margin-bottom: 20px;
+        }
+        .content-section p:last-child {
+            margin-bottom: 0;
+        }
+        .paper-link {
+            display: inline-block;
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(37, 99, 235, 0.3);
+            padding-bottom: 1px;
+        }
+        .paper-link:hover {
+            border-bottom-color: var(--accent);
         }
         .highlight {
             font-weight: 600;
@@ -108,10 +121,7 @@
     <section class="content-section">
         <h2>Project Overview</h2>
         <p>
-            This project is about building a differentiable surrogate model for scattering data so we can use it inside an inverse problem instead of relying only on slower direct simulation.
-        </p>
-        <p>
-            Paper: <a href="https://arxiv.org/abs/2608.10350">Parameter Reconstruction in Quantum Materials from Multi-dimensional Inelastic Neutron Scattering Data using a Physics-Informed Deep Learning Approach</a>.
+            This project is about building a differentiable surrogate model for scattering data so we can use it inside an inverse problem instead of relying only on slower direct simulation. Related paper: <a class="paper-link" href="https://arxiv.org/abs/2608.10350">Observation geometry for uncertainty-aware Hamiltonian inference and experimental design in quantum magnets</a>.
         </p>
     </section>
 
