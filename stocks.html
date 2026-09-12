@@ -1,171 +1,114 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Financial Modeling | Algorithmic Trading</title>
-    <style>
-        :root {
-            --bg: #f8f9fa;
-            --text: #1a1a1a;
-            --accent: #10b981; /* Financial Green Accent */
-            --gray: #666;
-            --light-gray: #e9ecef;
-        }
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.7;
-            color: var(--text);
-            background: var(--bg);
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 960px;
-            margin: 0 auto;
-            padding: 60px 20px;
-        }
-        #back-to-home {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            padding: 8px 16px;
-            background: #000;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: transform 0.2s;
-        }
-        #back-to-home:hover {
-            transform: scale(1.05);
-            background: var(--accent);
-        }
-        header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-        h1 {
-            font-size: 2.8rem;
-            font-weight: 700;
-            letter-spacing: -1px;
-            margin-bottom: 10px;
-        }
-        .subtitle {
-            color: var(--gray);
-            font-size: 1.1rem;
-        }
-        .project-image {
-            width: 100%;
-            max-width: 850px;
-            display: block;
-            margin: 0 auto 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            border: 1px solid rgba(0,0,0,0.1);
-        }
-        .content-section {
-            background: #fff;
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            margin-bottom: 30px;
-        }
-        h2 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            color: var(--accent);
-        }
-        p {
-            margin-bottom: 20px;
-        }
-        .highlight {
-            font-weight: 600;
-            color: var(--accent);
-        }
-        ul {
-            padding-left: 20px;
-            list-style-type: disc;
-        }
-        li {
-            margin-bottom: 10px;
-        }
-        .tech-stack {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-        .tech-badge {
-            background: var(--light-gray);
-            padding: 5px 12px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: #444;
-        }
-    </style>
-    <link rel="stylesheet" href="project.css">
-</head>
-<body>
-
-<a href="index.html" id="back-to-home">← All work</a>
-
-<div class="container">
-    <header>
-        <h1>Short-Term Stock Modeling</h1>
-        <p class="subtitle">A student project on short-term market signals, backtesting, and feature engineering</p>
-    </header>
-
-    <img src="assets/stocks.png" alt="Model Output Terminal" class="project-image">
-
-    <section class="content-section">
-        <h2>Project Framing</h2>
-        <p>
-            The screenshot above shows the live output of one of the paper-trading versions of the project generating buy and short ideas for the day. This started as a fairly open-ended question about whether short-horizon price movement could be modeled in a way that was still somewhat interpretable, and it ended up turning into a lot of data collection, feature engineering, backtesting, and trial and error with different model families.
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Feature engineering, boosted trees, and a paper-trading pipeline."
+    />
+    <meta name="theme-color" content="#f5f3ec" />
+    <title>Testing short-term market signals — Roy Liu</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="project.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <nav class="site-nav shell" aria-label="Main navigation">
+      <a class="brand" href="index.html"
+        >Roy Liu<span class="brand-note"> / personal website</span></a
+      >
+      <div class="nav-links">
+        <a href="index.html#work">Work</a><a href="index.html#about">About</a
+        ><a href="mailto:royrliu@utexas.edu">Email ↗</a>
+      </div>
+    </nav>
+    <main id="main" class="project shell">
+      <header class="project-header">
+        <a class="text-link" href="index.html#work">← All work</a>
+        <p class="eyebrow">Independent project / Machine learning</p>
+        <h1>Testing short-term market signals</h1>
+        <p class="subtitle">
+          Feature engineering, boosted trees, and a paper-trading pipeline.
         </p>
-        <p>
-            <a href="https://github.com/royliu897/stock-movement-predictor">View the GitHub repo ↗</a>
-        </p>
-    </section>
-
-    <section class="content-section">
-        <h2>Methodology & Architecture</h2>
-        <ul>
-            <li>
-                <span class="highlight">Model selection:</span> I tested linear baselines, random forests, SVMs, CNN-style experiments, and boosted trees. CNNs and SVMs mostly overfit the data I had, so the more useful path ended up being a simpler feature-engineering workflow with tree-based models.
-            </li>
-            <li>
-                <span class="highlight">Final direction:</span> after using random forests to sanity-check features, I moved to <strong>XGBoost</strong> as the final model family because it improved performance without making the workflow too opaque.
-            </li>
-            <li>
-                <span class="highlight">Tuning:</span> I used repeated cross-validation plus parameter search to narrow down a workable configuration instead of trusting a single train/test split.
-            </li>
-            <li>
-                <span class="highlight">Data workflow:</span> a lot of the project was ordinary but important data work: collecting bars, computing indicators, storing larger training tables in parquet, and keeping CSV copies around while debugging.
-            </li>
-        </ul>
-    </section>
-
-    <section class="content-section">
-        <h2>Execution Layer</h2>
-        <p>
-            I also connected the project to the <strong>Alpaca API</strong> for paper-trading experiments. That part was mainly a way to test the mechanics of a live pipeline. It was not used for live trading with real funds.
-        </p>
-    </section>
-
-    <section class="content-section">
-        <h2>Technologies Used</h2>
-        <div class="tech-stack">
-            <span class="tech-badge">Python (Pandas, Numpy)</span>
-            <span class="tech-badge">Scikit-Learn</span>
-            <span class="tech-badge">XGBoost</span>
-            <span class="tech-badge">Alpaca API</span>
-            <span class="tech-badge">Parquet</span>
-        </div>
-    </section>
-</div>
-
-</body>
+      </header>
+      <figure class="project-figure stocks">
+        <img
+          src="assets/stocks.png"
+          alt="Output from a paper-trading version of the project, showing generated buy and short ideas."
+        />
+        <figcaption>
+          Output from a paper-trading version of the project, showing generated
+          buy and short ideas.
+        </figcaption>
+      </figure>
+      <div class="project-content">
+        <section class="content-section">
+          <h2>The experiment</h2>
+          <div>
+            <p>
+              I started this project to see whether I could model short-term
+              price movement with a workflow I could inspect and understand. It
+              became an exercise in collecting data, choosing features,
+              comparing models, and testing the pipeline.
+            </p>
+            <p>
+              <a href="https://github.com/royliu897/stock-movement-predictor"
+                >View the project on GitHub ↗</a
+              >
+            </p>
+          </div>
+        </section>
+        <section class="content-section">
+          <h2>Choosing a model</h2>
+          <div>
+            <p>
+              I tried linear baselines, random forests, SVMs, convolutional
+              networks, and boosted trees. The CNN and SVM experiments tended to
+              overfit the data I had. Tree-based models gave me a more useful
+              direction.
+            </p>
+            <p>
+              I used random forests to check features, then moved to XGBoost.
+              Repeated cross-validation and parameter searches helped narrow the
+              configuration instead of relying on a single split.
+            </p>
+          </div>
+        </section>
+        <section class="content-section">
+          <h2>The pipeline</h2>
+          <div>
+            <p>
+              I collected price bars, computed indicators, and stored larger
+              training tables in Parquet, with CSV files for debugging. I
+              connected the pipeline to Alpaca’s API to test paper-trading
+              execution.
+            </p>
+            <p>
+              The screenshot shows simulated trading activity. I used this to
+              test the live pipeline’s mechanics; the project did not trade real
+              funds.
+            </p>
+          </div>
+        </section>
+        <section class="content-section">
+          <h2>Tools</h2>
+          <div>
+            <p>
+              Python · pandas · NumPy · scikit-learn · XGBoost · Alpaca API ·
+              Parquet
+            </p>
+          </div>
+        </section>
+      </div>
+      <div class="project-next">
+        <a href="index.html#work">← All work</a
+        ><a href="tennis.html">Next: Years on court →</a>
+      </div>
+    </main>
+    <footer class="shell">
+      <span>Roy Liu · Austin, Texas</span
+      ><a href="interactive.html">Take the scenic route ↗</a><span>© 2026</span>
+    </footer>
+  </body>
 </html>

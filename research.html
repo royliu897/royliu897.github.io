@@ -1,148 +1,105 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Research Project | GAMMA Lab</title>
-    <style>
-        :root {
-            --bg: #f8f9fa;
-            --text: #1a1a1a;
-            --accent: #2563eb;
-            --gray: #666;
-            --light-gray: #e9ecef;
-        }
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.7;
-            color: var(--text);
-            background: var(--bg);
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 960px;
-            margin: 0 auto;
-            padding: 60px 20px;
-        }
-        #back-to-home {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            padding: 8px 16px;
-            background: #000;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: transform 0.2s;
-        }
-        #back-to-home:hover {
-            transform: scale(1.05);
-            background: var(--accent);
-        }
-        header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-        h1 {
-            font-size: 2.8rem;
-            font-weight: 700;
-            letter-spacing: -1px;
-            margin-bottom: 10px;
-        }
-        .subtitle {
-            color: var(--gray);
-            font-size: 1.1rem;
-        }
-        .project-image {
-            width: 100%;
-            max-width: 800px;
-            display: block;
-            margin: 0 auto 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        .content-section {
-            background: #fff;
-            padding: 32px 36px;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            margin-bottom: 30px;
-        }
-        h2 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            color: var(--accent);
-        }
-        p {
-            margin-bottom: 20px;
-        }
-        .content-section p:last-child {
-            margin-bottom: 0;
-        }
-        .paper-link {
-            display: inline-block;
-            color: var(--accent);
-            text-decoration: none;
-            border-bottom: 1px solid rgba(37, 99, 235, 0.3);
-            padding-bottom: 1px;
-        }
-        .paper-link:hover {
-            border-bottom-color: var(--accent);
-        }
-        .highlight {
-            font-weight: 600;
-            color: var(--accent);
-        }
-        ul {
-            padding-left: 20px;
-            list-style-type: disc;
-        }
-        li {
-            margin-bottom: 10px;
-        }
-    </style>
-    <link rel="stylesheet" href="project.css">
-</head>
-<body>
-
-<a href="index.html" id="back-to-home">← All work</a>
-
-<div class="container">
-    <header>
-        <h1>Physics-Informed Deep Learning for Materials</h1>
-        <p class="subtitle">Surrogate modeling for inverse problems in the GAMMA Lab</p>
-    </header>
-
-    <img src="assets/research.png" alt="Comparison of Ground Truth vs SIREN Prediction" class="project-image">
-
-    <section class="content-section">
-        <h2>Project Overview</h2>
-        <p>
-            This project is about building a differentiable surrogate model for scattering data so we can use it inside an inverse problem instead of relying only on slower direct simulation. Related paper: <a class="paper-link" href="https://arxiv.org/abs/2608.10350">Observation geometry for uncertainty-aware Hamiltonian inference and experimental design in quantum magnets</a>.
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="A differentiable surrogate for a materials inverse problem."
+    />
+    <meta name="theme-color" content="#f5f3ec" />
+    <title>Learning a faster model of scattering — Roy Liu</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="project.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <nav class="site-nav shell" aria-label="Main navigation">
+      <a class="brand" href="index.html"
+        >Roy Liu<span class="brand-note"> / personal website</span></a
+      >
+      <div class="nav-links">
+        <a href="index.html#work">Work</a><a href="index.html#about">About</a
+        ><a href="mailto:royrliu@utexas.edu">Email ↗</a>
+      </div>
+    </nav>
+    <main id="main" class="project shell">
+      <header class="project-header">
+        <a class="text-link" href="index.html#work">← All work</a>
+        <p class="eyebrow">Research / GAMMA Lab</p>
+        <h1>Learning a faster model of scattering</h1>
+        <p class="subtitle">
+          A differentiable surrogate for a materials inverse problem.
         </p>
-    </section>
-
-    <section class="content-section">
-        <h2>Key Achievements & Methodology</h2>
-        <ul>
-            <li>
-                <span class="highlight">Surrogate model:</span> I worked on a modulated SIREN-style network with 13 inputs: 9 Hamiltonian parameters plus 4 energy-momentum coordinates.
-            </li>
-            <li>
-                <span class="highlight">Data pipeline:</span> I helped move a large Julia-generated dataset into a Python training workflow on TACC, including some of the annoying layout and interoperability issues that come with crossing that boundary.
-            </li>
-            <li>
-                <span class="highlight">Loss design:</span> Because the useful signal lives in narrow peaks, I experimented with weighted losses that kept the model from learning mostly background structure.
-            </li>
-            <li>
-                <span class="highlight">HPC workflow:</span> I also worked on the training environment itself, including Slurm jobs and GPU runs on TACC systems.
-            </li>
-        </ul>
-    </section>
-</div>
-
-</body>
+      </header>
+      <figure class="project-figure research">
+        <img
+          src="assets/research.png"
+          alt="Ground truth and SIREN predictions. The challenge is preserving narrow peaks, not just fitting the background."
+        />
+        <figcaption>
+          Ground truth and SIREN predictions. The challenge is preserving narrow
+          peaks, not just fitting the background.
+        </figcaption>
+      </figure>
+      <div class="project-content">
+        <section class="content-section">
+          <h2>The problem</h2>
+          <div>
+            <p>
+              Direct simulation can make an inverse problem expensive: every
+              candidate set of material parameters needs another prediction. In
+              the GAMMA Lab, I work on a differentiable surrogate that can
+              predict scattering data inside that loop.
+            </p>
+            <p>
+              The related paper is
+              <a href="https://arxiv.org/abs/2608.10350"
+                >Observation geometry for uncertainty-aware Hamiltonian
+                inference and experimental design in quantum magnets ↗</a
+              >.
+            </p>
+          </div>
+        </section>
+        <section class="content-section">
+          <h2>My part</h2>
+          <div>
+            <p>
+              I worked on a modulated SIREN-style network with 13 inputs: nine
+              Hamiltonian parameters and four energy–momentum coordinates.
+            </p>
+            <p>
+              I also helped bring a large Julia-generated dataset into a Python
+              training workflow on TACC. That involved resolving array-layout
+              and interoperability issues, setting up Slurm jobs, and running
+              GPU training.
+            </p>
+          </div>
+        </section>
+        <section class="content-section">
+          <h2>What needed care</h2>
+          <div>
+            <p>
+              The useful signal is concentrated in narrow peaks. A model can fit
+              much of the background and still miss the structure we care about.
+              I experimented with weighted losses to give those peaks more
+              influence during training.
+            </p>
+          </div>
+        </section>
+        <section class="content-section">
+          <h2>Tools</h2>
+          <div><p>Julia · Python · PyTorch · Slurm · TACC / HPC</p></div>
+        </section>
+      </div>
+      <div class="project-next">
+        <a href="index.html#work">← All work</a
+        ><a href="lhr.html">Next: What makes a lap faster? →</a>
+      </div>
+    </main>
+    <footer class="shell">
+      <span>Roy Liu · Austin, Texas</span
+      ><a href="interactive.html">Take the scenic route ↗</a><span>© 2026</span>
+    </footer>
+  </body>
 </html>

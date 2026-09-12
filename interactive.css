@@ -1,0 +1,156 @@
+* {
+  box-sizing: border-box;
+}
+body,
+html {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: #19231a;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+canvas {
+  display: block;
+  touch-action: none;
+}
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid #e5efb3;
+  outline-offset: 5px;
+}
+canvas:focus-visible {
+  outline: 2px solid #e5efb3;
+  outline-offset: -3px;
+}
+#backToNormal {
+  position: absolute;
+  top: 22px;
+  left: 24px;
+  padding: 10px 14px;
+  background: #f5f3ec;
+  color: #252c32;
+  text-decoration: none;
+  font-size: 12px;
+  z-index: 20;
+  border: 1px solid #cbcac1;
+}
+#world-title {
+  position: absolute;
+  top: 22px;
+  right: 24px;
+  z-index: 10;
+  color: #252c32;
+  text-align: right;
+  background: #f5f3ec;
+  padding: 12px 16px;
+  max-width: 340px;
+}
+#world-title strong {
+  display: block;
+  font:
+    24px Georgia,
+    serif;
+}
+#sim-status {
+  display: block;
+  margin-top: 6px;
+  font-size: 11px;
+  line-height: 1.5;
+}
+#footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  min-height: 90px;
+  padding: 14px 24px;
+  background: #202b22;
+  border-top: 1px solid #59624e;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  z-index: 30;
+}
+.legend-icons {
+  display: flex;
+  gap: 30px;
+}
+.legend-icons a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #f5f3ec;
+  font-size: 12px;
+  text-decoration: none;
+}
+.legend-icons a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.legend-icons img {
+  height: 32px;
+  width: 38px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+.garden-controls {
+  display: flex;
+  gap: 10px;
+}
+button {
+  padding: 9px 12px;
+  background: transparent;
+  border: 1px solid #939d89;
+  color: #f5f3ec;
+  font: 12px inherit;
+  cursor: pointer;
+}
+button:hover {
+  background: #3a4838;
+}
+@media (max-width: 650px) {
+  #backToNormal {
+    top: 14px;
+    left: 14px;
+    padding: 8px 10px;
+  }
+  #world-title {
+    top: 62px;
+    left: 14px;
+    right: auto;
+    text-align: left;
+    padding: 10px 12px;
+    max-width: 260px;
+  }
+  #world-title strong {
+    font-size: 21px;
+  }
+  #footer {
+    padding: 12px 14px;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .legend-icons {
+    width: 100%;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .legend-icons a {
+    flex-direction: column;
+    gap: 2px;
+    font-size: 11px;
+  }
+  .legend-icons img {
+    height: 25px;
+    width: 32px;
+  }
+  .garden-controls button {
+    padding: 6px 12px;
+  }
+}

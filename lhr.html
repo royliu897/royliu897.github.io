@@ -1,174 +1,104 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Racing Analysis | LHR Combustion</title>
-    <style>
-        :root {
-            --bg: #f8f9fa;
-            --text: #1a1a1a;
-            --accent: #d90429; /* Racing Red Accent */
-            --gray: #666;
-            --light-gray: #e9ecef;
-        }
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.7;
-            color: var(--text);
-            background: var(--bg);
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 960px;
-            margin: 0 auto;
-            padding: 60px 20px;
-        }
-        #back-to-home {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            padding: 8px 16px;
-            background: #000;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: transform 0.2s;
-        }
-        #back-to-home:hover {
-            transform: scale(1.05);
-            background: var(--accent);
-        }
-        header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-        h1 {
-            font-size: 2.8rem;
-            font-weight: 700;
-            letter-spacing: -1px;
-            margin-bottom: 10px;
-        }
-        .subtitle {
-            color: var(--gray);
-            font-size: 1.1rem;
-        }
-        .project-image {
-            width: 100%;
-            max-width: 800px;
-            display: block;
-            margin: 0 auto 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            background: #fff;
-            padding: 10px;
-        }
-        .content-section {
-            background: #fff;
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            margin-bottom: 30px;
-        }
-        h2 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            color: var(--accent);
-        }
-        p {
-            margin-bottom: 20px;
-        }
-        .highlight {
-            font-weight: 600;
-            color: var(--accent);
-        }
-        ul {
-            padding-left: 20px;
-            list-style-type: disc;
-        }
-        li {
-            margin-bottom: 10px;
-        }
-        .tech-stack {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-        .tech-badge {
-            background: var(--light-gray);
-            padding: 5px 12px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: #444;
-        }
-    </style>
-    <link rel="stylesheet" href="project.css">
-</head>
-<body>
-
-<a href="index.html" id="back-to-home">← All work</a>
-
-<div class="container">
-    <header>
-        <h1>Formula Student Data Analysis</h1>
-        <p class="subtitle">Simulation and data work with Longhorn Racing Combustion</p>
-    </header>
-
-    <img src="assets/lhr.png" alt="Laptime Sensitivity Analysis" class="project-image">
-
-    <section class="content-section">
-        <h2>Context: FSAE & LHR Combustion</h2>
-        <p>
-            Longhorn Racing Combustion is UT Austin's Formula SAE combustion team. My work there has mostly been on simulation and data tasks that help the team compare design tradeoffs with something more defensible than "this probably feels faster."
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Simulation and data work for UT Austin’s Formula SAE combustion team."
+    />
+    <meta name="theme-color" content="#f5f3ec" />
+    <title>What makes a lap faster? — Roy Liu</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="project.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <nav class="site-nav shell" aria-label="Main navigation">
+      <a class="brand" href="index.html"
+        >Roy Liu<span class="brand-note"> / personal website</span></a
+      >
+      <div class="nav-links">
+        <a href="index.html#work">Work</a><a href="index.html#about">About</a
+        ><a href="mailto:royrliu@utexas.edu">Email ↗</a>
+      </div>
+    </nav>
+    <main id="main" class="project shell">
+      <header class="project-header">
+        <a class="text-link" href="index.html#work">← All work</a>
+        <p class="eyebrow">Engineering / Longhorn Racing</p>
+        <h1>What makes a lap faster?</h1>
+        <p class="subtitle">
+          Simulation and data work for UT Austin’s Formula SAE combustion team.
         </p>
-        <p>
-            <a href="https://github.com/royliu897/limited-slip-differential-model">Related public repo: limited-slip differential model ↗</a>
-        </p>
-    </section>
-
-    <section class="content-section">
-        <h2>Simulation: Lap Time Sensitivity</h2>
-        <p>
-            The plot above is a lap-time sensitivity study we used to reason about broad setup and design tradeoffs.
-        </p>
-        <ul>
-            <li><span class="highlight">What it varies:</span> coefficient of drag, added vehicle mass, and the resulting simulated lap time.</li>
-            <li><span class="highlight">Why it matters:</span> aero can improve cornering performance, but it usually brings both drag and weight penalties.</li>
-            <li><span class="highlight">What we learned:</span> under some event assumptions, extra mass hurt enough that lightweighting mattered more than chasing a more aggressive aero package.</li>
-        </ul>
-    </section>
-
-    <section class="content-section">
-        <h2>Data Engineering & Pipeline Development</h2>
-        <p>
-            Outside the headline plots, a lot of the work was quieter data cleanup and tooling so the simulation stack was easier for the team to use and trust.
-        </p>
-        <ul>
-            <li>
-                <span class="highlight">Damper curve processing:</span> I wrote code to clean and interpolate shock dyno force-velocity data so it could be used more directly in vehicle simulations.
-            </li>
-            <li>
-                <span class="highlight">Dyno and ECU data handling:</span> I also worked on parsing and organizing Haltech logs so engine data was easier to inspect and reuse.
-            </li>
-        </ul>
-    </section>
-
-    <section class="content-section">
-        <h2>Technologies Used</h2>
-        <div class="tech-stack">
-            <span class="tech-badge">Python (Pandas, Numpy, Matplotlib)</span>
-            <span class="tech-badge">Julia</span>
-            <span class="tech-badge">SQL</span>
-            <span class="tech-badge">CSV Parsing</span>
-            <span class="tech-badge">Vehicle Dynamics Simulation</span>
-        </div>
-    </section>
-</div>
-
-</body>
+      </header>
+      <figure class="project-figure lhr">
+        <img
+          src="assets/lhr.png"
+          alt="Lap-time sensitivity to drag and added mass under the study’s event assumptions."
+        />
+        <figcaption>
+          Lap-time sensitivity to drag and added mass under the study’s event
+          assumptions.
+        </figcaption>
+      </figure>
+      <div class="project-content">
+        <section class="content-section">
+          <h2>The question</h2>
+          <div>
+            <p>
+              A design change can help in one part of a lap and cost time in
+              another. My work with Longhorn Racing Combustion uses simulation
+              and data to help the team compare those tradeoffs.
+            </p>
+            <p>
+              <a
+                href="https://github.com/royliu897/limited-slip-differential-model"
+                >Limited-slip differential model on GitHub ↗</a
+              >
+            </p>
+          </div>
+        </section>
+        <section class="content-section">
+          <h2>The lap-time study</h2>
+          <div>
+            <p>
+              The figure varies drag coefficient and added vehicle mass, then
+              compares the simulated lap times. Aerodynamic changes can improve
+              cornering, but they also introduce drag and weight.
+            </p>
+            <p>
+              Under some of the event assumptions we tested, the mass penalty
+              was large enough that reducing weight mattered more than a more
+              aggressive aerodynamic package. That result depends on the setup
+              and event being modeled.
+            </p>
+          </div>
+        </section>
+        <section class="content-section">
+          <h2>Making the data usable</h2>
+          <div>
+            <p>
+              I wrote code to clean and interpolate shock-dyno force–velocity
+              data for use in vehicle simulations. I also worked on parsing and
+              organizing Haltech logs so the team could inspect and reuse engine
+              data.
+            </p>
+          </div>
+        </section>
+        <section class="content-section">
+          <h2>Tools</h2>
+          <div><p>Python · pandas · NumPy · Matplotlib · Julia · SQL</p></div>
+        </section>
+      </div>
+      <div class="project-next">
+        <a href="index.html#work">← All work</a
+        ><a href="stocks.html">Next: Testing short-term market signals →</a>
+      </div>
+    </main>
+    <footer class="shell">
+      <span>Roy Liu · Austin, Texas</span
+      ><a href="interactive.html">Take the scenic route ↗</a><span>© 2026</span>
+    </footer>
+  </body>
 </html>
