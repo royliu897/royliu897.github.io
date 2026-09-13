@@ -6,6 +6,7 @@ const HORIZON_RATIO = 0.45,
 const DOG_W = 32,
   DOG_H = 40;
 const PROJECTS = [
+  { id: "logiqal", label: "Logiqal", path: "logiqal.html" },
   { id: "car", label: "Longhorn Racing", path: "lhr.html" },
   { id: "gamma", label: "GAMMA Lab", path: "research.html" },
   { id: "racket", label: "Tennis", path: "tennis.html" },
@@ -52,6 +53,7 @@ for (const [id, src] of Object.entries({
   gamma: "gamma.png",
   racket: "racket.png",
   stock: "stock.png",
+  logiqal: "logiqal-icon.svg",
 })) {
   assets[id] = new Image();
   assets[id].src = "assets/" + src;
@@ -117,9 +119,9 @@ function buildWorld(reset = true) {
     bottom = groundBottom(),
     height = bottom - top;
   patches = PROJECTS.map((project, i) => ({
-    x: canvas.width * (0.2 + i * 0.2),
+    x: canvas.width * (0.16 + (i * 0.68) / (PROJECTS.length - 1)),
     y: top + height * (i % 2 ? 0.57 : 0.43),
-    rx: canvas.width * 0.155,
+    rx: canvas.width * 0.13,
     ry: height * 0.3,
   }));
   const old = icons;
@@ -188,7 +190,7 @@ function buildWorld(reset = true) {
 
 function updateFoundCount() {
   document.getElementById("foundCount").textContent =
-    `${icons.filter((i) => i.revealed).length} / 4 found`;
+    `${icons.filter((i) => i.revealed).length} / ${PROJECTS.length} found`;
 }
 function setPaused(value) {
   paused = value;
@@ -250,7 +252,7 @@ function reveal(icon) {
   encounter = icon;
   sit();
   document.getElementById("encounterTitle").textContent = icon.label;
-  document.getElementById("encounterImage").src = "assets/" + icon.id + ".png";
+  document.getElementById("encounterImage").src = assets[icon.id].src;
   document.getElementById("encounterLink").href = icon.path;
   document.getElementById("encounterPanel").hidden = false;
   pointerActive = false;

@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="My summer 2026 quantum hardware internship at Logiqal: instrument control, AOM calibration, FPGA acquisition, and laboratory telemetry."
+    />
+    <meta name="theme-color" content="#f5f3ec" />
+    <title>Logiqal — Roy Liu</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="project.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <nav class="site-nav shell" aria-label="Main navigation">
+      <a class="brand" href="index.html"
+        >Roy Liu<span class="brand-note"> / personal website</span></a
+      >
+      <div class="nav-links">
+        <a href="index.html#work">Work</a><a href="index.html#about">About</a
+        ><a href="mailto:royrliu@utexas.edu">Email ↗</a>
+      </div>
+    </nav>
+    <main id="main" class="project shell">
+      <header class="project-header">
+        <a class="text-link" href="index.html#work">← All work</a>
+        <p class="eyebrow">Internship / Quantum hardware</p>
+        <h1>Logiqal</h1>
+        <p class="subtitle">
+          A summer working on the hardware and software behind neutral-atom
+          quantum computing.
+        </p>
+        <p class="internship-meta">
+          Quantum Hardware Intern · May 2026 – Aug 2026<br />Logiqal, Inc. ·
+          Monmouth Junction, NJ
+        </p>
+      </header>
+      <figure class="project-figure logiqal-photo">
+        <img
+          src="assets/logiqal-princeton-lasers.jpg"
+          alt="Orange laser light passing through optical components in Jeff Thompson’s Princeton laboratory."
+          width="1440"
+          height="810"
+        />
+        <figcaption>
+          Lasers and qubits in Jeff Thompson’s Princeton lab. Photo by Frank
+          Wojciechowski, via
+          <a
+            href="https://engineering.princeton.edu/news/2023/10/11/illuminating-errors-creates-new-paradigm-quantum-computing"
+            >Princeton Engineering ↗</a
+          >.
+        </figcaption>
+      </figure>
+      <div class="project-content">
+        <section class="content-section">
+          <h2>The internship</h2>
+          <div>
+            <p>
+              I spent summer 2026 at Logiqal as a Quantum Hardware Intern. My
+              work was on the software around the experiments: connecting
+              instruments, calibrating optical waveforms, getting data off
+              FPGAs, and keeping track of what was happening in the lab.
+            </p>
+            <a class="company-link" href="https://www.logiqal.com/"
+              ><img
+                src="assets/logiqal-logo.svg"
+                alt="Logiqal"
+                width="180"
+                height="54"
+              /><span>Visit Logiqal ↗</span></a
+            >
+          </div>
+        </section>
+        <section class="content-section">
+          <h2>Connecting the lab</h2>
+          <div>
+            <p>
+              One of my main projects was a distributed NATS pub-sub network
+              supporting more than 40 different instruments. I developed
+              production device drivers, calibration services, and remote device
+              management for the neutral-atom experiments.
+            </p>
+            <p>
+              The work covered both the individual devices and how they
+              communicated across the network, so the drivers and services could
+              be used together in an experiment.
+            </p>
+          </div>
+        </section>
+        <section class="content-section">
+          <h2>AOM calibration</h2>
+          <div>
+            <p>
+              I also developed a calibration pipeline for fiber-coupled
+              acousto-optic modulators (AOMs). The goal was to get the optical
+              output to match the requested waveform. I used complex-covariance
+              demodulation and closed-loop pre-distortion, achieving less than
+              1% shape error in under 0.2 ms.
+            </p>
+            <p>
+              The basic idea is to measure the output, compare it with the
+              target, and adjust the drive waveform to compensate for the
+              difference.
+            </p>
+          </div>
+        </section>
+        <figure class="calibration-diagram">
+          <p class="eyebrow">Calibration loop</p>
+          <ol class="calibration-flow">
+            <li>
+              <span>01</span><strong>Target waveform</strong>
+              <p>The optical pulse we want</p>
+            </li>
+            <li>
+              <span>02</span><strong>RF drive pulse</strong>
+              <p>Generate the pulse that drives the AOM</p>
+            </li>
+            <li>
+              <span>03</span><strong>Fiber-coupled AOM</strong>
+              <p>Shape the optical pulse</p>
+            </li>
+            <li>
+              <span>04</span><strong>Measure & compare</strong>
+              <p>Demodulate the output and estimate the error</p>
+            </li>
+            <li>
+              <span>05</span><strong>Apply correction</strong>
+              <p>Pre-distort the RF drive pulse to compensate for the error</p>
+            </li>
+          </ol>
+          <div class="loop-connector" aria-hidden="true">
+            <svg viewBox="0 0 700 44" preserveAspectRatio="none">
+              <defs>
+                <marker id="loop-tip" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M 2 2 L 5 5 L 2 8" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="square" stroke-linejoin="miter" />
+                </marker>
+              </defs>
+              <path d="M 8 7 V 36 H 692 V 7" fill="none" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke" marker-start="url(#loop-tip)" marker-end="url(#loop-tip)" />
+            </svg>
+          </div>
+          <p class="loop-return">
+            Repeat steps 02–05 with the corrected RF drive pulse.
+          </p>
+          <figcaption>
+            (Over)simplified calibration loop.
+          </figcaption>
+        </figure>
+        <section class="content-section">
+          <h2>FPGA acquisition</h2>
+          <div>
+            <p>
+              On the acquisition side, I redesigned a Solarflare
+              <code>ef_vi</code> kernel-bypass receive path for FPGA waveform
+              data. I separated control traffic and jumbo-frame traffic into
+              optimized RX queues, which increased throughput by 18×.
+            </p>
+          </div>
+        </section>
+        <section class="content-section">
+          <h2>Lab telemetry</h2>
+          <div>
+            <p>
+              I designed a PostgreSQL/TimescaleDB backend for continuous
+              laboratory monitoring. This included the hypertable schemas and
+              compression and retention policies, so Grafana could query the
+              data quickly over long time horizons.
+            </p>
+          </div>
+        </section>
+        <section class="content-section">
+          <h2>Tools</h2>
+          <div>
+            <p>
+              NATS · Solarflare ef_vi · FPGA waveform acquisition · PostgreSQL ·
+              TimescaleDB · Grafana · Fiber-optic hardware
+            </p>
+          </div>
+        </section>
+        <section class="content-section asset-credits">
+          <h2>Image credits</h2>
+          <div>
+            <p>
+              The laser photograph is by Frank Wojciechowski and appears in
+              Princeton Engineering’s
+              <a
+                href="https://engineering.princeton.edu/news/2023/10/11/illuminating-errors-creates-new-paradigm-quantum-computing"
+                >“Illuminating errors creates a new paradigm for quantum
+                computing”</a
+              >
+              (October 11, 2023). It shows the Princeton research setup, rather
+              than the equipment from my internship.
+            </p>
+            <p>
+              The Logiqal logo is from
+              <a href="https://www.logiqal.com/">Logiqal’s official website</a>.
+              The calibration diagram is an original illustration for this page.
+            </p>
+          </div>
+        </section>
+      </div>
+      <div class="project-next">
+        <a href="index.html#work">← All work</a
+        ><a href="research.html">Next: GAMMA Lab →</a>
+      </div>
+    </main>
+    <footer class="shell">
+      <span>Roy Liu · Austin, Texas</span
+      ><a href="interactive.html">Walk my dog ↗</a><span>© 2026</span>
+    </footer>
+  </body>
+</html>

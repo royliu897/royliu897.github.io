@@ -44,16 +44,16 @@ function disturbance(speed){const h=harness();h.run(`icons=[];trees=[];grass=[{x
 assert(disturbance(10)>disturbance(2));console.log('PASS: faster running disturbs grass more');
 
 const found=harness();assert.equal(found.run('icons.some(i=>i.revealed)'),false);
-for(let i=0;i<4;i++){
+for(let i=0;i<5;i++){
   found.run(`dog.x=icons[${i}].x;dog.y=icons[${i}].y;updatePhysics(STEP)`);
   assert.equal(found.elements.encounterPanel.hidden,false);
   assert.equal(found.elements.encounterLink.href,found.run(`icons[${i}].path`));
   found.elements.keepWalking.onclick();assert.equal(found.elements.encounterPanel.hidden,true);
 }
-assert.equal(found.elements.foundCount.textContent,'4 / 4 found');
-found.elements.resetBtn.onclick();assert.equal(found.elements.foundCount.textContent,'0 / 4 found');
+assert.equal(found.elements.foundCount.textContent,'5 / 5 found');
+found.elements.resetBtn.onclick();assert.equal(found.elements.foundCount.textContent,'0 / 5 found');
 assert(found.run('trees.every(t=>t.y<canvas.height*HORIZON_RATIO+(groundBottom()-canvas.height*HORIZON_RATIO)*.11 || t.x<canvas.width*.13 || t.x>canvas.width*.87)'));
-console.log('PASS: all four hidden objects reveal correctly, keep-walking, reset, and center exclusion for trees');
+console.log('PASS: all five hidden objects reveal correctly, keep-walking, reset, and center exclusion for trees');
 
 const paused=harness({reduced:true,width:390,height:844});paused.move(350,650);paused.frame(0);const x=paused.run('dog.x');paused.frame(500);assert.equal(paused.run('dog.x'),x);
 paused.elements.pauseBtn.onclick();paused.frame(600);paused.frame(700);assert(paused.run('dog.x')>x);
