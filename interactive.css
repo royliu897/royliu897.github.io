@@ -38,29 +38,7 @@ canvas:focus-visible {
   z-index: 20;
   border: 1px solid #cbcac1;
 }
-#world-title {
-  position: absolute;
-  top: 22px;
-  right: 24px;
-  z-index: 10;
-  color: #252c32;
-  text-align: right;
-  background: #f5f3ec;
-  padding: 12px 16px;
-  max-width: 340px;
-}
-#world-title strong {
-  display: block;
-  font:
-    24px Georgia,
-    serif;
-}
-#sim-status {
-  display: block;
-  margin-top: 6px;
-  font-size: 11px;
-  line-height: 1.5;
-}
+
 #footer {
   position: absolute;
   bottom: 0;
@@ -107,7 +85,8 @@ button {
   background: transparent;
   border: 1px solid #939d89;
   color: #f5f3ec;
-  font: 12px inherit;
+  font: inherit;
+  font-size: 12px;
   cursor: pointer;
 }
 button:hover {
@@ -119,17 +98,7 @@ button:hover {
     left: 14px;
     padding: 8px 10px;
   }
-  #world-title {
-    top: 62px;
-    left: 14px;
-    right: auto;
-    text-align: left;
-    padding: 10px 12px;
-    max-width: 260px;
-  }
-  #world-title strong {
-    font-size: 21px;
-  }
+
   #footer {
     padding: 12px 14px;
     gap: 12px;
@@ -152,5 +121,204 @@ button:hover {
   }
   .garden-controls button {
     padding: 6px 12px;
+  }
+}
+
+@media (max-width: 700px) {
+  .legend-icons {
+    gap: 8px;
+  }
+  .legend-icons a {
+    text-align: center;
+    font-size: 10px;
+  }
+  .legend-icons img {
+    flex-shrink: 0;
+  }
+}
+
+@media (min-width: 651px) and (max-width: 1000px) {
+  #footer {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+  }
+  .legend-icons {
+    justify-content: center;
+    gap: 22px;
+  }
+}
+
+.garden-controls {
+  flex-wrap: wrap;
+  justify-content: center;
+}
+#simulationNotes {
+  width: min(720px, calc(100% - 32px));
+  max-height: calc(100dvh - 40px);
+  padding: 30px 36px;
+  color: #252c32;
+  background: #f5f3ec;
+  border: 1px solid #cbcac1;
+  line-height: 1.65;
+}
+#simulationNotes::backdrop {
+  background: rgba(12, 20, 15, 0.68);
+}
+.notes-header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid #cbcac1;
+  padding-bottom: 18px;
+  margin-bottom: 22px;
+}
+.notes-header h1 {
+  font:
+    normal 32px/1.12 Georgia,
+    serif;
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+.notes-header button {
+  color: #252c32;
+  border-color: #91958b;
+  white-space: nowrap;
+}
+.notes-header button:hover {
+  background: #e4e6db;
+}
+#simulationNotes :focus-visible {
+  outline-color: #284d6b;
+}
+.notes-intro {
+  font-size: 16px;
+}
+#simulationNotes section {
+  border-top: 1px solid #cbcac1;
+  padding-top: 20px;
+  margin-top: 24px;
+}
+#simulationNotes h2 {
+  font:
+    normal 23px/1.25 Georgia,
+    serif;
+  margin: 0 0 12px;
+}
+#simulationNotes p {
+  font-size: 14px;
+  margin: 0 0 14px;
+}
+#simulationNotes a {
+  color: #284d6b;
+  text-underline-offset: 3px;
+}
+#simulationNotes code {
+  font-size: 12px;
+  white-space: normal;
+}
+#simulationNotes .notes-end {
+  border-top: 1px solid #cbcac1;
+  padding-top: 20px;
+  margin: 24px 0 0;
+  font-size: 12px;
+  color: #5d6365;
+}
+@media (max-width: 650px) {
+  #simulationNotes {
+    padding: 22px 20px;
+  }
+  .notes-header h1 {
+    font-size: 27px;
+  }
+  .garden-controls {
+    gap: 8px;
+  }
+  .garden-controls button {
+    font-size: 11px;
+  }
+}
+
+#foundCount {
+  color: #d4ddc8;
+  font:
+    11px "Courier New",
+    monospace;
+  align-self: center;
+  white-space: nowrap;
+}
+#encounterPanel[hidden] {
+  display: none;
+}
+#encounterPanel {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  transform: translate(-50%, -50%);
+  z-index: 35;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  width: min(480px, calc(100% - 36px));
+  padding: 24px;
+  background: #f5f3ec;
+  color: #252c32;
+  border: 1px solid #858d77;
+  box-shadow: 0 8px 0 rgba(18, 35, 24, 0.2);
+}
+#encounterImage {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+#encounterPanel p {
+  font:
+    11px "Courier New",
+    monospace;
+  margin: 0 0 10px;
+  color: #59634d;
+}
+#encounterPanel h2 {
+  font:
+    normal 30px/1.1 Georgia,
+    serif;
+  margin: 0 0 20px;
+}
+.encounter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  font-size: 12px;
+}
+#encounterPanel button {
+  color: #252c32;
+  border-color: #9fa592;
+}
+#encounterPanel button:hover {
+  background: #e2e7d9;
+}
+#encounterPanel :focus-visible {
+  outline-color: #284d6b;
+}
+@media (max-width: 650px) {
+  #encounterPanel {
+    padding: 20px;
+    gap: 16px;
+  }
+  #encounterImage {
+    width: 60px;
+    height: 60px;
+  }
+  #encounterPanel h2 {
+    font-size: 25px;
+  }
+  .garden-controls {
+    gap: 7px;
+  }
+  #foundCount {
+    font-size: 10px;
   }
 }

@@ -8,7 +8,7 @@
       content="Simulation and data work for UT Austin’s Formula SAE combustion team."
     />
     <meta name="theme-color" content="#f5f3ec" />
-    <title>What makes a lap faster? — Roy Liu</title>
+    <title>Longhorn Racing — Roy Liu</title>
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="project.css" />
   </head>
@@ -27,7 +27,7 @@
       <header class="project-header">
         <a class="text-link" href="index.html#work">← All work</a>
         <p class="eyebrow">Engineering / Longhorn Racing</p>
-        <h1>What makes a lap faster?</h1>
+        <h1>Longhorn Racing</h1>
         <p class="subtitle">
           Simulation and data work for UT Austin’s Formula SAE combustion team.
         </p>
@@ -44,12 +44,12 @@
       </figure>
       <div class="project-content">
         <section class="content-section">
-          <h2>The question</h2>
+          <h2>My work</h2>
           <div>
             <p>
-              A design change can help in one part of a lap and cost time in
-              another. My work with Longhorn Racing Combustion uses simulation
-              and data to help the team compare those tradeoffs.
+              With Longhorn Racing Combustion, I work on simulations and the
+              data that goes into them. We use lap-time studies to compare
+              changes to the car before committing to a design or setup.
             </p>
             <p>
               <a
@@ -60,7 +60,7 @@
           </div>
         </section>
         <section class="content-section">
-          <h2>The lap-time study</h2>
+          <h2>Lap-time simulation</h2>
           <div>
             <p>
               The figure varies drag coefficient and added vehicle mass, then
@@ -68,37 +68,38 @@
               cornering, but they also introduce drag and weight.
             </p>
             <p>
-              Under some of the event assumptions we tested, the mass penalty
-              was large enough that reducing weight mattered more than a more
-              aggressive aerodynamic package. That result depends on the setup
-              and event being modeled.
+              In some of the cases we tested, the added mass cost more lap time
+              than the aerodynamic changes saved.
             </p>
           </div>
         </section>
         <section class="content-section">
-          <h2>Making the data usable</h2>
+          <h2>Data processing</h2>
           <div>
             <p>
-              I wrote code to clean and interpolate shock-dyno force–velocity
-              data for use in vehicle simulations. I also worked on parsing and
-              organizing Haltech logs so the team could inspect and reuse engine
-              data.
+              Alongside the lap-time studies, I wrote code to clean and interpolate 
+              shock-dyno force–velocity data for our simulations. I also worked on 
+              parsing Haltech ECU logs to make the engine data easier for the team to 
+              inspect and analyze. My "big" project has been developing a data ingestion 
+              and validation pipeline that centers around a RasberryPi which collects data 
+              from the 20+ sensors onboard the racecar, and pushes to a cloud-hosted database 
+              that various Grafana dashboards and analysis scripts poll from.
             </p>
           </div>
         </section>
         <section class="content-section">
           <h2>Tools</h2>
-          <div><p>Python · pandas · NumPy · Matplotlib · Julia · SQL</p></div>
+          <div><p>C · C++ · Python · pandas · NumPy · Matplotlib · Julia · PostgreSQL</p></div>
         </section>
       </div>
       <div class="project-next">
         <a href="index.html#work">← All work</a
-        ><a href="stocks.html">Next: Testing short-term market signals →</a>
+        ><a href="stocks.html">Next: Stock Modeling →</a>
       </div>
     </main>
     <footer class="shell">
       <span>Roy Liu · Austin, Texas</span
-      ><a href="interactive.html">Take the scenic route ↗</a><span>© 2026</span>
+      ><a href="interactive.html">Walk my dog ↗</a><span>© 2026</span>
     </footer>
   </body>
 </html>

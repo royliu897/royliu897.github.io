@@ -1,40 +1,261 @@
 <!doctype html>
+
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta
       name="description"
-      content="Take a walk through Roy Liu’s projects in a small interactive garden."
+      content="Walk my dog through the grass and find four projects."
     />
-    <title>The garden — Roy Liu</title>
+    <title>Walk my dog — Roy Liu</title>
     <link rel="stylesheet" href="interactive.css" />
     <script src="interactive.js" defer></script>
+    <script src="simulation-notes.js" defer></script>
   </head>
   <body>
     <a href="index.html" id="backToNormal">← Roy Liu / All work</a>
-    <div id="world-title">
-      <strong>The garden</strong
-      ><span id="sim-status">Click or tap to walk. Arrow keys work too.</span>
-    </div>
-    <canvas
-      id="gameCanvas"
-      tabindex="0"
-      aria-label="Interactive garden. Click or tap the ground to move the dog, or use arrow keys. Space pauses. Project links are available below."
-      >Explore the projects using the links below.</canvas
+
+```
+<canvas
+  id="gameCanvas"
+  tabindex="0"
+  aria-label="Move your cursor to lead the dog. Click the ground to walk there and sit. On touch screens, tap or drag. Arrow keys move, Space sits, and P pauses. Try to find the four objects, or use the links below :)"
+  >Explore the projects using the links below.</canvas
+>
+<nav id="footer" aria-label="Projects and controls">
+  <div class="legend-icons">
+    <a href="lhr.html"><img src="assets/car.png" alt="" />Longhorn Racing</a
+    ><a href="research.html"
+      ><img src="assets/gamma.png" alt="" />GAMMA Lab</a
+    ><a href="tennis.html"><img src="assets/racket.png" alt="" />Tennis</a
+    ><a href="stocks.html"
+      ><img src="assets/stock.png" alt="" />Stock Modeling</a
     >
-    <nav id="footer" aria-label="Projects and garden controls">
-      <div class="legend-icons">
-        <a href="lhr.html"><img src="assets/car.png" alt="" />Racing</a
-        ><a href="research.html"
-          ><img src="assets/gamma.png" alt="" />Research</a
-        ><a href="tennis.html"><img src="assets/racket.png" alt="" />Tennis</a
-        ><a href="stocks.html"><img src="assets/stock.png" alt="" />Markets</a>
-      </div>
-      <div class="garden-controls">
-        <button id="pauseBtn" aria-pressed="false">Pause</button
-        ><button id="resetBtn">Reset leaves</button>
-      </div>
-    </nav>
+  </div>
+  <div class="garden-controls">
+    <span id="foundCount" aria-live="polite">0 / 4 found</span>
+    <button
+      id="aboutSimulation"
+      aria-haspopup="dialog"
+      aria-controls="simulationNotes"
+    >
+      About the simulation
+    </button>
+    <button id="pauseBtn" aria-pressed="false">Pause</button
+    ><button id="resetBtn">Reset walk</button>
+  </div>
+</nav>
+
+<section id="encounterPanel" hidden aria-labelledby="encounterTitle">
+  <img id="encounterImage" alt="" />
+  <div>
+    <p>Found something!</p>
+    <h2 id="encounterTitle"></h2>
+    <div class="encounter-actions">
+      <a id="encounterLink" href="index.html">View project ↗</a
+      ><button id="keepWalking">Keep walking</button>
+    </div>
+  </div>
+</section>
+<dialog id="simulationNotes" aria-labelledby="simulationHeading">
+  <div class="notes-header">
+    <h1 id="simulationHeading">About the simulation</h1>
+    <form method="dialog">
+      <button aria-label="Close simulation notes" autofocus>Close ×</button>
+    </form>
+  </div>
+  <p>
+    This started as a small physics experiment for my portfolio: I wanted the
+    field to react to the dog rather than just play a fixed animation. The
+    result is not meant to be a physically complete simulation. Instead, I
+    picked a few effects that are noticeable while walking through grass,
+    gave them simple dynamics, and tried to keep the whole thing cheap enough
+    to run smoothly in a browser.
+  </p>
+  <section>
+    <h2>Dog movement</h2>
+    <p>
+      The dog’s motion is controlled by acceleration rather than setting its
+      position directly. At each physics step, I find the vector from the dog
+      to its target and use the distance to determine how strongly it should
+      accelerate. Farther targets make it speed up; as it gets close, the
+      acceleration falls off and a small dead zone lets it come to rest
+      instead of constantly correcting around the cursor. Velocity is also
+      capped, so a click on the other side of the screen does not produce an
+      unrealistic jump in speed.
+    </p>
+    <p>
+      That gives the cursor a little slack, almost like an invisible leash.
+      It also means the dog’s velocity is useful elsewhere in the simulation:
+      running quickly through a patch of grass can produce a larger
+      disturbance than slowly walking through the same patch.
+    </p>
+  </section>
+  <section>
+    <h2>Grass as damped springs</h2>
+    <p>
+      I originally considered treating the grass as particles, but that would
+      spend a lot of computation on motion that is barely visible at this
+      scale. Instead, every tuft stays fixed at its root and only its visual
+      bend is simulated. When the dog passes through a tuft, it adds bend
+      velocity in the direction of contact. Afterward, the tuft behaves like
+      a damped spring and returns to its resting position.
+    </p>
+    <p>
+      For a bend <code>x</code> with bend velocity <code>v</code>, the
+      restoring acceleration is <code>a = −k x − c v</code>. The
+      <code>−k x</code> term pulls the grass back toward its upright
+      position, while <code>−c v</code> removes energy so it settles instead
+      of oscillating forever. Increasing <code>k</code> makes the grass feel
+      stiffer; increasing <code>c</code> makes it settle faster.
+    </p>
+    <p>
+      This is the standard spring-and-damper model described in
+      <a
+        href="https://gafferongames.com/post/spring_physics/"
+        target="_blank"
+        rel="noopener"
+        >Glenn Fiedler’s Spring Physics ↗</a
+      >. The simplification is where I apply it: one spring represents the
+      visible deformation of an entire tuft rather than simulating every
+      blade independently.
+    </p>
+  </section>
+  <section>
+    <h2>Loose grass and particles</h2>
+    <p>
+      The bits kicked into the air are a separate particle system. Each has
+      a position and velocity, with gravity pulling it downward and drag
+      gradually reducing its speed. Particles have short lifetimes and fade
+      once they settle. Sitting produces a larger local impulse, which is why
+      it kicks up a more noticeable burst than ordinary walking.
+    </p>
+    <p>
+      I deliberately left out particle-particle collisions, airflow, and
+      detailed leaf rotation or deformation. Those would make the model more
+      physically complete, but they add a lot of pairwise work for details
+      that are difficult to notice at the size the particles are drawn. The
+      goal was to preserve the visible consequences of the physics—momentum,
+      falling, drag, and settling—without turning the page into a full
+      rigid-body or soft-body simulator.
+    </p>
+  </section>
+  <section>
+    <h2>Numerical integration</h2>
+    <p>
+      The physics runs at a fixed timestep of <code>1/120 s</code>. For each
+      step, acceleration updates velocity first, and the new velocity then
+      updates position. This is semi-implicit Euler integration: still very
+      inexpensive, but generally better behaved for spring-like systems than
+      updating position from the old velocity.
+    </p>
+    <p>
+      Rendering is kept separate from the physics clock. A 60 Hz display, a
+      144 Hz display, or an occasional slow frame should therefore not change
+      the underlying motion very much. If rendering falls behind, the
+      simulation performs multiple fixed physics steps to catch up, but I cap
+      accumulated catch-up time at <code>0.1 s</code>. Without that cap, one
+      unusually slow frame can create a feedback loop where the browser has
+      to run more and more physics just to catch up.
+    </p>
+    <p>
+      This follows the fixed-timestep approach in
+      <a
+        href="https://gafferongames.com/post/fix_your_timestep/"
+        target="_blank"
+        rel="noopener"
+        >Fix Your Timestep! ↗</a
+      >. Fiedler’s
+      <a
+        href="https://gafferongames.com/post/integration_basics/"
+        target="_blank"
+        rel="noopener"
+        >Integration Basics ↗</a
+      >
+      is also a good reference for the integration method.
+    </p>
+  </section>
+  <section>
+    <h2>Collisions and interactions</h2>
+    <p>
+      Not everything on screen needs detailed geometry. Trees use circular
+      footprints for collision checks, which is enough to make the dog steer
+      around their trunks without testing against every transparent pixel of
+      the sprite. The four project objects use simple proximity checks:
+      reaching one counts as an encounter and opens its project card.
+      Grounding shadows are just drawn ellipses rather than simulated
+      lighting.
+    </p>
+    <p>
+      These approximations are intentional. I tried to use detailed physics
+      where it changes how the scene feels and cheap geometric tests where
+      the exact result is visually indistinguishable.
+    </p>
+  </section>
+  <section>
+    <h2>Performance tradeoffs</h2>
+    <p>
+      Grass was the main performance constraint because there can be many
+      tufts on screen at once. The terrain and small grass sprites are
+      cached instead of rebuilt every frame. Rooted grass is also sorted once
+      when the field is generated; each frame only has to merge that mostly
+      static ordering with the small number of objects that actually move.
+    </p>
+    <p>
+      The loose-particle system is capped at 320 particles. This gives enough
+      density for a visible burst without allowing repeated movement to
+      create an ever-growing simulation. More importantly, particles do not
+      collide with one another. Pairwise collision detection would move the
+      cost toward quadratic growth as the particle count increases, while
+      contributing very little visually for tiny pieces of grass.
+    </p>
+    <p>
+      The same reasoning is why a tuft gets one bend state instead of a
+      simulation for every blade. There is a lot of physics I could add, but
+      realism was not the only objective. I wanted the interactions that
+      matter visually—acceleration, inertia, spring recovery, gravity, drag,
+      and collision avoidance—while keeping the amount of state and
+      computation small enough for an interactive webpage.
+    </p>
+  </section>
+  <section>
+    <h2>What isn’t simulated</h2>
+    <p>
+      This is still a deliberately stylized model. There is no airflow,
+      blade-by-blade grass mechanics, particle-particle collision, leaf
+      deformation, articulated dog skeleton, or physical lighting model.
+      Trees are placed procedurally around the edges of the scene rather than
+      grown from a terrain model. Some effects are also exaggerated because
+      physically accurate motion can be too subtle to read at this scale.
+    </p>
+    <p>
+      I think of the simulation as a perceptual model rather than a complete
+      physical one: spend computation on the dynamics a person notices, and
+      approximate or omit the ones they probably won’t.
+    </p>
+  </section>
+  <section>
+    <h2>Artwork</h2>
+    <p>
+      The ground uses tiles from
+      <a
+        href="https://opengameart.org/content/overworld-grass-biome"
+        target="_blank"
+        rel="noopener"
+        >Beast’s Overworld — Grass Biome ↗</a
+      >, released under CC0. The bending grass tufts are drawn in code. The
+      dog, trees, sky, and project objects are from the site’s existing
+      artwork.
+    </p>
+  </section>
+  <p class="notes-end">
+    Opening these notes pauses the simulation. Reduced-motion preferences
+    also start the scene paused, and the normal project links remain
+    available below the canvas.
+  </p>
+</dialog>
+```
+
   </body>
 </html>

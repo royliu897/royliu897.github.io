@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta
       name="description"
-      content="A differentiable surrogate for a materials inverse problem."
+      content="A differentiable surrogate for a quantum materials problem."
     />
     <meta name="theme-color" content="#f5f3ec" />
-    <title>Learning a faster model of scattering — Roy Liu</title>
+    <title>GAMMA Lab — Roy Liu</title>
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="project.css" />
   </head>
@@ -27,33 +27,34 @@
       <header class="project-header">
         <a class="text-link" href="index.html#work">← All work</a>
         <p class="eyebrow">Research / GAMMA Lab</p>
-        <h1>Learning a faster model of scattering</h1>
+        <h1>GAMMA Lab</h1>
         <p class="subtitle">
-          A differentiable surrogate for a materials inverse problem.
+          A differentiable surrogate for a quantum materials problem.
         </p>
       </header>
       <figure class="project-figure research">
         <img
           src="assets/research.png"
-          alt="Ground truth and SIREN predictions. The challenge is preserving narrow peaks, not just fitting the background."
+          alt="Ground truth compared with my SIREN model’s predictions."
         />
         <figcaption>
-          Ground truth and SIREN predictions. The challenge is preserving narrow
-          peaks, not just fitting the background.
+          Ground truth compared with my SIREN model’s predictions.
         </figcaption>
       </figure>
       <div class="project-content">
         <section class="content-section">
-          <h2>The problem</h2>
+          <h2>Research</h2>
           <div>
             <p>
-              Direct simulation can make an inverse problem expensive: every
-              candidate set of material parameters needs another prediction. In
-              the GAMMA Lab, I work on a differentiable surrogate that can
-              predict scattering data inside that loop.
+              As a URA in the Group for AI in Materials Modeling and Analysis, 
+              my first project was developing a neural network that predicts
+              inelastic neutron scattering data from a material's spin Hamiltonian. 
+              The model is differentiable, so it can be used in an inverse problem to
+              estimate those parameters without running a full simulation each
+              time time (aka an <a href="https://www.emergentmind.com/topics/implicit-neural-representation-inr">INR ↗</a>).
             </p>
             <p>
-              The related paper is
+              My first-author paper on this work: 
               <a href="https://arxiv.org/abs/2608.10350"
                 >Observation geometry for uncertainty-aware Hamiltonian
                 inference and experimental design in quantum magnets ↗</a
@@ -62,28 +63,33 @@
           </div>
         </section>
         <section class="content-section">
-          <h2>My part</h2>
+          <h2>My work</h2>
           <div>
             <p>
-              I worked on a modulated SIREN-style network with 13 inputs: nine
-              Hamiltonian parameters and four energy–momentum coordinates.
+              I created a FiLM-modulated SIREN network with 13 inputs: nine
+              Hamiltonian parameters and four energy–momentum coordinates, 
+              where the energy-momentum coordinates are conditioned on
+              the given Hamiltonian parameters. This allowed for linear scaling
+              of the amount of training data needed to model 9d Hamiltonians
+              versus 4d Hamiltonians (as done in this <a href="https://www.emergentmind.com/topics/implicit-neural-representation-inr">work ↗</a>).
             </p>
             <p>
-              I also helped bring a large Julia-generated dataset into a Python
-              training workflow on TACC. That involved resolving array-layout
-              and interoperability issues, setting up Slurm jobs, and running
-              GPU training.
+              A good part of the work was learning how to manipulate the very large
+              dataset (many gigabytes worth of simulated scattering data). I had the 
+              privilege of training on Nvidia H100 GPUs through TACC, but still had
+              to use a mix of lazy loading, gradient accumulation, and careful selection
+              of batch sizes to do so in an efficient and effective manner.
             </p>
           </div>
         </section>
         <section class="content-section">
-          <h2>What needed care</h2>
+          <h2>Training</h2>
           <div>
             <p>
-              The useful signal is concentrated in narrow peaks. A model can fit
-              much of the background and still miss the structure we care about.
-              I experimented with weighted losses to give those peaks more
-              influence during training.
+              The tricky part is that much of the signal is concentrated in
+              narrow Bragg peaks. The model can fit the background fairly well and
+              still miss them, so I had to experiment with weighting losses based on
+              intensity and varying sine frequencies to get the model to work.
             </p>
           </div>
         </section>
@@ -94,12 +100,12 @@
       </div>
       <div class="project-next">
         <a href="index.html#work">← All work</a
-        ><a href="lhr.html">Next: What makes a lap faster? →</a>
+        ><a href="lhr.html">Next: Longhorn Racing →</a>
       </div>
     </main>
     <footer class="shell">
       <span>Roy Liu · Austin, Texas</span
-      ><a href="interactive.html">Take the scenic route ↗</a><span>© 2026</span>
+      ><a href="interactive.html">Walk my dog ↗</a><span>© 2026</span>
     </footer>
   </body>
 </html>

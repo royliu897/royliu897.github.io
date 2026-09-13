@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta
       name="description"
-      content="Feature engineering, boosted trees, and a paper-trading pipeline."
+      content="Feature engineering, decision trees, and a paper-trading pipeline."
     />
     <meta name="theme-color" content="#f5f3ec" />
-    <title>Testing short-term market signals — Roy Liu</title>
+    <title>Stock Modeling — Roy Liu</title>
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="project.css" />
   </head>
@@ -27,30 +27,30 @@
       <header class="project-header">
         <a class="text-link" href="index.html#work">← All work</a>
         <p class="eyebrow">Independent project / Machine learning</p>
-        <h1>Testing short-term market signals</h1>
+        <h1>Stock Modeling</h1>
         <p class="subtitle">
-          Feature engineering, boosted trees, and a paper-trading pipeline.
+          Feature engineering, decision trees, and a paper-trading pipeline.
         </p>
       </header>
       <figure class="project-figure stocks">
         <img
           src="assets/stocks.png"
-          alt="Output from a paper-trading version of the project, showing generated buy and short ideas."
+          alt="Output from my model, showing the recommended buy and short ideas for the day."
         />
         <figcaption>
-          Output from a paper-trading version of the project, showing generated
-          buy and short ideas.
+          Output from my model, showing the recommended buy and short ideas for the day.
         </figcaption>
       </figure>
       <div class="project-content">
         <section class="content-section">
-          <h2>The experiment</h2>
+          <h2>The project</h2>
           <div>
             <p>
-              I started this project to see whether I could model short-term
-              price movement with a workflow I could inspect and understand. It
-              became an exercise in collecting data, choosing features,
-              comparing models, and testing the pipeline.
+              I started this project to see how far I could get with short-term
+              stock prediction. It involved collecting and cleaning data, identifying
+              and building features, experimenting with different model architectures,
+              optimizing hyperparameters, and after many iterations connecting to a 
+              paper-trading account.
             </p>
             <p>
               <a href="https://github.com/royliu897/stock-movement-predictor"
@@ -60,34 +60,36 @@
           </div>
         </section>
         <section class="content-section">
-          <h2>Choosing a model</h2>
+          <h2>Models</h2>
           <div>
             <p>
-              I tried linear baselines, random forests, SVMs, convolutional
-              networks, and boosted trees. The CNN and SVM experiments tended to
-              overfit the data I had. Tree-based models gave me a more useful
-              direction.
+              I tried linear models, random forests, SVMs, convolutional
+              networks, and boosted trees. The SVMs and convolutional networks
+              tended to overfit the data I had. Tree-based models were more
+              useful, so that’s where I focused the rest of the project.
             </p>
             <p>
-              I used random forests to check features, then moved to XGBoost.
-              Repeated cross-validation and parameter searches helped narrow the
-              configuration instead of relying on a single split.
+              I used random forest feature and permutation importance to figure 
+              out which features were actually useful. I then used those features 
+              with XGBoost, which I found gave me better predictive performance. 
+              Finally, I fine-tuned the XGBoost model using randomized search to 
+              explore the global hyperparameter space and a denser grid search for
+              the best-performing regions.
             </p>
           </div>
         </section>
         <section class="content-section">
-          <h2>The pipeline</h2>
+          <h2>Data and paper trading</h2>
           <div>
             <p>
               I collected price bars, computed indicators, and stored larger
-              training tables in Parquet, with CSV files for debugging. I
-              connected the pipeline to Alpaca’s API to test paper-trading
-              execution.
+              training tables in Parquet, with CSV files for debugging and 
+              manual verification. I connected the pipeline to Alpaca’s API 
+              to test paper-trading execution and live performance.
             </p>
             <p>
-              The screenshot shows simulated trading activity. I used this to
-              test the live pipeline’s mechanics; the project did not trade real
-              funds.
+              The screenshot is from a paper-trading run. I didn’t use the
+              project to trade real money.
             </p>
           </div>
         </section>
@@ -103,12 +105,12 @@
       </div>
       <div class="project-next">
         <a href="index.html#work">← All work</a
-        ><a href="tennis.html">Next: Years on court →</a>
+        ><a href="tennis.html">Next: Tennis →</a>
       </div>
     </main>
     <footer class="shell">
       <span>Roy Liu · Austin, Texas</span
-      ><a href="interactive.html">Take the scenic route ↗</a><span>© 2026</span>
+      ><a href="interactive.html">Walk my dog ↗</a><span>© 2026</span>
     </footer>
   </body>
 </html>

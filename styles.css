@@ -434,3 +434,21 @@ footer {
     scroll-behavior: auto;
   }
 }
+
+.dog-note h2 a {
+  text-decoration: none;
+}
+.dog-note h2 a:hover {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+@media (max-width: 650px) {
+  .dog-note {
+    min-height: 122px;
+    display: flex;
+    align-items: center;
+  }
+  .dog-note h2 {
+    margin: 0;
+  }
+}
