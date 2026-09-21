@@ -67,6 +67,14 @@ class WritingTests(unittest.TestCase):
             if target.startswith('#'):
                 self.assertIn(target[1:], identifiers)
 
+    def test_short_analysis_sections(self):
+        content = (ROOT / 'lennar.html').read_text()
+        headings = ['Why is Lennar interesting?', 'What does Lennar do?',
+                    'How is Lennar doing?', 'Thesis', 'Areas of Concern', 'Value', 'Action']
+        positions = [content.index('<h2>' + heading + '</h2>') for heading in headings]
+        self.assertEqual(positions, sorted(positions))
+        self.assertEqual(content.count('<h2>'), len(headings))
+
 
 if __name__ == '__main__':
     unittest.main()
