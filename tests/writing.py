@@ -58,6 +58,15 @@ class WritingTests(unittest.TestCase):
         for number in range(1, 21):
             self.assertIn('source-' + str(number), identifiers)
 
+    def test_short_analysis_source_links(self):
+        page = Page(ROOT / 'lennar.html')
+        identifiers = [attrs['id'] for tag, attrs in page.elements if 'id' in attrs]
+        self.assertEqual(len(identifiers), len(set(identifiers)))
+        for tag, attrs in page.elements:
+            target = attrs.get('href', '')
+            if target.startswith('#'):
+                self.assertIn(target[1:], identifiers)
+
 
 if __name__ == '__main__':
     unittest.main()
