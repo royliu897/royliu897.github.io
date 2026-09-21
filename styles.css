@@ -550,3 +550,184 @@ footer {
 .dog-stamp::before {
   background-position: 29px 11px;
 }
+
+.blog-content {
+  max-width: 760px;
+  padding-block: 36px 70px;
+  overflow-wrap: anywhere;
+}
+.blog-content h1 {
+  font-size: clamp(45px, 6vw, 76px);
+  line-height: 1.04;
+  letter-spacing: -0.045em;
+  margin-bottom: 24px;
+}
+.blog-content h2 {
+  font: 28px/1.25 var(--serif);
+  letter-spacing: -0.02em;
+  margin-top: 40px;
+  margin-bottom: 18px;
+}
+.blog-content h3 {
+  font: 23px/1.25 var(--serif);
+}
+.blog-content hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin-block: 30px;
+}
+.post-meta {
+  font: 11px/1.5 var(--mono);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin: 48px 0 20px;
+}
+.post-subtitle {
+  font: 22px/1.45 var(--serif);
+  color: var(--muted);
+  max-width: 670px;
+}
+.post-date,
+.post-entry time,
+.post-updates .update-date {
+  font: 11px/1.7 var(--mono);
+  color: var(--muted);
+}
+.post-verdict {
+  font-weight: 600;
+  margin-block: 24px;
+}
+.post-list {
+  margin-block: 30px;
+}
+.post-entry {
+  border-bottom: 1px solid var(--line);
+}
+.post-entry > a {
+  display: block;
+  padding: 26px 0;
+  text-decoration: none;
+}
+.post-entry > a:hover h2,
+.post-entry > a:focus-visible h2 {
+  color: var(--blue);
+  text-decoration: underline;
+}
+.post-entry-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+}
+.post-entry-header h2 {
+  margin: 0 0 15px;
+}
+.post-entry time {
+  white-space: nowrap;
+}
+.post-entry p {
+  color: var(--muted);
+  margin-bottom: 0;
+}
+.post-sources {
+  border-block: 1px solid var(--line);
+  padding-block: 18px;
+  margin-block: 30px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.post-sources summary {
+  cursor: pointer;
+  color: var(--ink);
+}
+.post-sources summary:hover {
+  color: var(--blue);
+}
+.post-sources summary:focus-visible,
+.post-table:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 6px;
+}
+.post-sources[open] summary {
+  margin-bottom: 18px;
+}
+.post-sources li {
+  margin-bottom: 10px;
+}
+.post-updates {
+  margin-block: 36px;
+}
+.post-updates .update + .update {
+  border-top: 1px solid var(--line);
+  padding-top: 22px;
+  margin-top: 22px;
+}
+.post-disclaimer {
+  font-size: 12px;
+  color: var(--muted);
+  margin-block: 30px;
+}
+.post-full-link {
+  font-size: 13px;
+  margin-block: 26px;
+}
+.back-link {
+  font-size: 12px;
+}
+.post-figure {
+  margin: 34px 0;
+}
+.post-figure figcaption {
+  margin: 0 0 10px;
+}
+.post-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+}
+.post-figure-source {
+  font: 10px/1.5 var(--mono);
+  color: var(--muted);
+  margin-top: 10px;
+}
+.post-table {
+  overflow-x: auto;
+  margin-block: 30px;
+}
+.post-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.post-table th,
+.post-table td {
+  text-align: left;
+  padding: 10px;
+  border-bottom: 1px solid var(--line);
+}
+@media (max-width: 650px) {
+  .blog-content {
+    padding-block: 24px 40px;
+  }
+  .post-meta {
+    margin-top: 34px;
+  }
+  .post-subtitle {
+    font-size: 20px;
+  }
+  .post-entry-header {
+    flex-wrap: wrap;
+    gap: 0 20px;
+    margin-bottom: 15px;
+  }
+}
+@media (max-width: 380px) {
+  .site-nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    padding-block: 14px;
+  }
+}
