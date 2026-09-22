@@ -96,6 +96,14 @@ class WritingTests(unittest.TestCase):
             self.assertIn(('section', {'class': 'post-comments',
                                       'aria-labelledby': 'comments-heading'}), page.elements)
 
+    def test_updates_only_in_short_thesis(self):
+        short = (ROOT / 'lennar.html').read_text()
+        full = (ROOT / 'lennar-full.html').read_text()
+        self.assertIn('class="author-updates"', short)
+        self.assertNotIn('class="author-updates"', full)
+        self.assertNotIn('class="post-updates"', full)
+        self.assertNotIn('<h3>Updates</h3>', full)
+
 
 if __name__ == '__main__':
     unittest.main()

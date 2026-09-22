@@ -671,6 +671,63 @@ footer {
   max-width: none;
   width: 100%;
 }
+.reader-comment {
+  padding-block: 20px;
+  border-bottom: 1px solid var(--line);
+}
+.comment-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  align-items: baseline;
+  font-size: 13px;
+}
+.comment-meta a {
+  text-decoration: none;
+}
+.comment-meta time {
+  color: var(--muted);
+  font: 10px/1.6 var(--mono);
+}
+.comment-edited {
+  color: var(--muted);
+  font: 10px/1.6 var(--mono);
+}
+.comment-body {
+  margin-top: 12px;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.comment-body > :first-child { margin-top: 0; }
+.comment-body > :last-child { margin-bottom: 0; }
+.trade-update .comment-body {
+  margin-top: 0;
+}
+.trade-update .comment-meta {
+  margin-top: 6px;
+}
+.comment-body pre,
+.comment-body table { max-width: 100%; overflow-x: auto; display: block; }
+.comment-body h1,
+.comment-body h2,
+.comment-body h3,
+.comment-body h4 { font: 600 14px/1.6 var(--sans); letter-spacing: normal; }
+.comment-editor { margin-block: 20px; }
+.comment-editor summary { cursor: pointer; font-size: 13px; }
+.comment-refresh {
+  margin-top: 16px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font: 12px/1.6 var(--sans);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+.comment-refresh:hover,
+.comment-editor summary:hover { color: var(--blue); }
+.comment-editor summary:focus-visible { outline: 2px solid var(--blue); outline-offset: 6px; }
 .post-updates .update + .update {
   border-top: 1px solid var(--line);
   padding-top: 22px;

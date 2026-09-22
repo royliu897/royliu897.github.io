@@ -8,6 +8,7 @@
   <title>Lennar (LEN) — Roy Liu</title>
   <link rel="stylesheet" href="styles.css" />
   <script src="reading-progress.js" defer></script>
+  <script src="comments.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -439,22 +440,23 @@
 
     <div class="post-updates">
       <h3>Updates</h3>
-      <p class="update-placeholder"><em>None yet.</em></p>
-      <!-- Future updates go here
-      <div class="update">
-        <p class="update-date">Oct 15, 2026</p>
-        <p>Update text here.</p>
-      </div>
-      -->
+      <div class="author-updates" aria-live="polite"><p class="comment-note">Enable JavaScript to load updates, or view the discussion on GitHub below.</p></div>
       <section class="post-comments" aria-labelledby="comments-heading">
         <h3 id="comments-heading">Comments</h3>
-        <p class="comment-note">Questions, corrections, and follow-ups are welcome. Sign in with GitHub to comment. Comments are public and dated automatically.</p>
+        <div class="comment-list" aria-live="polite"><p class="comment-note">Loading comments…</p></div>
+        <button class="comment-refresh" type="button" hidden>Refresh comments</button>
+        <details class="comment-editor">
+          <summary>Add a comment</summary>
+          <p class="comment-note">Sign in with GitHub to post. For a named link, use <code>[link text](https://example.com)</code>. Close the editor to refresh the discussion.</p>
+          <template>
         <script src="https://utteranc.es/client.js"
                 repo="royliu897/royliu897.github.io"
                 issue-term="pathname"
                 theme="github-light"
                 crossorigin="anonymous"
                 async></script>
+          </template>
+        </details>
         <p class="comment-note">You can also <a href="https://github.com/royliu897/royliu897.github.io/issues?q=is%3Aissue%20%22%2Flennar.html%22">find this discussion on GitHub</a>.</p>
         <noscript><p class="comment-note">Enable JavaScript to read and write comments here, or use the GitHub link above.</p></noscript>
       </section>
