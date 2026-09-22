@@ -75,6 +75,14 @@ class WritingTests(unittest.TestCase):
         self.assertEqual(positions, sorted(positions))
         self.assertEqual(content.count('<h2>'), len(headings))
 
+    def test_reading_navigation_script(self):
+        for name in ['blog.html', 'lennar.html', 'lennar-full.html']:
+            page = Page(ROOT / name)
+            scripts = [attrs for tag, attrs in page.elements if tag == 'script'
+                       and attrs.get('src') == 'reading-progress.js']
+            self.assertEqual(len(scripts), 1)
+            self.assertIn('defer', scripts[0])
+
 
 if __name__ == '__main__':
     unittest.main()

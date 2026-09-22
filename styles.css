@@ -731,3 +731,40 @@ footer {
     padding-block: 14px;
   }
 }
+.reading-progress {
+  position: fixed;
+  inset: 0 0 auto;
+  height: 3px;
+  background: var(--blue);
+  transform: scaleX(0);
+  transform-origin: left;
+  pointer-events: none;
+  z-index: 100;
+}
+.post-sections {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin-block: 28px 36px;
+  padding-block: 16px;
+  border-block: 1px solid var(--line);
+  font: 12px/1.6 var(--sans);
+  color: var(--muted);
+}
+.post-sections-label {
+  flex-basis: 100%;
+  font: 10px/1.6 var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.post-sections a {
+  text-decoration: none;
+}
+.post-sections a:hover {
+  text-decoration: underline;
+}
+@media (prefers-reduced-motion: reduce) {
+  html:has(.blog-content) {
+    scroll-behavior: auto;
+  }
+}
