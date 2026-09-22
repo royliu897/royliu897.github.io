@@ -39,3 +39,13 @@ The Lennar full analysis preserves the supplied quality-checked Word document's 
 
 Run `python3 tests/writing.py` to check navigation, local blog links, and the full analysis structure.
 Run `node tests/reading-progress.cjs` to check reading progress and generated section links.
+
+### Public comments
+
+Each article's Updates section includes [Utterances](https://utteranc.es/), which stores public comments in GitHub Issues with author names and timestamps. Visitors need a GitHub account to post. Author updates remain separate above the discussion.
+
+Before comments can be posted, install or configure the [Utterances GitHub app](https://github.com/apps/utterances) for `royliu897/royliu897.github.io`. Keep the repository public with Issues enabled. The app creates a thread when the first visitor comments. No tokens belong in the website files.
+
+Threads are matched by page pathname, so the short and full analyses have separate discussions. Preserve published filenames to preserve thread mappings. When copying a post, keep the embed and update the fallback GitHub search link to the new pathname. Moderate comments through the corresponding GitHub issue. The embedded widget uses its own light theme, with the surrounding heading, spacing and dividers styled by the site.
+
+After deployment and app authorization, test signing in, posting a comment, reloading the page, and viewing the same comment while signed out. Automated tests check the embed configuration, not the third-party login or posting flow.
