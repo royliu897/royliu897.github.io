@@ -667,10 +667,6 @@ footer {
   font-size: 12px;
   color: var(--muted);
 }
-.post-comments .utterances {
-  max-width: none;
-  width: 100%;
-}
 .reader-comment {
   padding-block: 20px;
   border-bottom: 1px solid var(--line);
@@ -712,8 +708,69 @@ footer {
 .comment-body h2,
 .comment-body h3,
 .comment-body h4 { font: 600 14px/1.6 var(--sans); letter-spacing: normal; }
-.comment-editor { margin-block: 20px; }
-.comment-editor summary { cursor: pointer; font-size: 13px; }
+.comment-account {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 12px;
+  margin-block: 12px 20px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.comment-form {
+  margin-block: 20px 28px;
+}
+.comment-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+.comment-form textarea {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 80px;
+  padding: 12px 14px;
+  resize: vertical;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--ink);
+  font: 14px/1.65 var(--sans);
+}
+.comment-form textarea::placeholder { color: var(--muted); }
+.comment-form textarea:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+}
+.comment-form-actions {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+}
+.comment-form button[type="submit"] {
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--ink);
+  font: 12px/1.6 var(--sans);
+  cursor: pointer;
+}
+.comment-form button[type="submit"]:hover:not(:disabled) {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+.comment-form button:disabled { opacity: 0.55; cursor: default; }
+.comment-text-button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font: 12px/1.6 var(--sans);
+  cursor: pointer;
+}
+.comment-text-button:hover { color: var(--blue); text-decoration: underline; }
 .comment-refresh {
   margin-top: 16px;
   padding: 0;
@@ -725,9 +782,7 @@ footer {
   text-underline-offset: 4px;
   cursor: pointer;
 }
-.comment-refresh:hover,
-.comment-editor summary:hover { color: var(--blue); }
-.comment-editor summary:focus-visible { outline: 2px solid var(--blue); outline-offset: 6px; }
+.comment-refresh:hover { color: var(--blue); }
 .post-updates .update + .update {
   border-top: 1px solid var(--line);
   padding-top: 22px;

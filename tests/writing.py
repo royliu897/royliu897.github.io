@@ -87,14 +87,15 @@ class WritingTests(unittest.TestCase):
         for name in ['lennar.html', 'lennar-full.html']:
             page = Page(ROOT / name)
             scripts = [attrs for tag, attrs in page.elements if tag == 'script'
-                       and attrs.get('src') == 'https://utteranc.es/client.js']
+                       and attrs.get('src') == 'comments.js']
             self.assertEqual(len(scripts), 1)
-            self.assertEqual(scripts[0]['repo'], 'royliu897/royliu897.github.io')
-            self.assertEqual(scripts[0]['issue-term'], 'pathname')
-            self.assertEqual(scripts[0]['theme'], 'github-light')
-            self.assertIn('async', scripts[0])
+            self.assertIn('defer', scripts[0])
             self.assertIn(('section', {'class': 'post-comments',
-                                      'aria-labelledby': 'comments-heading'}), page.elements)
+                                      'aria-labelledby': 'comments-heading',
+                                      'data-repo': 'royliu897/royliu897.github.io',
+                                      'data-api': 'https://comments.royrliu.com'}), page.elements)
+            self.assertFalse(any(tag == 'script' and 'utteranc.es' in attrs.get('src', '')
+                                 for tag, attrs in page.elements))
 
     def test_updates_only_in_short_thesis(self):
         short = (ROOT / 'lennar.html').read_text()

@@ -1,0 +1,15 @@
+name = "roy-writing-comments"
+main = "worker.mjs"
+compatibility_date = "2026-09-22"
+workers_dev = false
+
+[[routes]]
+pattern = "comments.royrliu.com"
+custom_domain = true
+
+[vars]
+SITE_ORIGIN = "https://royrliu.com"
+API_ORIGIN = "https://comments.royrliu.com"
+GITHUB_REPO = "royliu897/royliu897.github.io"
+AUTHOR_ID = "124701324"
+PAGES_JSON = '{"lennar":{"issue":1,"updates":true},"lennar-full":{"issue":0,"updates":false}}'
