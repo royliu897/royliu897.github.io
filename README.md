@@ -28,7 +28,7 @@ The simulation lives in `interactive.js`, updates at 120 Hz, and draws once per 
 
 The writing section is plain HTML with shared blog styles appended to `styles.css`.
 
-Include `reading-progress.js` with `defer` on writing pages. It adds a thin reading-progress bar and section links from the article's top-level `h2` headings. Pages without enough content to scroll hide the bar. Copying an existing post preserves this setup.
+Include `reading-progress.js` with `defer` on writing pages. It adds a vertical reading-progress indicator and section links from the article's top-level `h2` headings, highlighting the current section. Wide screens show a fixed left-hand outline. Smaller screens keep the links above the article and the indicator at the left edge. Pages without enough content to scroll hide the indicator. Copying an existing post preserves this setup.
 
 1. Copy `lennar.html` to `company.html` for a short post. Update the title, description, publication date, thesis, sources, and disclosure.
 2. Optionally copy `lennar-full.html` to `company-full.html` for the detailed analysis, with images in `assets/`. Update both cross-links; omit the full-analysis link when there is no longer version.

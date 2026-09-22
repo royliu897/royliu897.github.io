@@ -3,6 +3,7 @@
   if (!content) return;
 
   const headings = Array.from(content.children).filter(element => element.tagName === 'H2');
+  const links = [];
   if (headings.length > 1) {
     const navigation = document.createElement('nav');
     navigation.className = 'post-sections';
@@ -17,6 +18,7 @@
       link.href = `#${heading.id}`;
       link.textContent = heading.textContent.trim();
       navigation.append(link);
+      links.push(link);
     });
     headings[0].before(navigation);
   }
@@ -36,7 +38,15 @@
     const fraction = distance > 0
       ? Math.min(1, Math.max(0, -bounds.top / distance))
       : 0;
-    progress.style.transform = `scaleX(${fraction})`;
+    progress.style.setProperty('--reading-progress', fraction);
+    let activeIndex = -1;
+    headings.forEach((heading, index) => {
+      if (heading.getBoundingClientRect().top <= 120) activeIndex = index;
+    });
+    links.forEach((link, index) => {
+      if (index === activeIndex) link.setAttribute('aria-current', 'location');
+      else link.removeAttribute('aria-current');
+    });
   }
 
   function scheduleUpdate() {

@@ -22,9 +22,10 @@ function setup(height, headings = []) {
     querySelector: () => content,
     body: { append: element => elements.push(element) },
     createElement: tag => ({
-      tag, style: {}, children: [], attributes: {},
+      tag, style: { setProperty(name, value) { this[name] = value; } }, children: [], attributes: {},
       append(child) { this.children.push(child); },
       setAttribute(name, value) { this.attributes[name] = value; },
+      removeAttribute(name) { delete this.attributes[name]; },
     }),
   };
   class ResizeObserver {
@@ -36,28 +37,34 @@ function setup(height, headings = []) {
 }
 
 let navigation;
-const headings = ['Thesis', 'Value'].map(textContent => ({
+const headings = ['Thesis', 'Value'].map((textContent, index) => ({
   tagName: 'H2', textContent,
+  top: 100 + index * 900,
+  getBoundingClientRect() { return { top: this.top }; },
   before(element) { navigation = element; },
 }));
 const page = setup(2400, headings);
 assert.equal(navigation.attributes['aria-label'], 'Article sections');
 assert.equal(navigation.children[1].href, '#section-1');
 assert.equal(navigation.children[2].textContent, 'Value');
-assert.equal(page.progress.style.transform, 'scaleX(0)');
+assert.equal(page.progress.style['--reading-progress'], 0);
+assert.equal(navigation.children[1].attributes['aria-current'], 'location');
+headings[1].top = 100;
 page.bounds.top = -800;
 page.events.scroll();
 page.events.scroll();
 assert.equal(page.frames.length, 1);
 page.frames.shift()();
-assert.equal(page.progress.style.transform, 'scaleX(0.5)');
+assert.equal(page.progress.style['--reading-progress'], 0.5);
+assert.equal(navigation.children[1].attributes['aria-current'], undefined);
+assert.equal(navigation.children[2].attributes['aria-current'], 'location');
 page.bounds.top = -2000;
 page.events.scroll();
 page.frames.shift()();
-assert.equal(page.progress.style.transform, 'scaleX(1)');
+assert.equal(page.progress.style['--reading-progress'], 1);
 page.bounds.height = 4800;
 page.resize();
 page.frames.shift()();
-assert.equal(page.progress.style.transform, 'scaleX(0.5)');
+assert.equal(page.progress.style['--reading-progress'], 0.5);
 assert.equal(setup(600).progress.hidden, true);
 console.log('Reading progress and section navigation tests passed.');

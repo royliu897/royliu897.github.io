@@ -733,13 +733,21 @@ footer {
 }
 .reading-progress {
   position: fixed;
-  inset: 0 0 auto;
-  height: 3px;
-  background: var(--blue);
-  transform: scaleX(0);
-  transform-origin: left;
+  left: 10px;
+  top: 25vh;
+  width: 2px;
+  height: 50vh;
+  background: var(--line);
   pointer-events: none;
-  z-index: 100;
+  z-index: 10;
+}
+.reading-progress::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--blue);
+  transform: scaleY(var(--reading-progress, 0));
+  transform-origin: top;
 }
 .post-sections {
   display: flex;
@@ -762,6 +770,37 @@ footer {
 }
 .post-sections a:hover {
   text-decoration: underline;
+}
+.post-sections a[aria-current="location"] {
+  color: var(--blue);
+  font-weight: 600;
+}
+@media (min-width: 1240px) {
+  .post-sections {
+    position: fixed;
+    top: 140px;
+    left: max(40px, calc(50% - 600px));
+    width: 180px;
+    max-height: calc(100vh - 180px);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    gap: 14px;
+    margin: 0;
+    padding: 0 8px 12px 0;
+    border: 0;
+  }
+  .post-sections-label {
+    flex-basis: auto;
+    margin-bottom: 4px;
+  }
+  .reading-progress {
+    left: max(24px, calc(50% - 616px));
+    top: 140px;
+    height: calc(100vh - 180px);
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   html:has(.blog-content) {
