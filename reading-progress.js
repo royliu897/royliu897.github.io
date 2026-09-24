@@ -2,7 +2,11 @@
   const content = document.querySelector('.blog-content');
   if (!content) return;
 
-  const headings = Array.from(content.children).filter(element => element.tagName === 'H2');
+  const headings = Array.from(content.children).flatMap(element => {
+    if (element.tagName === 'H2') return [element];
+    if (element.classList && element.classList.contains('markdown-heading')) return Array.from(element.children).filter(child => child.tagName === 'H2');
+    return [];
+  });
   const links = [];
   if (headings.length > 1) {
     const navigation = document.createElement('nav');

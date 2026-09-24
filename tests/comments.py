@@ -96,6 +96,14 @@ with sync_playwright() as playwright:
     page.reload()
     page.get_by_role('button', name='Edit', exact=True).wait_for()
     assert page.get_by_role('button', name='Edit', exact=True).count() == 1
+    comments[0]['editable'] = False
+    comments[0]['html_url'] = 'https://github.com/royliu897/royliu897.github.io/issues/1#issuecomment-1'
+    page.reload()
+    page.get_by_role('link', name='Edit on GitHub', exact=True).wait_for()
+    assert page.get_by_role('button', name='Edit', exact=True).count() == 0
+    comments[0]['editable'] = True
+    page.reload()
+    page.get_by_role('button', name='Edit', exact=True).wait_for()
     assert not page.locator('.author-update-editor').is_visible()
     page.get_by_role('button', name='Edit', exact=True).click()
     page.get_by_label('Edit message').fill('Edited question')

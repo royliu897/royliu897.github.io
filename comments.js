@@ -101,7 +101,7 @@
     Array.from(parsed.body.childNodes).forEach(node => copyMarkup(node, body));
     if (authorUpdate) article.append(body, header);
     else article.append(header, body);
-    if (user && comment.user && user.id === comment.user.id) {
+    if (user && comment.user && user.id === comment.user.id && comment.editable !== false) {
       const edit = document.createElement('button');
       edit.type = 'button';
       edit.className = 'comment-text-button';
@@ -117,6 +117,12 @@
         article.append(form);
         form.querySelector('textarea').focus();
       });
+      header.append(edit);
+    } else if (user && comment.user?.id === user.id && comment.editable === false && sourceUrl) {
+      const edit = document.createElement('a');
+      edit.href = sourceUrl;
+      edit.textContent = 'Edit on GitHub';
+      edit.className = 'comment-text-button';
       header.append(edit);
     }
     return article;
@@ -234,7 +240,7 @@
       login.textContent = 'Sign in with GitHub';
       account.append(login);
       const note = document.createElement('span');
-      note.textContent = serviceAvailable ? 'to post or edit your messages.' : 'Posting will be available once the sign-in service is configured.';
+      note.textContent = serviceAvailable ? 'No repository access required.' : 'Posting will be available once the sign-in service is configured.';
       account.append(note);
     }
     document.querySelectorAll('[data-message-submit]').forEach(button => { button.disabled = !user; });

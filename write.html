@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#f5f3ec" />
+  <meta name="robots" content="noindex" />
+  <title>Write — Roy Liu</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="write.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <nav class="site-nav shell" aria-label="Main navigation">
+    <a class="brand" href="index.html">Roy Liu<span class="brand-note"> / personal website</span></a>
+    <div class="nav-links">
+      <a href="index.html#work">Work</a>
+      <a href="blog.html" aria-current="true">Writing</a>
+      <a href="index.html#about">About</a>
+      <a href="mailto:royrliu@utexas.edu">Email ↗</a>
+    </div>
+  </nav>
+  <main id="main" class="writer shell" data-api="https://comments.royrliu.com">
+    <a href="blog.html" class="back-link">← All posts</a>
+    <div class="writer-heading">
+      <h1>Write</h1>
+      <div id="writer-account" class="comment-account" aria-live="polite">Checking sign-in…</div>
+    </div>
+    <p id="writer-status" class="writer-status" role="status"></p>
+    <div id="writer-workspace" class="writer-workspace" hidden>
+      <aside class="writer-library" aria-label="Writing library">
+        <button id="new-draft" class="writer-button" type="button">New draft</button>
+        <h2>Drafts</h2>
+        <p class="comment-note">Saved on this browser.</p>
+        <div id="draft-list" class="writer-list"></div>
+        <h2>Published</h2>
+        <div id="published-list" class="writer-list"></div>
+        <button id="refresh-pages" class="comment-text-button" type="button">Refresh pages</button>
+        <p class="comment-note">Pages created here can be edited here. Existing hand-written pages stay unchanged.</p>
+      </aside>
+      <section class="writer-document" aria-label="Page editor">
+        <form id="writer-form">
+          <fieldset id="writer-fields">
+            <div class="writer-field">
+              <label for="page-title">Title</label>
+              <input id="page-title" name="title" maxlength="140" required placeholder="A company, an idea, a question" />
+            </div>
+            <div class="writer-field-row">
+              <div class="writer-field">
+                <label for="page-slug">Page address</label>
+                <div class="writer-address"><input id="page-slug" name="slug" maxlength="80" pattern="[a-z0-9]+(-[a-z0-9]+)*" required placeholder="company" /><span>.html</span></div>
+              </div>
+              <div class="writer-field">
+                <label for="page-type">Page type</label>
+                <select id="page-type" name="type">
+                  <option value="thesis">Investment thesis</option>
+                  <option value="analysis">Full analysis</option>
+                  <option value="note">Note</option>
+                </select>
+              </div>
+            </div>
+            <p class="comment-note">Every page has comments. Investment theses also have your trade updates.</p>
+            <details class="writer-details" open>
+              <summary>Introduction</summary>
+              <div class="writer-field"><label for="page-category">Label <span>optional</span></label><input id="page-category" name="category" maxlength="80" placeholder="Analysis / Homebuilding" /></div>
+              <div class="writer-field"><label for="page-subtitle">Subtitle <span>optional</span></label><input id="page-subtitle" name="subtitle" maxlength="240" /></div>
+              <div class="writer-field"><label for="page-summary">Summary for the writing index</label><textarea id="page-summary" name="summary" maxlength="500" rows="2" required></textarea></div>
+            </details>
+            <div class="writer-field">
+              <label for="page-body">Article</label>
+              <p id="markdown-help" class="comment-note">Use ## for sections, **bold**, and [link text](https://example.com). Tables and image links work too. Link a companion analysis with [Full analysis](company-full.html).</p>
+              <textarea id="page-body" name="body" maxlength="150000" rows="22" required aria-describedby="markdown-help" spellcheck="true" placeholder="Start with the idea."></textarea>
+            </div>
+          </fieldset>
+          <div class="writer-actions">
+            <button class="writer-button" type="submit">Preview</button>
+            <button id="publish-page" class="writer-button writer-primary" type="button">Publish…</button>
+            <span id="draft-status" class="comment-note" role="status"></span>
+          </div>
+        </form>
+        <div class="writer-draft-tools">
+          <button id="export-draft" class="comment-text-button" type="button">Download draft</button>
+          <label class="writer-import">Import draft<input id="import-draft" type="file" accept="application/json,.json" /></label>
+          <button id="delete-draft" class="comment-text-button" type="button">Discard local draft</button>
+        </div>
+        <section id="preview-panel" class="writer-preview" aria-labelledby="preview-heading" hidden>
+          <div class="writer-actions"><h2 id="preview-heading">Preview</h2><button id="close-preview" class="comment-text-button" type="button">Close preview</button></div>
+          <iframe id="article-preview" title="Article preview" sandbox=""></iframe>
+          <p class="comment-note">Comments, trade updates and section navigation activate on the published page.</p>
+        </section>
+      </section>
+    </div>
+    <dialog id="publish-confirm" class="writer-dialog" aria-labelledby="publish-heading">
+      <h2 id="publish-heading">Publish this page?</h2>
+      <p id="publish-description"></p>
+      <p class="comment-note">The article and its source become public. The writing index and discussion are set up automatically. GitHub Pages may take a few minutes to update.</p>
+      <div class="writer-actions"><button id="confirm-publish" class="writer-button writer-primary" type="button">Publish page</button><button id="cancel-publish" class="comment-text-button" type="button">Keep editing</button></div>
+    </dialog>
+    <noscript><p>Enable JavaScript to use the editor.</p></noscript>
+  </main>
+  <footer class="shell"><span>Roy Liu · Austin, Texas</span><a href="interactive.html">Walk my dog ↗</a><span>© 2026</span></footer>
+</body>
+</html>

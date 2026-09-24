@@ -67,4 +67,8 @@ page.resize();
 page.frames.shift()();
 assert.equal(page.progress.style['--reading-progress'], 0.5);
 assert.equal(setup(600).progress.hidden, true);
+setup(2400, headings.map(heading => ({
+  tagName: 'DIV', classList: { contains: name => name === 'markdown-heading' }, children: [heading],
+})));
+assert.equal(navigation.children[2].textContent, 'Value');
 console.log('Reading progress and section navigation tests passed.');

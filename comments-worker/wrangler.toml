@@ -11,5 +11,6 @@ custom_domain = true
 SITE_ORIGIN = "https://royrliu.com"
 API_ORIGIN = "https://comments.royrliu.com"
 GITHUB_REPO = "royliu897/royliu897.github.io"
+PUBLISH_BRANCH = "main"
 AUTHOR_ID = "124701324"
 PAGES_JSON = '{"lennar":{"issue":1,"updates":true},"lennar-full":{"issue":2,"updates":false}}'
