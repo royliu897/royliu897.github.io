@@ -222,7 +222,7 @@
     };
     try {
       const { user } = await request('/session');
-      if (!user) { login(); status('Sign in as the site author to write. No repository access is requested from visitors.'); return; }
+      if (!user) { login(); status('Roy only.'); return; }
       account.textContent = `Signed in as ${user.login}`;
       account.append(button('Sign out', () => run(async () => {
         persist();

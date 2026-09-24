@@ -74,7 +74,7 @@ export function articleHtml(draft, body, published, env) {
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <nav class="site-nav shell" aria-label="Main navigation">
-    <a class="brand" href="index.html">Roy Liu<span class="brand-note"> / personal website</span></a>
+    <a class="brand" href="index.html">Roy Liu</a>
     <div class="nav-links">
       <a href="index.html#work">Work</a>
       <a href="blog.html" aria-current="true">Writing</a>
