@@ -25,9 +25,10 @@ class WritingTests(unittest.TestCase):
                 links = [attrs.get('href') for tag, attrs in page.elements if tag == 'a']
                 self.assertIn('blog.html', links)
                 if path.name != 'interactive.html':
-                    start = links.index('index.html#work')
+                    first = 'resume.html' if path.name in ['index.html', 'resume.html'] else 'index.html#work'
+                    start = links.index(first)
                     self.assertEqual(links[start:start + 4], [
-                        'index.html#work', 'blog.html', 'index.html#about',
+                        first, 'blog.html', 'index.html#about',
                         'mailto:royrliu@utexas.edu',
                     ])
 
