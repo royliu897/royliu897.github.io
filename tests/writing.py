@@ -20,6 +20,8 @@ class Page(HTMLParser):
 class WritingTests(unittest.TestCase):
     def test_writing_reachable_from_every_page(self):
         for path in ROOT.glob('*.html'):
+            if path.name == 'resume.html':
+                continue  # Standalone resume intentionally has no site navigation.
             with self.subTest(page=path.name):
                 page = Page(path)
                 links = [attrs.get('href') for tag, attrs in page.elements if tag == 'a']

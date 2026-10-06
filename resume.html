@@ -4,31 +4,81 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="theme-color" content="#f5f3ec" />
-  <meta name="description" content="Roy Liu's resume. Computer science at UT Austin, machine learning research, and software engineering." />
+  <meta name="description" content="Roy Liu's resume: computer science at UT Austin, quantum hardware, machine learning research, and vehicle simulation." />
   <title>Resume — Roy Liu</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="resume.css" />
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
-  <nav class="site-nav shell" aria-label="Main navigation">
-    <a class="brand" href="index.html">Roy Liu</a>
-    <div class="nav-links">
-      <a href="resume.html" aria-current="page">Resume</a>
-      <a href="blog.html">Writing</a>
-      <a href="index.html#about">About</a>
-      <a href="mailto:royrliu@utexas.edu">Email ↗</a>
-    </div>
-  </nav>
-  <main id="main" class="resume-page shell">
-    <div class="resume-heading">
-      <h1>Resume</h1>
-      <a href="assets/roy-liu-resume.pdf" download="Roy-Liu-Resume.pdf">Download PDF ↓</a>
-    </div>
-    <p class="resume-open">Prefer a separate tab? <a href="assets/roy-liu-resume.pdf" target="_blank" rel="noopener">Open the resume PDF ↗</a></p>
-    <object class="resume-document" data="assets/roy-liu-resume.pdf" type="application/pdf" aria-label="Roy Liu's resume">
-      <a href="assets/roy-liu-resume.pdf" aria-label="Open Roy Liu's resume PDF"><img class="resume-fallback" src="assets/roy-liu-resume.png" alt="Roy Liu’s resume: education, experience, projects and skills. Open the PDF for selectable text." width="796" height="1030" /></a>
-    </object>
+  <main class="resume-page">
+    <header class="resume-header">
+      <h1>Roy Liu</h1>
+      <a class="resume-download" href="assets/roy-liu-resume.pdf" download="Roy-Liu-Resume.pdf">Download PDF <span aria-hidden="true">↓</span></a>
+      <address class="resume-contact">
+        <a href="tel:+16097210429">609-721-0429</a>
+        <a href="mailto:royrliu@utexas.edu">royrliu@utexas.edu</a>
+        <a href="index.html">royrliu.com</a>
+        <a href="https://github.com/royliu897">github.com/royliu897</a>
+      </address>
+    </header>
+    <section aria-labelledby="education">
+      <h2 id="education">Education</h2>
+      <div class="resume-entry">
+        <div class="resume-entry-heading"><h3>University of Texas at Austin</h3><span>Austin, TX</span></div>
+        <div class="resume-entry-meta"><p>Bachelor of Science in Computer Science · GPA: 3.89/4.0</p><span>Expected May 2028</span></div>
+      </div>
+    </section>
+    <section aria-labelledby="experience">
+      <h2 id="experience">Experience</h2>
+      <article class="resume-entry">
+        <div class="resume-entry-heading"><h3>Quantum Hardware Intern</h3><span>May 2026 – Aug 2026</span></div>
+        <div class="resume-entry-meta"><p>Logiqal, Inc.</p><span>Monmouth Junction, NJ</span></div>
+        <ul>
+          <li>Redesigned a Solarflare ef_vi kernel-bypass receive path for FPGA waveform acquisition, increasing receive throughput by 18×.</li>
+          <li>Built a distributed NATS control platform for 40+ laboratory instruments supporting neutral-atom quantum computing experiments, with real-time monitoring and device control.</li>
+          <li>Developed closed-loop AOM calibration achieving &lt;1% waveform error in &lt;0.2 ms, validated with RFSoC hardware-in-the-loop testing.</li>
+          <li>Built a PostgreSQL/TimescaleDB telemetry backend, reducing storage by ∼6× through compression and average query latency by ∼2×.</li>
+        </ul>
+      </article>
+      <article class="resume-entry">
+        <div class="resume-entry-heading"><h3>Undergraduate Research Assistant</h3><span>Oct 2025 – Present</span></div>
+        <div class="resume-entry-meta"><p>GAMMA Lab, University of Texas at Austin</p><span>Austin, TX</span></div>
+        <ul>
+          <li>First author of “Observation Geometry for Uncertainty-Aware Hamiltonian Inference and Experimental Design in Quantum Magnets,” <a href="https://arxiv.org/abs/2608.10350">arXiv:2608.10350</a>.</li>
+          <li>Developed a FiLM-modulated SIREN surrogate for neutron-scattering simulations, reducing model evaluation from days to seconds with &gt;0.9 Pearson correlation.</li>
+          <li>Built a 7.2-billion-point training dataset on TACC using sharded HDF5 files and striped Lustre I/O.</li>
+          <li>Built a Bayesian experimental-design pipeline that adaptively selects measurements to maximize information gain under experimental constraints.</li>
+        </ul>
+      </article>
+      <article class="resume-entry">
+        <div class="resume-entry-heading"><h3>Simulation &amp; Validation</h3><span>Sep 2025 – Present</span></div>
+        <div class="resume-entry-meta"><p>Longhorn Racing Combustion</p><span>Austin, TX</span></div>
+        <ul>
+          <li>Built a Raspberry Pi telemetry system decoding CAN data from 20+ vehicle sensors and streaming it to Oracle Cloud for live monitoring and validation.</li>
+          <li>Developed a limited-slip differential torque model in Julia using differential-algebraic equations and clutch friction models.</li>
+          <li>Extended the team’s Python vehicle model with anti-roll bar dynamics, inverse motion-ratio calculations, and interpolated damper force curves.</li>
+        </ul>
+      </article>
+    </section>
+    <section aria-labelledby="projects">
+      <h2 id="projects">Projects</h2>
+      <article class="resume-entry">
+        <div class="resume-entry-heading"><h3>Quantum Pulse Optimization</h3><span>2026</span></div>
+        <p class="resume-entry-meta">Python, SciPy, GRAPE</p>
+        <ul>
+          <li>Built a GRAPE-based optimizer for single- and two-qubit Rydberg gate pulses using gradient-based numerical optimization.</li>
+          <li>Modeled AOM bandwidth, phase transients, and fiber dispersion as differentiable operators to account for hardware distortion during optimization.</li>
+        </ul>
+      </article>
+    </section>
+    <section aria-labelledby="skills">
+      <h2 id="skills">Skills</h2>
+      <dl class="resume-skills">
+        <dt>Languages</dt><dd>Python, C, C++, Java, Julia, SQL</dd>
+        <dt>ML &amp; Scientific</dt><dd>PyTorch, NumPy, pandas, SciPy, scikit-learn, XGBoost, HDF5</dd>
+        <dt>Systems &amp; Infrastructure</dt><dd>Linux, Docker, NATS, Git, PostgreSQL, TimescaleDB, Grafana, FPGA/DMA</dd>
+      </dl>
+    </section>
   </main>
 </body>
 </html>
