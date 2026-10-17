@@ -5,7 +5,7 @@
   <meta name="theme-color" content="#f5f3ec"><meta name="robots" content="noindex">
   <title>Research desk — Roy Liu</title>
   <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="assets/research/desk.css">
-  <script type="module" src="assets/research/desk.mjs"></script>
+  <link rel="stylesheet" href="assets/research/depth.css"><script type="module" src="assets/research/desk.mjs"></script><script type="module" src="assets/research/workspace.mjs"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -19,8 +19,8 @@
       <label>Company<select id="company"><option value="MCD">MCD · McDonald’s</option><option value="AAPL">AAPL · Apple</option><option value="CAT">CAT · Caterpillar</option><option value="KO">KO · Coca-Cola</option><option value="NKE">NKE · Nike</option></select></label>
       <div class="desk-step"><button id="prev" aria-label="Previous company">←</button><button id="next" aria-label="Next company">→</button></div>
       <div class="desk-stage" role="group" aria-label="Review stage"><button data-view="quick" aria-pressed="true">Quick review</button><button data-view="detailed" aria-pressed="false">Detailed review</button></div><div class="desk-spacer"></div>
-      <button id="density" aria-pressed="false">Compact</button><button id="notes-toggle" aria-expanded="true" aria-controls="tools-panel">Tools</button>
-      <details class="desk-layout-menu"><summary>Layout</summary><div><label><input type="checkbox" data-pin="valuation"> Keep valuation open</label><label><input type="checkbox" data-pin="financials"> Keep financials open</label><label><input type="checkbox" data-pin="filings"> Keep filings open</label><label><input type="checkbox" data-pin="calculator"> Keep calculator open</label><label><input type="checkbox" data-pin="archive"> Keep archive open</label><button id="reset-layout">Reset layout</button></div></details>
+      <button id="fullscreen" aria-pressed="false" title="Escape exits fullscreen">Fullscreen</button><button id="theme-toggle" aria-pressed="false">Dark mode</button><button id="density" aria-pressed="false">Compact</button><button id="notes-toggle" aria-expanded="true" aria-controls="tools-panel">Tools</button>
+      <details class="desk-layout-menu"><summary>Layout</summary><div><label><input type="checkbox" data-pin="research"> Keep research library open</label><label><input type="checkbox" data-pin="valuation"> Keep valuation open</label><label><input type="checkbox" data-pin="financials"> Keep financials open</label><label><input type="checkbox" data-pin="filings"> Keep filings open</label><label><input type="checkbox" data-pin="calculator"> Keep calculator open</label><label><input type="checkbox" data-pin="archive"> Keep archive open</label><button id="reset-layout">Reset layout</button></div></details>
     </div>
     <p id="workspace-status" class="desk-status" role="status"></p>
     <div class="desk-workspace" id="workspace">
@@ -56,6 +56,47 @@
             <details class="desk-subdrawer"><summary>Methodology</summary><div id="formula-help"><p>Growth inputs use decimals: <code>0.05</code> is 5% annually; <code>0.05 + 0.01*t</code> is 5%, 6%, 7%… EPS growth starts at t=0 in year one. Dividend growth starts at t=0 for the increase from year one to year two.</p><p>P/E moves in equal steps from purchase price / starting EPS to exit P/E. Annual year-end dividends buy fractional shares at that year's modeled price. Cash-held dividends earn 0%. Taxes and fees are excluded.</p><p>Discounted value includes separately received dividends and the terminal share price. IRR solves the return on those cash flows; reinvested CAGR also depends on the modeled reinvestment prices. Positive earnings only; EPS growth includes any share-count changes.</p></div></details>
           </div>
         </details>
+        <details class="desk-drawer" id="research" hidden><summary><span>Research library</span><small>Sources · series · events</small></summary><div class="drawer-body">
+ <p id="library-status" class="desk-muted" role="status"></p>
+ <details class="desk-subdrawer" open><summary>Company documents</summary>
+  <div class="desk-inputs"><label>Filed from<input id="library-from" type="date" value="2015-01-01"></label><label>Through<input id="library-to" type="date" value="2026-10-17"></label><label>Document type<select id="library-form"><option>10-K</option><option>10-Q</option><option>8-K</option><option>DEF 14A</option><option value="all">All documents</option></select></label></div>
+  <p class="desk-muted">Includes amendments. Dates below are filing dates; reporting periods are shown separately. 8-Ks may contain earnings releases and other announcements.</p>
+  <div class="desk-actions"><button id="library-list">Show documents</button><button id="library-manifest">Export source list</button><a id="library-edgar" target="_blank" rel="noopener">Search EDGAR ↗</a></div>
+  <div id="library-docs" class="library-list"></div>
+ </details>
+ <details class="desk-subdrawer"><summary>Add reported financial data</summary>
+  <label>SEC accounting concept<select id="library-concept"></select></label><label>Reported unit<select id="library-unit"></select></label><p id="concept-definition" class="desk-muted"></p>
+  <button id="library-add">Add annual series</button><p class="desk-muted">Latest annual value filed by the snapshot date, including restatements. Concepts remain separate; fiscal year ends are retained. These are not point-in-time backtest data.</p>
+ </details>
+ <details class="desk-subdrawer"><summary>Economic data catalogue</summary>
+  <label>Series<select id="macro-series"><option value="FEDFUNDS">Federal funds rate · percent · monthly, NSA</option><option value="CPIAUCSL">Consumer prices · index 1982–84=100 · monthly, SA</option><option value="TTLHH">US households · thousands · annual, NSA</option></select></label>
+  <div id="macro-links" class="desk-links"></div><button id="macro-fetch">Load selected data</button><p id="macro-status" class="desk-muted" role="status"></p>
+  <a href="https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm" target="_blank" rel="noopener">FOMC statements and meeting dates ↗</a>
+ </details>
+ <details class="desk-subdrawer"><summary>Import or enter a series</summary>
+  <label>Name<input id="data-name" maxlength="120"></label><div class="desk-inputs"><label>Units<input id="data-unit" maxlength="80" placeholder="USD millions, units, households…"></label><label>Source URL<input id="data-source" type="url"></label></div>
+  <label>Observations<textarea id="data-text" rows="5" placeholder="date,value&#10;2024-12-31,100&#10;2025-12-31,110" spellcheck="false"></textarea></label>
+  <div class="desk-actions"><label class="desk-file">Read CSV<input id="data-file" type="file" accept=".csv,text/csv"></label><button id="data-add">Save series</button></div>
+ </details>
+ <details class="desk-subdrawer" open><summary>Chart</summary>
+  <fieldset class="series-choices"><legend>Series</legend><div id="research-series"></div></fieldset>
+  <div class="desk-inputs"><label>From<input id="chart-from" type="date" value="2015-01-01"></label><label>Through<input id="chart-to" type="date" value="2026-10-17"></label><label>Display<select id="chart-transform"><option value="level">Reported values</option><option value="indexed">Start = 100</option><option value="change">Change from previous observation · %</option></select></label><label>Plot<select id="chart-style"><option value="line">Line</option><option value="points">Points</option></select></label></div>
+  <div id="research-legend" class="research-legend"></div><div id="research-chart" class="desk-chart"></div><p id="chart-status" class="desk-muted" role="status"></p><div id="chart-events" class="event-list"></div>
+  <details class="desk-subdrawer"><summary>Data and sources</summary><div class="desk-table-wrap"><table><thead><tr><th>Series</th><th>Period end</th><th>Value</th><th>Source</th></tr></thead><tbody id="research-table"></tbody></table></div></details>
+ </details>
+ <details class="desk-subdrawer"><summary>Relationships and saved models</summary>
+  <div class="desk-inputs"><label>Series A<select id="relation-a"></select></label><label>Series B<select id="relation-b"></select></label><label>Relationship<select id="relation-template"><option value="A/B">Ratio · A / B</option><option value="100*A/B">Percentage · 100 × A / B</option><option value="A-B">Difference · A − B</option><option value="A+B">Sum · A + B</option><option value="custom">Custom formula</option></select></label><label>Alignment<select id="relation-align"><option value="exact">Exact dates</option><option value="last">Calendar year · last value</option><option value="mean">Calendar year · mean</option><option value="sum">Calendar year · sum</option></select></label></div>
+  <label>Formula<input id="relation-formula" value="A/B" spellcheck="false"></label><div class="desk-inputs"><label>Model name<input id="relation-name" maxlength="120"></label><label>Output units<input id="relation-unit" maxlength="80"></label></div>
+  <p class="desk-muted">A and B retain their stated units: convert thousands or millions explicitly. Exact dates use only matching observations. Annual alignment groups by calendar year, not fiscal year; partial years use only available observations. No interpolation. Undefined results are omitted.</p>
+  <button id="relation-save">Calculate and save model</button><div id="saved-models" class="library-list"></div>
+ </details>
+ <details class="desk-subdrawer"><summary>Events and context</summary>
+  <div class="desk-inputs"><label>Event date<input id="event-date" type="date"></label><label>Title<input id="event-title" maxlength="160"></label></div><label>Source URL<input id="event-url" type="url"></label><button id="event-add">Save event</button><div id="research-events" class="library-list"></div>
+ </details>
+ <details class="desk-subdrawer"><summary>Library backup</summary><div class="desk-actions"><button id="research-export">Export library</button><label class="desk-file">Import library<input id="research-import" type="file" accept=".json,application/json"></label></div><p class="desk-muted">Series, models, and selected events stay in this browser. Imported copies receive new IDs; existing data is retained.</p></details>
+ <p id="research-message" class="desk-muted" role="status"></p>
+</div></details>
+
         <details class="desk-drawer" id="financials"><summary><span>Financials</span><small>Historical series</small></summary><div class="drawer-body"><div class="desk-inputs"><label>Metric<select id="metric"><option value="revenue">Revenue · USD millions</option><option value="profit">GAAP net income · USD millions</option><option value="eps">GAAP diluted EPS · USD per share</option><option value="custom">Imported series</option></select></label><label>Series label / units<input id="series-label"></label></div><div class="desk-inputs"><label>From<select id="series-from"></select></label><label>Through<select id="series-through"></select></label><label>Display<select id="series-mode"><option value="level">Reported values</option><option value="growth">Annual change · %</option><option value="indexed">Starting value = 100</option></select></label></div><div class="desk-actions"><button id="series-all">All years</button><button id="series-five">Last 5 years</button><button id="series-ten">Last 10 years</button></div><div class="desk-actions"><label class="desk-file">Import CSV<input id="series-upload" type="file" accept=".csv,text/csv"></label><button id="series-reset">Reset series</button></div><p id="series-status" class="desk-muted"></p><details class="desk-subdrawer"><summary>Edit or paste table</summary><label>Year and value<textarea id="series-table" rows="5" spellcheck="false" placeholder="year,value&#10;2023,100&#10;2024,110"></textarea></label><button id="series-apply">Plot table</button></details><div id="series-chart" class="desk-chart"></div><details class="desk-subdrawer"><summary>View data</summary><div class="desk-table-wrap"><table><thead><tr><th>Year</th><th>Reported</th><th>Displayed</th></tr></thead><tbody id="series-values"></tbody></table></div></details><a id="series-source" target="_blank" rel="noopener" hidden>Source filing ↗</a></div></details>
         <details class="desk-drawer" id="filings"><summary><span>Filings</span><small>10-K · 10-Q · proxy</small></summary><div class="drawer-body"><div class="desk-inputs"><label>Calendar filing year<input id="filing-year" type="number" min="1994" max="2100" value="2025"></label></div><p class="desk-muted">Filing date differs from the fiscal reporting period. Results use the included SEC metadata snapshot; search EDGAR for newer or older filings.</p><div id="filing-links" class="desk-links"></div><p id="filing-status" class="desk-muted"></p><div id="filing-results" class="desk-links"></div></div></details>
         <details class="desk-drawer" id="calculator"><summary><span>Calculator</span><small>Arithmetic</small></summary><div class="drawer-body"><label>Expression<input id="calc" autocomplete="off" spellcheck="false" placeholder="12.2 * 1.05^5 * 22"></label><output id="calc-result">—</output></div></details>

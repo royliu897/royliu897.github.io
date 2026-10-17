@@ -1,0 +1,20 @@
+import assert from 'node:assert/strict';
+import {parseObservations,annualize,relationship,transform,annualFacts,safeURL,validDate} from '../assets/research/research-data.mjs';
+assert.deepEqual(parseObservations('observation_date,FEDFUNDS\n2024-01-01,5.3\n2024-02-01,.').map(p=>p.value),[5.3]);
+assert.throws(()=>parseObservations('date,value\n2024-02-30,1'));
+assert.throws(()=>parseObservations('date,value\n2024-01-01,1\n2024-01-01,2'));
+assert.equal(validDate('2024-02-29'),true);assert.equal(validDate('2023-02-29'),false);
+assert.throws(()=>safeURL('javascript:alert(1)'));
+const a=parseObservations('date,value\n2023-01-01,10\n2023-12-31,20\n2024-12-31,30'),b=parseObservations('year,value\n2023,2\n2024,0');
+assert.equal(annualize(a,'mean')[0].value,15);assert.equal(annualize(a,'sum')[0].value,30);assert.equal(annualize(a,'last')[0].value,20);
+const result=relationship(a,b,'A/B');assert.equal(result.points[0].value,10);assert.equal(result.skipped,2);
+assert.throws(()=>relationship(a,b,'fetch(A)'));
+assert.deepEqual(transform([{date:'2023-12-31',value:10},{date:'2024-12-31',value:20}],'indexed').map(p=>p.value),[100,200]);
+const fact={units:{USD:[{start:'2023-01-01',end:'2023-12-31',val:10,form:'10-K',filed:'2024-02-01',accn:'a'},{start:'2023-01-01',end:'2023-12-31',val:11,form:'10-K',filed:'2025-02-01',accn:'b'},{start:'2023-10-01',end:'2023-12-31',val:4,form:'10-K',filed:'2025-02-01',accn:'c'},{start:'2023-01-01',end:'2023-12-31',val:12,form:'10-K',filed:'2026-02-01',accn:'d'}]}};
+assert.equal(annualFacts(fact,'USD','2025-12-31')[0].value,11);
+assert.equal(annualFacts(fact,'USD','2024-12-31')[0].value,10);
+console.log('Research library: dates, imports, safe links, calendar alignment, missing values, zero denominators, transforms and filing cutoffs passed.');
+
+const {plotSample}=await import('../assets/research/research-data.mjs');
+const long=Array.from({length:10000},(_,i)=>({date:String(i),value:i===3333?1e9:i}));
+const sample=plotSample(long);assert.ok(sample.length<=600);assert.ok(sample.includes(long[3333]));assert.equal(sample[0],long[0]);assert.equal(sample.at(-1),long.at(-1));
