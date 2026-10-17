@@ -106,3 +106,10 @@ Company-specific series, event selections, chart settings and saved models use t
 Fullscreen uses the browser API where available, with an in-page fallback. Escape and the visible exit button leave fullscreen. Light/dark preference persists independently, initially following the system preference. PDFs retain their original document colors. Notes remain plain text with improved spacing, contrast and focus treatment.
 
 Run `node tests/research-library.mjs` for imports, safe URLs, invalid dates, aggregation, denominator/missing-date handling and source-cutoff selection. Browser validation covers loading real source data, creating a net-margin model, adding an event, per-company isolation, theme switching and Escape.
+
+
+### Review-stage layouts
+
+Quick review now uses a viewport-height report area, a row of secondary tool drawers, and a bottom dock with notes, screening status and calculator open by default. Secondary tools open above the dock one at a time and close with Escape. Detailed review uses a separate document-collection sidebar and Chart, Models, Data, Events, Notes and Report views. These move the same live controls rather than duplicate state. On narrow screens the layout stacks and permits necessary scrolling. Fit page supplements Fit width for the PDF.
+
+Document checkboxes constrain newly added annual financial series to the selected accession numbers. With no selection, all annual filings in the dated snapshot are eligible. Existing series are not rewritten when selection changes. The visible selection count explains the current scope.

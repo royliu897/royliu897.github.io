@@ -5,7 +5,7 @@
   <meta name="theme-color" content="#f5f3ec"><meta name="robots" content="noindex">
   <title>Research desk — Roy Liu</title>
   <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="assets/research/desk.css">
-  <link rel="stylesheet" href="assets/research/depth.css"><script type="module" src="assets/research/desk.mjs"></script><script type="module" src="assets/research/workspace.mjs"></script>
+  <link rel="stylesheet" href="assets/research/depth.css"><link rel="stylesheet" href="assets/research/stages.css"><script type="module" src="assets/research/desk.mjs"></script><script type="module" src="assets/research/workspace.mjs"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -24,7 +24,7 @@
     </div>
     <p id="workspace-status" class="desk-status" role="status"></p>
     <div class="desk-workspace" id="workspace">
-        <section class="desk-document" id="reports"><div class="document-heading"><h2 id="document-title">Company report</h2><div class="desk-actions"><button id="zoom-out" aria-label="Zoom out">−</button><button id="zoom-fit">Fit width</button><button id="zoom-in" aria-label="Zoom in">+</button></div></div><div class="drawer-body"><div class="desk-actions"><label class="desk-file">Open PDF<input id="report-upload" type="file" accept="application/pdf"></label><a id="report-link" hidden target="_blank" rel="noopener">Open document ↗</a><a href="https://www.valuelinepro.com/Dow-30" target="_blank" rel="noopener">Value Line Dow 30 ↗</a></div><p id="report-status" class="desk-muted">No local document selected. Imported documents stay in this browser.</p><div id="report-frame" aria-label="Company report pages"><div class="report-empty">Open a company report to begin.<br><small>PDFs remain on this device.</small></div></div></div></section>
+        <section class="desk-document" id="reports"><div class="document-heading"><h2 id="document-title">Company report</h2><div class="desk-actions"><button id="zoom-out" aria-label="Zoom out">−</button><button id="zoom-fit">Fit width</button><button id="zoom-page">Fit page</button><button id="zoom-in" aria-label="Zoom in">+</button></div></div><div class="drawer-body"><div class="desk-actions"><label class="desk-file">Open PDF<input id="report-upload" type="file" accept="application/pdf"></label><a id="report-link" hidden target="_blank" rel="noopener">Open document ↗</a><a href="https://www.valuelinepro.com/Dow-30" target="_blank" rel="noopener">Value Line Dow 30 ↗</a></div><p id="report-status" class="desk-muted">No local document selected. Imported documents stay in this browser.</p><div id="report-frame" aria-label="Company report pages"><div class="report-empty">Open a company report to begin.<br><small>PDFs remain on this device.</small></div></div></div></section>
 
       <div id="desk-divider" role="separator" aria-label="Tools panel width" aria-orientation="vertical" tabindex="0" aria-valuemin="300" aria-valuemax="680" aria-valuenow="400"></div>
       <aside id="tools-panel" class="desk-tools" aria-label="Research tools"><div class="desk-drawers">      <details id="notes-panel" class="desk-drawer" open><summary><span>Notes</span><small id="note-status" role="status">Local</small></summary><div class="drawer-body">
@@ -62,7 +62,7 @@
   <div class="desk-inputs"><label>Filed from<input id="library-from" type="date" value="2015-01-01"></label><label>Through<input id="library-to" type="date" value="2026-10-17"></label><label>Document type<select id="library-form"><option>10-K</option><option>10-Q</option><option>8-K</option><option>DEF 14A</option><option value="all">All documents</option></select></label></div>
   <p class="desk-muted">Includes amendments. Dates below are filing dates; reporting periods are shown separately. 8-Ks may contain earnings releases and other announcements.</p>
   <div class="desk-actions"><button id="library-list">Show documents</button><button id="library-manifest">Export source list</button><a id="library-edgar" target="_blank" rel="noopener">Search EDGAR ↗</a></div>
-  <div id="library-docs" class="library-list"></div>
+  <p id="document-selection" class="desk-muted"></p><button id="documents-clear">Clear document selection</button><div id="library-docs" class="library-list"></div>
  </details>
  <details class="desk-subdrawer"><summary>Add reported financial data</summary>
   <label>SEC accounting concept<select id="library-concept"></select></label><label>Reported unit<select id="library-unit"></select></label><p id="concept-definition" class="desk-muted"></p>
