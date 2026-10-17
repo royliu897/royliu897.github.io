@@ -1,0 +1,18 @@
+{
+  "outcome": "In the next fiscal year, GAAP net income rose to $34.570m and diluted EPS to $1.71. Management reported adjusted net income of $28.689m and adjusted EPS of $1.42 after tax adjustments. Year-end cash reached $76.412m. This verifies subsequent operating recovery, not an investment return: no contemporaneous entry/exit price series was verified. Judge the original reasoning separately from this outcome.",
+  "sources": [
+    {
+      "label": "FY2008 Form 10-K — initial case",
+      "url": "https://www.sec.gov/Archives/edgar/data/1056285/000095014409003336/g18495e10vk.htm"
+    },
+    {
+      "label": "FY2007 Form 10-K — earlier comparison",
+      "url": "https://www.sec.gov/Archives/edgar/data/1056285/000095014408003474/g12954e10vk.htm"
+    },
+    {
+      "label": "FY2009 Form 10-K — reveal only",
+      "url": "https://www.sec.gov/Archives/edgar/data/1056285/000095012310035197/g22889e10vk.htm"
+    }
+  ],
+  "identity": "Kirkland's, Inc. (KIRK)"
+}

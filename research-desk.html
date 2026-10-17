@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f5f3ec"><meta name="robots" content="noindex">
+  <title>Research desk — Roy Liu</title>
+  <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="assets/research/desk.css">
+  <script type="module" src="assets/research/desk.mjs"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <nav class="site-nav shell" aria-label="Main navigation">
+    <a class="brand" href="index.html">Roy Liu</a>
+    <div class="nav-links"><a href="index.html#work">Work</a><a href="blog.html">Writing</a><a href="index.html#about">About</a><a href="mailto:royrliu@utexas.edu">Email ↗</a><a href="research-desk.html" aria-current="page">Research desk</a></div>
+  </nav>
+  <main id="main" class="desk shell">
+    <header class="desk-heading"><div><p class="eyebrow">Research</p><h1>Research desk</h1></div><a href="write.html">Writing editor ↗</a></header>
+    <div class="desk-toolbar">
+      <label>Company<select id="company"><option value="MCD">MCD · McDonald’s</option><option value="AAPL">AAPL · Apple</option><option value="CAT">CAT · Caterpillar</option><option value="KO">KO · Coca-Cola</option><option value="NKE">NKE · Nike</option></select></label>
+      <div class="desk-step"><button id="prev" aria-label="Previous company">←</button><button id="next" aria-label="Next company">→</button></div>
+      <div class="desk-stage" role="group" aria-label="Review stage"><button data-view="quick" aria-pressed="true">Quick review</button><button data-view="detailed" aria-pressed="false">Detailed review</button></div><div class="desk-spacer"></div>
+      <button id="density" aria-pressed="false">Compact</button><button id="notes-toggle" aria-expanded="true" aria-controls="tools-panel">Tools</button>
+      <details class="desk-layout-menu"><summary>Layout</summary><div><label><input type="checkbox" data-pin="valuation"> Keep valuation open</label><label><input type="checkbox" data-pin="financials"> Keep financials open</label><label><input type="checkbox" data-pin="filings"> Keep filings open</label><label><input type="checkbox" data-pin="calculator"> Keep calculator open</label><label><input type="checkbox" data-pin="archive"> Keep archive open</label><button id="reset-layout">Reset layout</button></div></details>
+    </div>
+    <p id="workspace-status" class="desk-status" role="status"></p>
+    <div class="desk-workspace" id="workspace">
+        <section class="desk-document" id="reports"><div class="document-heading"><h2 id="document-title">Company report</h2><div class="desk-actions"><button id="zoom-out" aria-label="Zoom out">−</button><button id="zoom-fit">Fit width</button><button id="zoom-in" aria-label="Zoom in">+</button></div></div><div class="drawer-body"><div class="desk-actions"><label class="desk-file">Open PDF<input id="report-upload" type="file" accept="application/pdf"></label><a id="report-link" hidden target="_blank" rel="noopener">Open document ↗</a><a href="https://www.valuelinepro.com/Dow-30" target="_blank" rel="noopener">Value Line Dow 30 ↗</a></div><p id="report-status" class="desk-muted">No local document selected. Imported documents stay in this browser.</p><div id="report-frame" aria-label="Company report pages"><div class="report-empty">Open a company report to begin.<br><small>PDFs remain on this device.</small></div></div></div></section>
+
+      <div id="desk-divider" role="separator" aria-label="Tools panel width" aria-orientation="vertical" tabindex="0" aria-valuemin="300" aria-valuemax="680" aria-valuenow="400"></div>
+      <aside id="tools-panel" class="desk-tools" aria-label="Research tools"><div class="desk-drawers">      <details id="notes-panel" class="desk-drawer" open><summary><span>Notes</span><small id="note-status" role="status">Local</small></summary><div class="drawer-body">
+        <div class="notes-heading"><h2 id="note-heading">Company note</h2></div>
+        <label>Status<select id="note-decision"><option>Unreviewed</option><option>Pass</option><option>Investigate</option></select></label>
+        <label>Writing format<select id="note-type"><option value="note">Note</option><option value="analysis">Full analysis</option><option value="thesis">Investment thesis</option></select></label><label>Title<input id="note-title" maxlength="140"></label><label>Notes<textarea id="note-body" rows="16" maxlength="140000" spellcheck="true"></textarea></label>
+        <div id="review-fields" hidden><label>Business assessment<textarea id="review-business" rows="5"></textarea></label><label>Risks<textarea id="review-risks" rows="4"></textarea></label><label>Valuation assessment<textarea id="review-valuation" rows="4"></textarea></label><label>Sources<textarea id="review-sources" rows="3"></textarea></label></div><div class="desk-actions"><button id="writing-draft" class="desk-primary">Open in writing editor</button><button id="note-export">Export draft</button></div>
+        <details class="desk-subdrawer"><summary>Notebook</summary><div class="desk-actions"><button id="notes-export">Export all notes</button><label class="desk-file">Import notes<input id="notes-import" type="file" accept=".json,application/json"></label></div><p class="desk-muted">Saved on this browser and site address. Opening a writing draft does not publish it. Publishing uses the existing author sign-in and confirmation.</p></details>
+</div></details>
+        <details class="desk-drawer" id="valuation" open>
+          <summary><span>Valuation</span><small>EPS · dividends · return</small></summary>
+          <div class="drawer-body">
+            <p id="model-source" class="desk-muted"></p>
+            <form id="valuation-form" class="desk-inputs">
+              <label>Purchase price ($)<input name="price" type="number" step="any" required></label>
+              <label>Starting EPS ($)<input name="eps" type="number" step="any" required></label>
+              <label>Horizon (years)<input name="years" type="number" min="1" max="50" required></label>
+              <label>Exit P/E<input name="exitPE" type="number" step="any" required></label>
+              <label>Required return (%)<input name="hurdle" type="number" step="any" required></label>
+              <label>Annual EPS growth<input name="growth" required aria-describedby="formula-help"></label>
+              <label>Year-one dividend / share ($)<input name="dividend" type="number" min="0" step="any" required></label>
+              <label>Dividend growth<input name="divGrowth" required aria-describedby="formula-help"></label>
+              <div class="desk-actions"><button class="desk-primary" type="submit">Calculate</button><button type="button" id="model-reset">Reset</button><button type="button" id="model-export" disabled>Export CSV</button><button type="button" id="model-to-note" disabled>Add to note</button></div>
+            </form>
+            <p id="model-error" class="desk-error" role="alert"></p>
+            <div class="desk-results"><div><span>Discounted value / share</span><strong id="pv">—</strong></div><div><span>Reinvested CAGR</span><strong id="cagr">—</strong></div><div><span>Cash-flow IRR</span><strong id="irr">—</strong></div></div>
+            <div class="desk-legend"><span>— Reinvested</span><span>— Dividends held as cash</span><span>— Share price</span></div><div id="value-chart" class="desk-chart"></div>
+            <details class="desk-subdrawer"><summary>Annual projections</summary><div class="desk-table-wrap"><table><thead><tr><th>Year</th><th>EPS</th><th>P/E</th><th>Price</th><th>Dividend</th><th>Shares</th><th>Reinvested</th><th>Price + cash</th></tr></thead><tbody id="projections"></tbody></table></div></details>
+            <details class="desk-subdrawer"><summary>Methodology</summary><div id="formula-help"><p>Growth inputs use decimals: <code>0.05</code> is 5% annually; <code>0.05 + 0.01*t</code> is 5%, 6%, 7%… EPS growth starts at t=0 in year one. Dividend growth starts at t=0 for the increase from year one to year two.</p><p>P/E moves in equal steps from purchase price / starting EPS to exit P/E. Annual year-end dividends buy fractional shares at that year's modeled price. Cash-held dividends earn 0%. Taxes and fees are excluded.</p><p>Discounted value includes separately received dividends and the terminal share price. IRR solves the return on those cash flows; reinvested CAGR also depends on the modeled reinvestment prices. Positive earnings only; EPS growth includes any share-count changes.</p></div></details>
+          </div>
+        </details>
+        <details class="desk-drawer" id="financials"><summary><span>Financials</span><small>Historical series</small></summary><div class="drawer-body"><div class="desk-inputs"><label>Metric<select id="metric"><option value="revenue">Revenue · USD millions</option><option value="profit">GAAP net income · USD millions</option><option value="eps">GAAP diluted EPS · USD per share</option><option value="custom">Imported series</option></select></label><label>Series label / units<input id="series-label"></label></div><div class="desk-inputs"><label>From<select id="series-from"></select></label><label>Through<select id="series-through"></select></label><label>Display<select id="series-mode"><option value="level">Reported values</option><option value="growth">Annual change · %</option><option value="indexed">Starting value = 100</option></select></label></div><div class="desk-actions"><button id="series-all">All years</button><button id="series-five">Last 5 years</button><button id="series-ten">Last 10 years</button></div><div class="desk-actions"><label class="desk-file">Import CSV<input id="series-upload" type="file" accept=".csv,text/csv"></label><button id="series-reset">Reset series</button></div><p id="series-status" class="desk-muted"></p><details class="desk-subdrawer"><summary>Edit or paste table</summary><label>Year and value<textarea id="series-table" rows="5" spellcheck="false" placeholder="year,value&#10;2023,100&#10;2024,110"></textarea></label><button id="series-apply">Plot table</button></details><div id="series-chart" class="desk-chart"></div><details class="desk-subdrawer"><summary>View data</summary><div class="desk-table-wrap"><table><thead><tr><th>Year</th><th>Reported</th><th>Displayed</th></tr></thead><tbody id="series-values"></tbody></table></div></details><a id="series-source" target="_blank" rel="noopener" hidden>Source filing ↗</a></div></details>
+        <details class="desk-drawer" id="filings"><summary><span>Filings</span><small>10-K · 10-Q · proxy</small></summary><div class="drawer-body"><div class="desk-inputs"><label>Calendar filing year<input id="filing-year" type="number" min="1994" max="2100" value="2025"></label></div><p class="desk-muted">Filing date differs from the fiscal reporting period. Results use the included SEC metadata snapshot; search EDGAR for newer or older filings.</p><div id="filing-links" class="desk-links"></div><p id="filing-status" class="desk-muted"></p><div id="filing-results" class="desk-links"></div></div></details>
+        <details class="desk-drawer" id="calculator"><summary><span>Calculator</span><small>Arithmetic</small></summary><div class="drawer-body"><label>Expression<input id="calc" autocomplete="off" spellcheck="false" placeholder="12.2 * 1.05^5 * 22"></label><output id="calc-result">—</output></div></details>
+        <details class="desk-drawer" id="archive"><summary><span>Historical archive</span><small>Staged disclosures</small></summary><div class="drawer-body"><button id="archive-open">Open record 01</button><p id="archive-status" class="desk-muted"></p><div id="archive-content"></div><div class="desk-actions"><button id="archive-next" disabled>Additional disclosures</button><button id="archive-reveal" disabled>Show subsequent results</button></div><div id="archive-outcome"></div></div></details>
+      </div></aside>
+    </div>
+  </main>
+  <footer class="shell"><span>Roy Liu · Research desk</span><a href="blog.html">Writing</a><span>Local notes · Dated inputs</span></footer>
+</body>
+</html>

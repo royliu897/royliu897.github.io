@@ -65,3 +65,27 @@ With Node.js 22+, run `node tests/comments-worker.mjs` for server authorization 
 Automated tests mock GitHub. Verify the actual login, posting, editing and sign-out flow after deploying and configuring the service.
 
 Run `node tests/publishing.mjs` for publishing and conflict checks, and `python3 tests/editor.py` for browser editor checks (Playwright and Chromium required).
+
+
+## Research desk
+
+`research-desk.html` is a report-centered workspace using the site's shared styling. Open a PDF locally; it is stored in IndexedDB in the current browser and is not sent to the website or committed to this repository. PDF.js is self-hosted under `assets/research/vendor` (Apache-2.0; version and license included), and loaded only when a document is opened.
+
+Notes, valuation models, imported financial series, company selection, drawer states, pinned drawers and tool-column width stay in browser storage. Notes export as a notebook or as the existing writing editor's JSON format. **Open in writing editor** creates a new draft in `roy-writing-drafts-v1` without overwriting existing drafts, then opens that draft by ID. The existing author login, preview and explicit publication flow remain in place. Localhost and the live domain have separate storage; use notebook export/import to transfer notes. Clearing browser data removes local notes and uploaded PDFs.
+
+The report remains visible beside independently expandable drawers. Pin frequent tools in Layout. Drag the separator, or focus it and use Left/Right (Home/End for limits), to resize the tools column. Compact density and all panel preferences persist. Quick review uses a brief company note; Detailed review exposes business, risk, valuation and source sections that transfer into the writing draft. The tools stack below the report on small screens.
+
+Financials accepts numeric `year,value` CSV, or pasted comma/tab-separated two-column data with that header. Values and units are explicit; automatic PDF table extraction is not implemented. PDF text can be selected and copied, but reading order may need cleanup. Only MCD has built-in financial series; other companies show an empty state until data is imported.
+
+SEC links use accession numbers and document names from `assets/research/filings.json`, not guessed document URLs. Refresh the metadata with `python3 scripts/refresh-sec-filings.py`; the script replaces the snapshot only after all five requests succeed. Static GitHub Pages cannot call the SEC API directly because of CORS. The UI labels the snapshot and provides date-filtered EDGAR search links for filings outside it. Value Line links go to the publisher's official report hub; copyrighted reports are not included in the deployment.
+
+Historical records are reconstructed from public filings, with subsequent results fetched only on explicit reveal. This prevents incidental spoilers, not intentional inspection of public static assets. The desk has `noindex`; that is not access control. The application and anonymous case material can be public, while notes/documents remain local unless the author chooses to publish them.
+
+Checks: `node tests/research-desk.mjs` (Node 22+), `python3 tests/writing.py`, and the existing publishing/worker tests. Browser checks cover PDF rendering, switching companies, drawer persistence, table plotting, date selection and growth display. Draft handoff is covered by unit checks; production author login/publication has not been exercised for this change.
+
+
+### Chart controls and next research layer
+
+Financials provides a metric selector, start/end years, 5-/10-year presets, reported values, year-over-year percentage change, and a start-at-100 index. Choices persist per company. View data shows raw and transformed values. Annual change uses the preceding calendar year (even outside the selected window), omits missing or nonpositive prior values, and never silently treats a multi-year gap as one year. Indexing requires a positive starting value. Presets select available observations; they do not imply ten years of built-in coverage.
+
+The deeper document workflow is not implemented yet. Its intended contract is a collection of selected filings, a reviewable extracted table with units, fiscal periods, accounting definitions and source passages, then plots with optional dated event annotations. Prefer structured reported facts for repeatable extraction. Any later AI extraction should propose data for review, retain citations, and run behind a server endpoint rather than embed credentials in this static site. Keep the report workspace and familiar chart controls unchanged as this layer is added.

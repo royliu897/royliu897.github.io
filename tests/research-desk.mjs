@@ -1,0 +1,25 @@
+import assert from 'node:assert/strict';
+import {makeDraft,appendDraft,parseSeries,importedNotes} from '../assets/research/data.mjs';
+import {model,expression} from '../assets/research/finance.mjs';
+const n={title:'Company note',body:'A saved observation.',type:'analysis',review:{risks:'Lease obligations.'}};
+const d=makeDraft('MCD',n,'12345678-test','2026-10-17T00:00:00Z');
+assert.equal(d.type,'analysis');assert.match(d.body,/## Risks\n\nLease obligations\./);assert.equal(d.revision,null);
+const old={...d,id:'existing',body:'Do not overwrite'};const merged=appendDraft({existing:old},d);
+assert.equal(merged.existing.body,'Do not overwrite');assert.equal(merged[d.id].body,d.body);
+assert.throws(()=>appendDraft({existing:{body:'damaged'}},d));
+assert.throws(()=>makeDraft('MCD',{body:''},'id','2026-10-17'));
+assert.deepEqual(parseSeries('year,value\n2025,-4\n2023,12'),[[2023,12],[2025,-4]]);
+for(const s of ['year,value\n2025,','year,value\n2025,1\n2025,2','year,value\n2025,Infinity','year,value\n2025,<script>','year,value\n2025,1,2'])assert.throws(()=>parseSeries(s));
+assert.equal(importedNotes({MCD:{decision:'Investigate',note:'Legacy note'}}).MCD.body,'Legacy note');
+assert.equal(importedNotes({notes:{MCD:n}}).MCD.review.risks,'Lease obligations.');
+const m=model({price:100,eps:5,years:5,hurdle:.1,exitPE:20,growth:'0',dividend:10,divGrowth:'0'});
+assert.ok(Math.abs(m.rows.at(-1).wealth-161.051)<1e-8);assert.ok(Math.abs(m.pv-100)<1e-8);
+assert.equal(expression('12.2*1.05^5*22').toFixed(2),'342.55');
+assert.throws(()=>expression('fetch(1)'));
+console.log('Research checks passed: draft handoff, existing-draft preservation, notebook import, table validation, DCF, reinvestment, expression safety.');
+
+const {chartSeries}=await import('../assets/research/data.mjs');
+assert.deepEqual(chartSeries([[2022,100],[2023,110],[2025,121]],2023,2025,'growth').map(([y,v])=>[y,Math.round(v)]),[[2023,10]]);
+assert.deepEqual(chartSeries([[2023,50],[2024,75]],2023,2024,'indexed'),[[2023,100],[2024,150]]);
+assert.throws(()=>chartSeries([[2023,0],[2024,3]],2023,2024,'indexed'));
+assert.deepEqual(chartSeries([[2023,-2],[2024,3]],2024,2024,'growth'),[]);

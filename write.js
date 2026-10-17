@@ -244,7 +244,10 @@
       }
       element('writer-workspace').hidden = false;
       const recent = Object.values(drafts).sort((first, second) => (second.savedAt || '').localeCompare(first.savedAt || ''))[0];
-      if (recent) openDraft(recent);
+      const requestedId = new URLSearchParams(window.location.search).get('draft');
+      const requested = requestedId && Object.prototype.hasOwnProperty.call(drafts, requestedId) ? drafts[requestedId] : null;
+      if (requested) openDraft(requested);
+      else if (recent) openDraft(recent);
       else newDraft();
       await refreshPages();
     } catch (error) {

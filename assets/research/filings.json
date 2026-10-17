@@ -1,0 +1,1450 @@
+{
+  "asOf": "2026-10-17",
+  "source": "https://data.sec.gov/submissions/",
+  "companies": {
+    "MCD": [
+      {
+        "form": "10-Q",
+        "filingDate": "2026-08-07",
+        "reportDate": "2026-06-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390826000073/mcd-20260630.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2026-05-07",
+        "reportDate": "2026-03-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390826000051/mcd-20260331.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2026-04-07",
+        "reportDate": "2026-05-20",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000119312526145548/mcd-20260407.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2026-02-24",
+        "reportDate": "2025-12-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390826000035/mcd-20251231.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2025-11-05",
+        "reportDate": "2025-09-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390825000059/mcd-20250930.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2025-08-06",
+        "reportDate": "2025-06-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390825000039/mcd-20250630.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2025-05-12",
+        "reportDate": "2025-03-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390825000025/mcd-20250331.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2025-04-07",
+        "reportDate": "2025-05-20",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000155837025004544/mcd-20250520xdef14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2025-02-25",
+        "reportDate": "2024-12-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390825000012/mcd-20241231.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2024-11-07",
+        "reportDate": "2024-09-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390824000156/mcd-20240930.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2024-08-08",
+        "reportDate": "2024-06-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390824000123/mcd-20240630.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2024-05-08",
+        "reportDate": "2024-03-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390824000092/mcd-20240331.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2024-04-08",
+        "reportDate": "2024-05-22",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000155837024004818/mcd-20240522xdef14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2024-02-22",
+        "reportDate": "2023-12-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390824000072/mcd-20231231.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2023-11-02",
+        "reportDate": "2023-09-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390823000101/mcd-20230930.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2023-08-02",
+        "reportDate": "2023-06-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390823000076/mcd-20230630.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2023-05-04",
+        "reportDate": "2023-03-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390823000036/mcd-20230331.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2023-04-14",
+        "reportDate": "",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000155837023005957/mcd-20230525xdef14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2023-02-24",
+        "reportDate": "2022-12-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390823000012/mcd-20221231.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2022-11-07",
+        "reportDate": "2022-09-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390822000055/mcd-20220930.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2022-08-04",
+        "reportDate": "2022-06-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390822000041/mcd-20220630.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2022-05-02",
+        "reportDate": "2022-03-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390822000016/mcd-20220331.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2022-02-24",
+        "reportDate": "2021-12-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390822000011/mcd-20211231.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2021-11-02",
+        "reportDate": "2021-09-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390821000039/mcd-20210930.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2021-08-04",
+        "reportDate": "2021-06-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390821000030/mcd-20210630.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2021-05-05",
+        "reportDate": "2021-03-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390821000018/mcd-20210331.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2021-04-08",
+        "reportDate": "2021-05-20",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000120677421001039/mcd3798221-def14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2021-02-23",
+        "reportDate": "2020-12-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390821000013/mcd-20201231.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2020-11-09",
+        "reportDate": "2020-09-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390820000076/mcd-9302020x10q.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2020-08-10",
+        "reportDate": "2020-06-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390820000063/mcd-6302020x10q.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2020-05-07",
+        "reportDate": "2020-03-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390820000042/mcd-3312020x10q.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2020-04-09",
+        "reportDate": "2020-05-21",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000120677420001117/mcd3631831-def14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2020-02-26",
+        "reportDate": "2019-12-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390820000022/mcd-12312019x10k.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2019-11-04",
+        "reportDate": "2019-09-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390819000085/mcd-9302019x10q.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2019-08-06",
+        "reportDate": "2019-06-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390819000062/mcd-6302019x10q.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2019-05-08",
+        "reportDate": "2019-03-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390819000039/mcd-3312019x10q.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2019-04-11",
+        "reportDate": "2019-05-23",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000120677419001299/mcd3477431-def14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2019-02-22",
+        "reportDate": "2018-12-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390819000010/mcd-12312018x10k.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2018-11-01",
+        "reportDate": "2018-09-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390818000064/mcd-9302018x10q.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2018-08-02",
+        "reportDate": "2018-06-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390818000049/mcd-6302018x10q.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2018-05-08",
+        "reportDate": "2018-03-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390818000025/mcd-3312018x10q.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2018-04-12",
+        "reportDate": "2018-05-24",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000120677418001176/mcd3291681-def14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2018-02-23",
+        "reportDate": "2017-12-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390818000010/mcd-12312017x10k.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2017-11-02",
+        "reportDate": "2017-09-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390817000053/mcd-9302017x10q.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2017-08-08",
+        "reportDate": "2017-06-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390817000039/mcd-6302017x10q.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2017-05-08",
+        "reportDate": "2017-03-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390817000025/mcd-3312017x10q.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2017-04-13",
+        "reportDate": "2017-05-24",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000120677417001192/mcdonalds3170981-def14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2017-03-01",
+        "reportDate": "2016-12-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/63908/000006390817000017/mcd-12312016x10k.htm"
+      }
+    ],
+    "AAPL": [
+      {
+        "form": "10-Q",
+        "filingDate": "2026-07-31",
+        "reportDate": "2026-06-27",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/aapl-20260627.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2026-05-01",
+        "reportDate": "2026-03-28",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000013/aapl-20260328.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2026-01-30",
+        "reportDate": "2025-12-27",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000006/aapl-20251227.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2026-01-08",
+        "reportDate": "2026-02-24",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000130817926000008/aapl014016-def14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2025-10-31",
+        "reportDate": "2025-09-27",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/aapl-20250927.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2025-08-01",
+        "reportDate": "2025-06-28",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000073/aapl-20250628.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2025-05-02",
+        "reportDate": "2025-03-29",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000057/aapl-20250329.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2025-01-31",
+        "reportDate": "2024-12-28",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000008/aapl-20241228.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2025-01-10",
+        "reportDate": "2025-02-25",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000130817925000008/aapl4359751-def14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2024-11-01",
+        "reportDate": "2024-09-28",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2024-08-02",
+        "reportDate": "2024-06-29",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019324000081/aapl-20240629.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2024-05-03",
+        "reportDate": "2024-03-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019324000069/aapl-20240330.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2024-02-02",
+        "reportDate": "2023-12-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019324000006/aapl-20231230.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2024-01-11",
+        "reportDate": "2024-02-28",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000130817924000010/laapl2024_def14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2023-11-03",
+        "reportDate": "2023-09-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/aapl-20230930.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2023-08-04",
+        "reportDate": "2023-07-01",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019323000077/aapl-20230701.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2023-05-05",
+        "reportDate": "2023-04-01",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019323000064/aapl-20230401.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2023-02-03",
+        "reportDate": "2022-12-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019323000006/aapl-20221231.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2023-01-12",
+        "reportDate": "2023-03-10",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000130817923000019/laap2023_def14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2022-10-28",
+        "reportDate": "2022-09-24",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019322000108/aapl-20220924.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2022-07-29",
+        "reportDate": "2022-06-25",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019322000070/aapl-20220625.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2022-04-29",
+        "reportDate": "2022-03-26",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019322000059/aapl-20220326.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2022-01-28",
+        "reportDate": "2021-12-25",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019322000007/aapl-20211225.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2022-01-06",
+        "reportDate": "2022-03-04",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000119312522003583/d222670ddef14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2021-10-29",
+        "reportDate": "2021-09-25",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019321000105/aapl-20210925.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2021-07-28",
+        "reportDate": "2021-06-26",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019321000065/aapl-20210626.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2021-04-29",
+        "reportDate": "2021-03-27",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019321000056/aapl-20210327.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2021-01-28",
+        "reportDate": "2020-12-26",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019321000010/aapl-20201226.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2021-01-05",
+        "reportDate": "2021-02-23",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000119312521001987/d767770ddef14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2020-10-30",
+        "reportDate": "2020-09-26",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019320000096/aapl-20200926.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2020-07-31",
+        "reportDate": "2020-06-27",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019320000062/aapl-20200627.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2020-05-01",
+        "reportDate": "2020-03-28",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019320000052/a10-qq220203282020.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2020-01-29",
+        "reportDate": "2019-12-28",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019320000010/a10-qq1202012282019.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2020-01-03",
+        "reportDate": "2020-02-26",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000119312520001450/d799303ddef14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2019-10-31",
+        "reportDate": "2019-09-28",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019319000119/a10-k20199282019.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2019-07-31",
+        "reportDate": "2019-06-29",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019319000076/a10-qq320196292019.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2019-05-01",
+        "reportDate": "2019-03-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019319000066/a10-qq220193302019.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2019-01-30",
+        "reportDate": "2018-12-29",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019319000010/a10-qq1201912292018.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2019-01-08",
+        "reportDate": "2019-03-01",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000119312519004664/d667873ddef14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2018-11-05",
+        "reportDate": "2018-09-29",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019318000145/a10-k20189292018.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2018-08-01",
+        "reportDate": "2018-06-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019318000100/a10-qq320186302018.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2018-05-02",
+        "reportDate": "2018-03-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019318000070/a10-qq220183312018.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2018-02-02",
+        "reportDate": "2017-12-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019318000007/a10-qq1201812302017.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2017-12-27",
+        "reportDate": "2018-02-13",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000119312517380130/d400278ddef14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2017-11-03",
+        "reportDate": "2017-09-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019317000070/a10-k20179302017.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2017-08-02",
+        "reportDate": "2017-07-01",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019317000009/a10-qq32017712017.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2017-05-03",
+        "reportDate": "2017-04-01",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000162828017004790/a10-qq22017412017.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2017-02-01",
+        "reportDate": "2016-12-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000162828017000717/a10-qq1201712312016.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2017-01-06",
+        "reportDate": "2017-02-28",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000119312517003753/d257185ddef14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2016-10-26",
+        "reportDate": "2016-09-24",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000162828016020309/a201610-k9242016.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2016-07-27",
+        "reportDate": "2016-06-25",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000162828016017809/a10-qq320166252016.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2016-04-27",
+        "reportDate": "2016-03-26",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000119312516559625/d165350d10q.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2016-01-27",
+        "reportDate": "2015-12-26",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000119312516439878/d66145d10q.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2016-01-06",
+        "reportDate": "2016-02-26",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000119312516422528/d79474ddef14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2015-10-28",
+        "reportDate": "2015-09-26",
+        "url": "https://www.sec.gov/Archives/edgar/data/320193/000119312515356351/d17062d10k.htm"
+      }
+    ],
+    "CAT": [
+      {
+        "form": "10-Q",
+        "filingDate": "2026-08-05",
+        "reportDate": "2026-06-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000046/cat-20260630.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2026-05-06",
+        "reportDate": "2026-03-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000021/cat-20260331.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2026-04-30",
+        "reportDate": "2026-06-10",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000130817926000358/cat014496-def14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2026-02-13",
+        "reportDate": "2025-12-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000008/cat-20251231.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2025-11-03",
+        "reportDate": "2025-09-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823025000048/cat-20250930.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2025-08-06",
+        "reportDate": "2025-06-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823025000040/cat-20250630.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2025-05-07",
+        "reportDate": "2025-03-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823025000016/cat-20250331.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2025-04-30",
+        "reportDate": "2025-06-11",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000130817925000529/cat012723-def14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2025-02-14",
+        "reportDate": "2024-12-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823025000008/cat-20241231.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2024-11-06",
+        "reportDate": "2024-09-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823024000053/cat-20240930.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2024-08-07",
+        "reportDate": "2024-06-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823024000045/cat-20240630.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2024-05-01",
+        "reportDate": "2024-03-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823024000020/cat-20240331.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2024-04-29",
+        "reportDate": "2024-06-12",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000130817924000623/lcat2024_def14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2024-02-16",
+        "reportDate": "2023-12-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823024000009/cat-20231231.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2023-11-01",
+        "reportDate": "2023-09-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823023000056/cat-20230930.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2023-08-02",
+        "reportDate": "2023-06-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823023000047/cat-20230630.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2023-05-03",
+        "reportDate": "2023-03-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823023000022/cat-20230331.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2023-05-01",
+        "reportDate": "",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000130817923000830/lcat2023_def14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2023-02-15",
+        "reportDate": "2022-12-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823023000011/cat-20221231.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2022-11-02",
+        "reportDate": "2022-09-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823022000223/cat-20220930.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2022-08-03",
+        "reportDate": "2022-06-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823022000183/cat-20220630.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2022-05-04",
+        "reportDate": "2022-03-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823022000112/cat-20220331.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2022-04-28",
+        "reportDate": "2022-06-08",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000130817922000290/lcat2022_def14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2022-02-16",
+        "reportDate": "2021-12-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823022000050/cat-20211231.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2021-11-03",
+        "reportDate": "2021-09-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823021000260/cat-20210930.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2021-08-04",
+        "reportDate": "2021-06-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823021000221/cat-20210630.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2021-05-05",
+        "reportDate": "2021-03-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823021000151/cat-20210331.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2021-04-30",
+        "reportDate": "2021-06-09",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000130817921000280/lcat2021_def14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2021-02-17",
+        "reportDate": "2020-12-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823021000063/cat-20201231.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2020-11-04",
+        "reportDate": "2020-09-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823020000297/cat-20200930.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2020-08-05",
+        "reportDate": "2020-06-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823020000214/cat10q6302020.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2020-05-06",
+        "reportDate": "2020-03-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823020000155/cat10q3312020.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2020-04-29",
+        "reportDate": "2020-06-10",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000130817920000236/lcat2020_def14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2020-02-19",
+        "reportDate": "2019-12-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823020000056/cat10-k12312019.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2019-10-31",
+        "reportDate": "2019-09-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823019000281/cat10q9302019.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2019-08-01",
+        "reportDate": "2019-06-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823019000224/cat10q6302019.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2019-05-06",
+        "reportDate": "2019-03-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000001823019000153/cat_10qx3312019.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2019-04-26",
+        "reportDate": "2019-06-12",
+        "url": "https://www.sec.gov/Archives/edgar/data/18230/000130817919000185/lcat2019_def14a.htm"
+      }
+    ],
+    "KO": [
+      {
+        "form": "10-Q",
+        "filingDate": "2026-07-29",
+        "reportDate": "2026-07-03",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026050503/ko-20260703.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2026-04-30",
+        "reportDate": "2026-04-03",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026028802/ko-20260403.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2026-03-16",
+        "reportDate": "2026-04-29",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000110465926028215/ko-20260429xdef14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2026-02-20",
+        "reportDate": "2025-12-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026010047/ko-20251231.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2025-10-23",
+        "reportDate": "2025-09-26",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828025046054/ko-20250926.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2025-07-24",
+        "reportDate": "2025-06-27",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134425000061/ko-20250627.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2025-05-01",
+        "reportDate": "2025-03-28",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134425000029/ko-20250328.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2025-03-17",
+        "reportDate": "2025-04-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000155837025003056/ko-20250430xdef14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2025-02-20",
+        "reportDate": "2024-12-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134425000011/ko-20241231.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2024-10-24",
+        "reportDate": "2024-09-27",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134424000060/ko-20240927.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2024-07-29",
+        "reportDate": "2024-06-28",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134424000044/ko-20240628.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2024-05-02",
+        "reportDate": "2024-03-29",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134424000017/ko-20240329.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2024-03-18",
+        "reportDate": "2024-05-01",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000155837024003468/ko-20240501xdef14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2024-02-20",
+        "reportDate": "2023-12-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134424000009/ko-20231231.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2023-10-24",
+        "reportDate": "2023-09-29",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134423000060/ko-20230929.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2023-07-27",
+        "reportDate": "2023-06-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134423000048/ko-20230630.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2023-04-26",
+        "reportDate": "2023-03-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134423000024/ko-20230331.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2023-03-10",
+        "reportDate": "",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000130817923000117/ko4104401-def14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2023-02-21",
+        "reportDate": "2022-12-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134423000011/ko-20221231.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2022-10-26",
+        "reportDate": "2022-09-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134422000042/ko-20220930.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2022-07-27",
+        "reportDate": "2022-07-01",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134422000034/ko-20220701.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2022-04-28",
+        "reportDate": "2022-04-01",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134422000016/ko-20220401.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2022-03-11",
+        "reportDate": "2022-04-26",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000120677422000669/ko3966431-def14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2022-02-22",
+        "reportDate": "2021-12-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134422000009/ko-20211231.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2021-10-28",
+        "reportDate": "2021-10-01",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134421000030/ko-20211001.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2021-07-26",
+        "reportDate": "2021-07-02",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134421000024/ko-20210702.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2021-04-27",
+        "reportDate": "2021-04-02",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134421000014/ko-20210402.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2021-03-04",
+        "reportDate": "2021-04-20",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000120677421000597/ko3821491-def14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2021-02-25",
+        "reportDate": "2020-12-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134421000008/ko-20201231.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2020-10-22",
+        "reportDate": "2020-09-25",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134420000046/ko-20200925.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2020-07-22",
+        "reportDate": "2020-06-26",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134420000041/ko-20200626.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2020-04-24",
+        "reportDate": "2020-03-27",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134420000014/a2020032710-q.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2020-03-05",
+        "reportDate": "2020-04-22",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000120677420000704/ko3621041-def14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2020-02-24",
+        "reportDate": "2019-12-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134420000006/a2019123110-k.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2019-10-24",
+        "reportDate": "2019-09-27",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134419000042/a2019092710-q.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2019-07-25",
+        "reportDate": "2019-06-28",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134419000034/a2019062810-q.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2019-04-25",
+        "reportDate": "2019-03-29",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134419000028/a2019032910-q.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2019-03-07",
+        "reportDate": "2019-04-24",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000120677419000735/ko3422831-def14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2019-02-21",
+        "reportDate": "2018-12-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134419000014/a2018123110-k.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2018-10-30",
+        "reportDate": "2018-09-28",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134418000042/a2018092810-q.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2018-07-26",
+        "reportDate": "2018-06-29",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134418000032/a2018062910-q.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2018-05-01",
+        "reportDate": "2018-03-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134418000023/a2018033010-q.htm"
+      }
+    ],
+    "NKE": [
+      {
+        "form": "10-Q",
+        "filingDate": "2026-10-02",
+        "reportDate": "2026-08-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018726000193/nke-20260831.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2026-07-15",
+        "reportDate": "2026-05-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018726000089/nke-20260715.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2026-07-15",
+        "reportDate": "2026-05-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018726000088/nke-20260531.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2026-04-01",
+        "reportDate": "2026-02-28",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018726000037/nke-20260228.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2025-12-30",
+        "reportDate": "2025-11-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018725000151/nke-20251130.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2025-10-01",
+        "reportDate": "2025-08-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018725000097/nke-20250831.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2025-07-17",
+        "reportDate": "2025-05-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018725000048/nke-20250717.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2025-07-17",
+        "reportDate": "2025-05-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018725000047/nke-20250531.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2025-04-03",
+        "reportDate": "2025-02-28",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018725000016/nke-20250228.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2025-01-03",
+        "reportDate": "2024-11-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018725000004/nke-20241130.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2024-10-07",
+        "reportDate": "2024-08-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018724000065/nke-20240831.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2024-07-25",
+        "reportDate": "2024-05-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018724000045/nke-20240725.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2024-07-25",
+        "reportDate": "2024-05-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018724000044/nke-20240531.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2024-04-04",
+        "reportDate": "2024-02-29",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018724000019/nke-20240229.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2024-01-05",
+        "reportDate": "2023-11-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018724000004/nke-20231130.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2023-10-06",
+        "reportDate": "2023-08-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018723000052/nke-20230831.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2023-07-20",
+        "reportDate": "2023-05-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018723000040/nke-20230720.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2023-07-20",
+        "reportDate": "2023-05-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018723000039/nke-20230531.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2023-04-06",
+        "reportDate": "2023-02-28",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018723000013/nke-20230228.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2023-01-05",
+        "reportDate": "2022-11-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018723000003/nke-20221130.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2022-10-06",
+        "reportDate": "2022-08-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018722000058/nke-20220831.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2022-07-21",
+        "reportDate": "2022-05-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018722000041/nike2022proxy.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2022-07-21",
+        "reportDate": "2022-05-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018722000038/nke-20220531.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2022-04-05",
+        "reportDate": "2022-02-28",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018722000017/nke-20220228.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2022-01-06",
+        "reportDate": "2021-11-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018722000004/nke-20211130.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2021-10-05",
+        "reportDate": "2021-08-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018721000045/nke-20210831.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2021-08-09",
+        "reportDate": "2021-05-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018721000035/nike2021proxy.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2021-07-20",
+        "reportDate": "2021-05-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018721000028/nke-20210531.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2021-04-02",
+        "reportDate": "2021-02-28",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018721000012/nke-20210228.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2021-01-05",
+        "reportDate": "2020-11-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018721000003/nke-20201130.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2020-10-08",
+        "reportDate": "2020-08-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018720000061/nke-20200831.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2020-07-24",
+        "reportDate": "2020-05-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018720000049/nike2020proxy.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2020-07-24",
+        "reportDate": "2020-05-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018720000047/nke-531202010k.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2020-04-07",
+        "reportDate": "2020-02-29",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018720000018/nke-229202010q.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2020-01-07",
+        "reportDate": "2019-11-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018720000004/nke-1130201910q.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2019-10-04",
+        "reportDate": "2019-08-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018719000071/nke-831201910q.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2019-07-23",
+        "reportDate": "2019-05-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018719000053/nike2019proxy.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2019-07-23",
+        "reportDate": "2019-05-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018719000051/nke-531201910k.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2019-04-04",
+        "reportDate": "2019-02-28",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018719000030/nke-02282019x10q.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2019-01-08",
+        "reportDate": "2018-11-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018719000007/nke-11302018x10q.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2018-10-05",
+        "reportDate": "2018-08-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018718000213/nke-08312018x10q.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2018-07-25",
+        "reportDate": "2018-05-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018718000144/nke-2018xdef14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2018-07-25",
+        "reportDate": "2018-05-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018718000142/nke-5312018x10k.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2018-04-05",
+        "reportDate": "2018-02-28",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018718000041/nke-02282018x10q.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2018-01-05",
+        "reportDate": "2017-11-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018718000007/nke-11302017x10q.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2017-10-06",
+        "reportDate": "2017-08-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018717000184/nke-08312017x10q.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2017-07-25",
+        "reportDate": "2017-05-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018717000127/nke-2017xdef14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2017-07-20",
+        "reportDate": "2017-05-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018717000090/nke-5312017x10k.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2017-04-04",
+        "reportDate": "2017-02-28",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018717000031/nke-02282017x10q.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2017-01-05",
+        "reportDate": "2016-11-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018717000003/nke-11302016x10q.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2016-10-11",
+        "reportDate": "2016-08-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018716000381/nke-8312016x10q.htm"
+      },
+      {
+        "form": "DEF 14A",
+        "filingDate": "2016-07-25",
+        "reportDate": "2016-09-22",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018716000339/nke-2016xdef14a.htm"
+      },
+      {
+        "form": "10-K",
+        "filingDate": "2016-07-21",
+        "reportDate": "2016-05-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018716000336/nke-5312016x10k.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2016-04-05",
+        "reportDate": "2016-02-29",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018716000264/nke-2292016x10q.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2016-01-06",
+        "reportDate": "2015-11-30",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018716000242/nke-11302015x10q.htm"
+      },
+      {
+        "form": "10-Q",
+        "filingDate": "2015-10-06",
+        "reportDate": "2015-08-31",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018715000208/nke-8312015x10q.htm"
+      }
+    ]
+  }
+}
