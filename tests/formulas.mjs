@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {parseFormula,calculatePanel} from '../assets/research/formulas.mjs';
+const series=[{id:'sales',points:[{date:'2022-12-31',value:100},{date:'2023-12-31',value:120},{date:'2024-12-31',value:150}]},{id:'profit',points:[{date:'2022-12-31',value:10},{date:'2023-12-31',value:18},{date:'2024-12-31',value:30}]}];
+const p={bindings:{A:'sales',B:'profit'},alignment:'exact',from:'2022-01-01',to:'2024-12-31',expressions:'100*B/A'};
+assert.deepEqual(calculatePanel(p,series)[0].points.map(p=>p.value),[10,15,20]);
+assert.deepEqual(calculatePanel({...p,expressions:'growth(A,1)'},series)[0].points.map(p=>Math.round(p.value*100)),[20,25]);
+assert.deepEqual(calculatePanel({...p,expressions:'avg(A,2)'},series)[0].points.map(p=>p.value),[110,135]);
+assert.deepEqual(calculatePanel({...p,expressions:'lag(A,1)'},series)[0].points.map(p=>p.value),[100,120]);
+assert.equal(calculatePanel({...p,expressions:'100/(1+0.1)^2'},[])[0].points[0].value,100/1.1**2);
+assert.throws(()=>parseFormula('fetch("https://example.com")'));
+assert.throws(()=>calculatePanel({...p,expressions:'A/0'},series));
+assert.throws(()=>calculatePanel({...p,expressions:'avg(A,0)'},series));
+assert.throws(()=>calculatePanel({...p,expressions:'Z'},series));
+assert.equal(calculatePanel({...p,from:'2024-01-01',expressions:'growth(A,1)'},series)[0].points[0].value,.25);
+assert.equal(calculatePanel({...p,expressions:'-2^2'},[])[0].points[0].value,-4);
+assert.deepEqual(calculatePanel({...p,expressions:'A\nB'},series).map(s=>s.points.length),[3,3]);
+console.log('Formula checks passed: ratios, growth, lag, averages, discounting, range history, precedence, multiple expressions and invalid inputs.');

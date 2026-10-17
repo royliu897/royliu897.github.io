@@ -35,6 +35,6 @@ def main():
             f=facts[tag];units={u:[p for p in observations if p.get('form') in ('10-K','10-K/A') and f'{args.start}-01-01'<=p['end']<=args.as_of and p['filed']<=args.as_of] for u,observations in f['units'].items()}
             selected[tag]={'label':f.get('label',tag),'description':f.get('description',''),'units':units}
         unique={f['accession']:f for f in filings}
-        out={'ticker':ticker,'cik':str(cik),'asOf':args.as_of,'start':args.start,'filings':sorted(unique.values(),key=lambda f:f['date'],reverse=True),'facts':selected}
-        temp=target/(ticker+'.tmp');temp.write_text(json.dumps(out,separators=(',',':')));temp.replace(target/(ticker+'.json'));print(ticker,len(unique),'filings;',len(selected),'concepts',flush=True)
+        out={'ticker':ticker,'cik':str(cik),'asOf':args.as_of,'start':args.start,'filings':sorted(unique.values(),key=lambda f:f['date'],reverse=True),'factsFile':ticker+'-facts.json'}
+        facts_temp=target/(ticker+'-facts.tmp');facts_temp.write_text(json.dumps(selected,separators=(',',':')));facts_temp.replace(target/(ticker+'-facts.json'));temp=target/(ticker+'.tmp');temp.write_text(json.dumps(out,separators=(',',':')));temp.replace(target/(ticker+'.json'));print(ticker,len(unique),'filings;',len(selected),'concepts',flush=True)
 if __name__=='__main__':main()

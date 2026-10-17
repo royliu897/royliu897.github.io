@@ -5,7 +5,7 @@
   <meta name="theme-color" content="#f5f3ec"><meta name="robots" content="noindex">
   <title>Research desk — Roy Liu</title>
   <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="assets/research/desk.css">
-  <link rel="stylesheet" href="assets/research/depth.css"><link rel="stylesheet" href="assets/research/stages.css"><script type="module" src="assets/research/desk.mjs"></script><script type="module" src="assets/research/workspace.mjs"></script>
+  <link rel="stylesheet" href="assets/research/depth.css"><link rel="stylesheet" href="assets/research/workbench.css"><script type="module" src="assets/research/desk.mjs?v=workbench2"></script><script type="module" src="assets/research/workspace.mjs"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -65,7 +65,7 @@
   <p id="document-selection" class="desk-muted"></p><button id="documents-clear">Clear document selection</button><div id="library-docs" class="library-list"></div>
  </details>
  <details class="desk-subdrawer"><summary>Add reported financial data</summary>
-  <label>SEC accounting concept<select id="library-concept"></select></label><label>Reported unit<select id="library-unit"></select></label><p id="concept-definition" class="desk-muted"></p>
+  <button id="library-load">Load selected financial fields</button><label>SEC accounting concept<select id="library-concept"></select></label><label>Reported unit<select id="library-unit"></select></label><p id="concept-definition" class="desk-muted"></p>
   <button id="library-add">Add annual series</button><p class="desk-muted">Latest annual value filed by the snapshot date, including restatements. Concepts remain separate; fiscal year ends are retained. These are not point-in-time backtest data.</p>
  </details>
  <details class="desk-subdrawer"><summary>Economic data catalogue</summary>
