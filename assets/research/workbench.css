@@ -141,3 +141,20 @@ html[data-theme=dark] .model-legend i,html[data-theme=dark] .panel-body svg poly
 .document-collection .library-list>div>a{flex:1;min-width:0;font-size:11px}
 .document-collection .library-list>div>button{flex-shrink:0;margin:0;padding:3px 5px;font-size:10px}
 .document-collection .library-list input[type=checkbox]{flex-shrink:0;margin:0}
+
+.filing-host{display:flex;flex-direction:column;flex:1;min-height:0;gap:6px}
+.filing-host p{font-size:12px;color:var(--muted);margin:4px}
+.desk .filing-host iframe{flex:1;min-height:160px;width:100%;height:0;border:1px solid var(--line)}
+.desk #evidence-dialog,.desk .filing-evidence-dialog{width:min(1050px,94vw);padding:12px}
+.evidence-heading{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:12px;margin:8px 0}
+.evidence-heading a{margin-left:auto}.evidence-heading button{padding:4px 8px}
+.desk #evidence-dialog .cached-filing,.desk .filing-evidence-dialog .cached-filing{display:block;height:420px;max-height:60vh;width:100%;border:1px solid var(--line);background:#fff;box-sizing:border-box}
+#evidence-dialog section{margin:14px 0}#evidence-dialog h3{font-size:13px;margin:6px 0}
+#evidence-dialog section>select{width:140px;margin:5px 0}
+.viewer-page td button{font-size:11px;padding:3px 6px;margin-left:8px}
+
+.viewer-page-heading h3{flex:1}
+.desk .cache-toggle{display:inline-flex;align-items:center;gap:6px;font-weight:400}
+.cache-toggle:before{content:'';width:8px;height:8px;border-radius:50%;border:1px solid var(--muted)}
+.desk .cache-toggle[aria-pressed=true]{color:var(--blue);border-color:var(--blue);background:color-mix(in srgb,var(--blue) 10%,var(--paper))}
+.cache-toggle[aria-pressed=true]:before{background:var(--blue);border-color:var(--blue)}

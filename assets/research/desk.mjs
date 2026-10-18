@@ -83,9 +83,9 @@ async function series(){
  try{const [meta,facts]=await Promise.all([companyMetadata(ticker),companyFacts(ticker)]);if(generation!==seriesGeneration)return;
  const names=metric==='revenue'?['RevenueFromContractWithCustomerExcludingAssessedTax','Revenues','SalesRevenueNet']:metric==='profit'?['NetIncomeLoss']:['EarningsPerShareDiluted'];
  const unit=metric==='eps'?'USD/shares':'USD',byYear=new Map();
- for(const name of names){if(!facts[name])continue;for(const point of annualFacts(facts[name],unit,meta.asOf)){const year=Number(point.date.slice(0,4));if(!byYear.has(year))byYear.set(year,point);}}
+ for(const name of names){if(!facts[name])continue;for(const point of annualFacts(facts[name],unit,meta.asOf)){const year=Number(point.date.slice(0,4));if(!byYear.has(year))byYear.set(year,{...point,concept:name});}}
  const rows=[...byYear.entries()].sort((a,b)=>a[0]-b[0]);activePoints=rows.map(([y,v])=>[y,v.value]);
- activeSources=rows.map(([year,v])=>{const filing=meta.filings.find(f=>f.accession===v.accession);return {year,url:filing?.url||`https://www.sec.gov/Archives/edgar/data/${meta.cik}/${v.accession.replaceAll('-','')}/${v.accession}-index.html`,label:filing?filingLabel(filing):`10-K · ${year}`,date:v.date};});
+ activeSources=rows.map(([year,v])=>{const filing=meta.filings.find(f=>f.accession===v.accession);return {year,url:filing?.url||`https://www.sec.gov/Archives/edgar/data/${meta.cik}/${v.accession.replaceAll('-','')}/${v.accession}-index.html`,label:filing?filingLabel(filing):`10-K · ${year}`,date:v.date,start:v.start,value:v.value,concept:v.concept,unit};});
  activeUnit=metric==='eps'?'USD / share':'USD';$('series-label').value=$('metric').selectedOptions[0].textContent;drawSeries();
  }catch(e){if(generation===seriesGeneration)$('series-status').textContent=e.message;}
 }
@@ -124,4 +124,4 @@ $('series-apply').onclick=()=>{try{const text=$('series-table').value.replace(/\
 
 let resizeTimer;window.addEventListener("resize",()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>width(Number(state.noteWidth)||400,false),150);});
 
-import("./research.mjs?v=workbench4").then(()=>import("./stages.mjs?v=workbench4")).catch(()=>status("Research library could not load. Reload to retry.",true));
+import("./research.mjs?v=workbench5").then(()=>import("./stages.mjs?v=workbench5")).catch(()=>status("Research library could not load. Reload to retry.",true));
