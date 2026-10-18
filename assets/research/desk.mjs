@@ -124,4 +124,4 @@ $('series-apply').onclick=()=>{try{const text=$('series-table').value.replace(/\
 
 let resizeTimer;window.addEventListener("resize",()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>width(Number(state.noteWidth)||400,false),150);});
 
-import("./research.mjs?v=workbench2").then(()=>import("./stages.mjs?v=workbench2")).catch(()=>status("Research library could not load. Reload to retry.",true));
+import("./research.mjs?v=workbench2").then(()=>import("./stages.mjs?v=workbench3")).catch(()=>status("Research library could not load. Reload to retry.",true));
