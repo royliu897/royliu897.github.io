@@ -75,21 +75,22 @@ Notes, valuation models, imported financial series, company selection, drawer st
 
 The report remains visible beside independently expandable drawers. Drag a drawer grip to the right column or bottom dock; the same grip supports arrow keys. Drag separators or use their arrow keys to resize. Each drawer has a position/size menu. Empty docks reappear as drop targets while dragging; the report uses their space when empty. Reset layout restores defaults. Compact density and layout preferences persist. Quick review uses a brief company note; Detailed review exposes business, risk, valuation and source sections that transfer into the writing draft. The tools stack below the report on small screens.
 
-Financials accepts numeric `year,value` CSV, or pasted comma/tab-separated two-column data with that header. Values and units are explicit; automatic PDF table extraction is not implemented. PDF text can be selected and copied, but reading order may need cleanup. Only MCD has built-in financial series; other companies show an empty state until data is imported.
+Financials accepts numeric `year,value` CSV, or pasted comma/tab-separated two-column data with that header. Values and units are explicit; automatic PDF table extraction is not implemented. PDF text can be selected and copied, but reading order may need cleanup. Revenue, GAAP net income and diluted EPS load lazily from SEC annual-fact snapshots for all five companies. Annual observations retain source-accession links; values are not Value Line adjusted earnings.
 
-SEC links use accession numbers and document names from `assets/research/filings.json`, not guessed document URLs. Refresh the metadata with `python3 scripts/refresh-sec-filings.py`; the script replaces the snapshot only after all five requests succeed. Static GitHub Pages cannot call the SEC API directly because of CORS. The UI labels the snapshot and provides date-filtered EDGAR search links for filings outside it. Value Line links go to the publisher's official report hub; copyrighted reports are not included in the deployment.
+SEC document tabs use accession numbers and primary-document URLs from `assets/research/library/{ticker}.json`. Static GitHub Pages uses dated snapshots rather than browser SEC API requests. Clicking or dragging a filing into the report area opens a closable tab; closed tabs can be reopened. Tabs persist per company under `roy-report-tabs-v1`. Publishers such as the SEC can block iframe embedding; Open original remains available. Local PDFs still use the built-in PDF viewer. Copyrighted Value Line reports are not deployed. The former historical archive UI has been removed; unlinked study assets remain in the repository.
 
-Historical records are reconstructed from public filings, with subsequent results fetched only on explicit reveal. This prevents incidental spoilers, not intentional inspection of public static assets. The desk has `noindex`; that is not access control. The application and anonymous case material can be public, while notes/documents remain local unless the author chooses to publish them.
+The desk has `noindex`, which is not access control. Notes and imported PDFs remain local.
 
 Checks: `node tests/research-desk.mjs` (Node 22+), `python3 tests/writing.py`, and the existing publishing/worker tests. Browser checks cover PDF rendering, switching companies, drawer persistence, table plotting, date selection and growth display. Draft handoff is covered by unit checks; production author login/publication has not been exercised for this change.
 
 
 ### Chart controls and next research layer
 
-Financials provides a metric selector, start/end years, 5-/10-year presets, reported values, year-over-year percentage change, and a start-at-100 index. Choices persist per company. View data shows raw and transformed values. Annual change uses the preceding calendar year (even outside the selected window), omits missing or nonpositive prior values, and never silently treats a multi-year gap as one year. Indexing requires a positive starting value. Presets select available observations; they do not imply ten years of built-in coverage.
+Financials uses `Past [n or all] years`, clipped to available annual observations. Create graph opens a main-viewer graph tab plus its source filing. Axes name the units; a data table preserves full numeric values and source links. Annual change requires the immediately preceding calendar-year observation and a positive prior value. Indexed values require a positive starting value. Imported data can be pasted or loaded from CSV.
 
+Calculator and dashboard expressions accept case-insensitive `m`, `b`, and `t` suffixes. Results abbreviate millions, billions and trillions; calculations retain full precision. Valuation separates projected price from discounted value, including dividends. Reinvestment assumes annual end-of-year dividends and a linear P/E path; it is distinct from cash-flow IRR. Charts remain opt-in.
 
-
+Range inputs accept years, calendar quarters (`2025 Q2` or `Q2 2025`), or exact ISO dates. Existing exact model ranges are preserved when editing. Filing labels show calendar quarter of period end, not inferred fiscal-quarter numbering. 8-Ks show their filing dates and group under calendar quarters. Events retain exact dates internally. Persistent instruction text is omitted; formulas and source definitions are documented in code/tests. Run `node tests/research-qos.mjs` for suffix, period and range regressions.
 
 ### Detailed research library
 

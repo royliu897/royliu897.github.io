@@ -1,8 +1,9 @@
+import {numberLiteral} from './amounts.mjs';
 // Deliberately small arithmetic language; no execution of user-entered JavaScript.
 export function expression(source, t=0) {
   const s=String(source).trim(); let pos=0;
   function ws(){while(/\s/.test(s[pos]||'')&&pos<s.length)pos++;}
-  function atom(){ws();if(s[pos]==='('){pos++;const v=sum();ws();if(s[pos++]!==')')throw Error('Missing closing parenthesis');return v;}if(s[pos]==='t'){pos++;return t;}const m=s.slice(pos).match(/^(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?/i);if(!m)throw Error('Use numbers, t, parentheses and + − * / ^ only.');pos+=m[0].length;return Number(m[0]);}
+  function atom(){ws();if(s[pos]==='('){pos++;const v=sum();ws();if(s[pos++]!==')')throw Error('Missing closing parenthesis');return v;}if(s[pos]==='t'){pos++;return t;}const m=s.slice(pos).match(/^(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?[mbt]?/i);if(!m)throw Error('Use numbers, m/b/t suffixes, parentheses and + − * / ^.');pos+=m[0].length;return numberLiteral(m[0]);}
   function power(){let a=atom();ws();if(s[pos]==='^'){pos++;a=Math.pow(a,unary());}return a;}
   function unary(){ws();if(s[pos]==='+'){pos++;return unary();}if(s[pos]==='-'){pos++;return -unary();}return power();}
   function product(){let a=unary();ws();while(s[pos]==='*'||s[pos]==='/'){const op=s[pos++],b=unary();a=op==='*'?a*b:a/b;ws();}return a;}

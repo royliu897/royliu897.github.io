@@ -1,4 +1,4 @@
-import {expression} from './finance.mjs';
+import {expression} from './finance.mjs?v=4';
 export function safeURL(value){const u=new URL(value);if(!['https:','http:'].includes(u.protocol))throw Error('Use an http or https source URL.');return u.href;}
 export function validDate(s){return /^\d{4}-\d{2}-\d{2}$/.test(s)&&Number.isFinite(Date.parse(s))&&new Date(s+'T00:00:00Z').toISOString().slice(0,10)===s;}
 export function parseObservations(text){

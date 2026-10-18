@@ -1,9 +1,10 @@
-import {annualize} from './research-data.mjs';
+import {numberLiteral} from './amounts.mjs';
+import {annualize} from './research-data.mjs?v=4';
 export function parseFormula(source){
  if(typeof source!=='string'||source.length>500)throw Error('Use an expression of at most 500 characters.');
- const tokens=source.match(/(?:\d*\.\d+|\d+\.?\d*)(?:e[+-]?\d+)?|[A-Za-z][A-Za-z0-9_]*|[()+\-*/^,]|\S/g)||[];let i=0,depth=0;
+ const tokens=source.match(/(?:\d*\.\d+|\d+\.?\d*)(?:e[+-]?\d+)?[mMbBtT]?|[A-Za-z][A-Za-z0-9_]*|[()+\-*/^,]|\S/g)||[];let i=0,depth=0;
  const take=t=>tokens[i]===t&&(i++,true);
- function atom(){if(++depth>40)throw Error('Expression nesting is too deep.');let n;const t=tokens[i++];if(t==='('){n=sum();if(!take(')'))throw Error('Missing closing parenthesis.');}else if(/^\d|^\.\d/.test(t||'')){n={op:'number',value:Number(t)};}else if(/^[A-Za-z][\w]*$/.test(t||'')){if(take('(')){const args=[sum()];while(take(','))args.push(sum());if(!take(')'))throw Error('Missing closing parenthesis.');if(!['lag','growth','avg','abs','min','max'].includes(t))throw Error('Unknown function: '+t);if((['lag','growth','avg'].includes(t)&&args.length!==2)||(t==='abs'&&args.length!==1)||(['min','max'].includes(t)&&args.length!==2))throw Error('Wrong number of function arguments.');n={op:t,args};}else n={op:'variable',name:t};}else throw Error('Expected a number, variable or parenthesis.');depth--;return n;}
+ function atom(){if(++depth>40)throw Error('Expression nesting is too deep.');let n;const t=tokens[i++];if(t==='('){n=sum();if(!take(')'))throw Error('Missing closing parenthesis.');}else if(/^\d|^\.\d/.test(t||'')){n={op:'number',value:numberLiteral(t)};}else if(/^[A-Za-z][\w]*$/.test(t||'')){if(take('(')){const args=[sum()];while(take(','))args.push(sum());if(!take(')'))throw Error('Missing closing parenthesis.');if(!['lag','growth','avg','abs','min','max'].includes(t))throw Error('Unknown function: '+t);if((['lag','growth','avg'].includes(t)&&args.length!==2)||(t==='abs'&&args.length!==1)||(['min','max'].includes(t)&&args.length!==2))throw Error('Wrong number of function arguments.');n={op:t,args};}else n={op:'variable',name:t};}else throw Error('Expected a number, variable or parenthesis.');depth--;return n;}
  function power(){const a=atom();return take('^')?{op:'^',args:[a,unary()]}:a;}
  function unary(){if(take('-'))return {op:'neg',args:[unary()]};if(take('+'))return unary();return power();}
  function product(){let a=unary();while(['*','/'].includes(tokens[i]))a={op:tokens[i++],args:[a,unary()]};return a;}

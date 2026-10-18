@@ -73,3 +73,71 @@ html[data-theme=dark] .model-legend i,html[data-theme=dark] .panel-body svg poly
 .panel-body svg{flex:1;min-height:100px;height:0;max-height:none}
 
 @media(min-width:501px){.desk[data-stage=quick] #quick-dock #notes-panel>.drawer-body{height:calc(var(--dock-height,155px) - 38px)}}
+
+/* Viewer-first workspace: compact controls, full-size documents and plots. */
+#reports{display:flex;flex-direction:column;min-height:0;overflow:hidden}
+#reports [hidden]{display:none!important}
+.viewer-tabs{display:flex;align-items:center;gap:5px;padding:5px 7px;border-bottom:1px solid var(--line);min-width:0;flex-shrink:0}
+.viewer-tab-list{display:flex;gap:3px;overflow-x:auto;flex:1;min-width:0;scrollbar-width:thin}
+.viewer-tab{display:flex;flex-shrink:0;align-items:stretch;border:1px solid var(--line);border-radius:3px;overflow:hidden}
+.desk .viewer-tab button{border:0;border-radius:0;padding:5px 7px;font-size:11px;white-space:nowrap;max-width:200px;overflow:hidden;text-overflow:ellipsis}
+.desk .viewer-tab:has([aria-selected=true]){border-color:var(--blue);background:color-mix(in srgb,var(--blue) 10%,var(--paper))}
+.desk .viewer-tab button[aria-selected=true]{color:var(--blue);font-weight:600}
+.desk .viewer-tabs>button,.desk .viewer-tabs>select{width:auto;max-width:110px;margin:0;font-size:11px;padding:4px 6px;flex-shrink:0}
+.viewer-page:not([hidden]){display:flex;flex:1;min-height:0;overflow:auto;flex-direction:column;padding:8px;gap:6px}
+.viewer-page-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-shrink:0}
+.viewer-page-heading h3{font-size:12px;font-weight:600;margin:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.viewer-page-heading a,.viewer-page-heading button{white-space:nowrap;flex-shrink:0;font-size:11px;padding:3px 6px}
+.desk .viewer-page iframe{flex:1;min-height:160px;height:0;box-sizing:border-box}
+.viewer-page .graph-unit{display:none}
+.viewer-graph{display:block;width:100%;flex:1;min-height:160px;height:0}
+.viewer-graph text{fill:var(--muted);font:13px var(--sans)}
+.viewer-page details{font-size:11px;flex-shrink:0}
+.viewer-page details[open]{max-height:40%;overflow:auto}
+.viewer-page summary{cursor:pointer}
+.document-drop-target{outline:2px solid var(--blue);outline-offset:-2px}
+.catalogue-heading button{font-size:11px!important;line-height:1.4;padding:4px 6px!important;white-space:nowrap}
+.catalogue-heading h2{font-size:13px}
+.desk .valuation-group{padding:8px;margin:0 0 10px;border:1px solid var(--line);min-width:0}
+.valuation-group legend{font-size:12px;font-weight:600;padding:0 4px}
+.valuation-group .desk-inputs{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.valuation-result{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0 0;font-size:11px}
+.valuation-result strong{font-size:19px;font-weight:500;font-variant-numeric:tabular-nums}
+#financials .desk-inputs{gap:8px;margin-bottom:8px}
+#financials label:has(#series-past){display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+#series-past{width:62px;margin:0}
+#series-status{margin:6px 0}
+#series-source{display:block;margin-top:8px}
+#series-source[hidden]{display:none}
+#filing-results{gap:0;margin:6px 0}
+#filing-results a{padding:6px 3px;border-bottom:1px solid var(--line);text-decoration:none}
+#filing-results a:hover{background:color-mix(in srgb,var(--blue) 8%,var(--paper));color:var(--blue)}
+.filing-quarter{font-size:10px;color:var(--muted);margin:10px 0 4px}
+.desk p:empty{display:none}
+@media(max-width:500px){.viewer-tabs{flex-wrap:wrap}.viewer-tab-list{flex-basis:100%}.viewer-page-heading h3{white-space:normal}.valuation-group .desk-inputs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.desk #reports .document-heading{padding:5px 8px;min-height:30px}
+.document-heading h2{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.desk #reports>.drawer-body{padding:5px;min-height:0;flex:1}
+.desk #reports>.drawer-body>.desk-actions[hidden]{display:none!important}
+.desk #report-status[hidden]{display:none!important}
+.valuation-output{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px;font-size:11px}
+.valuation-output strong{font-size:19px;font-weight:500;font-variant-numeric:tabular-nums}
+.valuation-returns{display:grid;gap:4px;font-size:10px;margin-top:8px;color:var(--muted)}
+.valuation-returns span{display:flex;justify-content:space-between;gap:6px}
+#financials .series-range{margin:10px 0}
+#financials .series-range label{display:flex;gap:6px;align-items:center;flex-wrap:nowrap}
+.series-create-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0}
+.series-create-row button{flex-shrink:0}.series-create-row #series-status{font-size:10px;margin:0}
+#financials #series-values[hidden],#financials #series-label-field[hidden]{display:none!important}
+.desk .viewer-tabs>select:disabled{display:none}
+
+.desk[data-stage=quick] #tools-panel .valuation-group .desk-inputs{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.desk .valuation-group input{padding:5px 6px;margin-top:3px;min-width:0;box-sizing:border-box;font-size:12px}
+.desk .valuation-group label{font-size:10px;line-height:1.35}
+.desk[data-stage=quick] #tools-panel #valuation>.drawer-body{padding:7px}
+.valuation-group .valuation-output{padding-top:5px;border-top:1px solid var(--line)}
+.document-collection .library-list>div{display:flex;align-items:center;gap:5px;padding:5px 0}
+.document-collection .library-list>div>a{flex:1;min-width:0;font-size:11px}
+.document-collection .library-list>div>button{flex-shrink:0;margin:0;padding:3px 5px;font-size:10px}
+.document-collection .library-list input[type=checkbox]{flex-shrink:0;margin:0}
