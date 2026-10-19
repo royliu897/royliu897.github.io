@@ -1,3 +1,5 @@
+import {filingList,financialFacts} from './sec-client.mjs';
+import {parseManualSeries,periodLabel} from './manual-series.mjs';
 import {formatAmount} from './amounts.mjs';
 import {filingLabel,pastRange} from './periods.mjs';
 import {annualFacts} from './research-data.mjs?v=4';
@@ -65,19 +67,17 @@ divider.addEventListener('pointermove',e=>{if(!divider.hasPointerCapture(e.point
 $('reset-layout').onclick=()=>{state.pins=[];state.open={};drawerIds.forEach(id=>{$(id).open=id==='notes-panel';$(id).classList.remove('pinned');});document.querySelectorAll('[data-pin]').forEach(c=>c.checked=false);state.compact=false;root.classList.remove('compact');$('density').setAttribute('aria-pressed','false');width(400);setNotes(true);persist();};
 $('calc').oninput=()=>{try{const value=expression($('calc').value);$('calc-result').textContent=formatAmount(value,8);$('calc-result').title=String(value);}catch{$('calc-result').textContent='—';$('calc-result').title='';}};
 state.chartPrefs=state.chartPrefs||{};
-const metadata=new Map(),factsCache=new Map();
-function jsonFile(path){return fetch(path).then(r=>{if(!r.ok)throw Error('Data unavailable.');return r.json();});}
-function companyMetadata(ticker){if(!metadata.has(ticker))metadata.set(ticker,jsonFile(`assets/research/library/${ticker}.json`).catch(e=>{metadata.delete(ticker);throw e;}));return metadata.get(ticker);}
-function companyFacts(ticker){if(!factsCache.has(ticker))factsCache.set(ticker,jsonFile(`assets/research/library/${ticker}-facts.json`).catch(e=>{factsCache.delete(ticker);throw e;}));return factsCache.get(ticker);}
+function companyMetadata(ticker){return filingList(ticker);}
+async function companyFacts(ticker){return (await financialFacts(ticker)).facts;}
 let activePoints=[],activeSources=[],activeUnit='',seriesGeneration=0,graphSpec=null;
 async function series(){
  const generation=++seriesGeneration,ticker=symbol,pref=state.chartPrefs[symbol]||{},custom=state.series[symbol];
  $('metric').value=pref.metric||(custom?'custom':'revenue');
  for(const option of $('metric').options)option.disabled=option.value==='custom'&&!custom;
  $('series-past').value=pref.past||'all';$('series-mode').value=pref.mode||'level';
- const metric=$('metric').value,isCustom=metric==='custom';$('series-label').readOnly=!isCustom;$('series-label-field').hidden=!isCustom;
+ const metric=$('metric').value,isCustom=metric==='custom';$('series-label').readOnly=!isCustom;$('series-label-field').hidden=!isCustom;$('series-unit-field').hidden=!isCustom;
  activePoints=[];activeSources=[];graphSpec=null;$('series-create').disabled=true;$('series-source').hidden=true;
- if(isCustom){activePoints=custom?.points||[];activeUnit=custom?.label||'Imported value';$('series-label').value=activeUnit;drawSeries();return;}
+ if(isCustom){activePoints=custom?.points||[];activeUnit=custom?.unit||custom?.label||'USD';$('series-label').value=custom?.label||'Manual series';$('series-unit').value=activeUnit;drawSeries();return;}
  if(!$('financials').open)return;
  $('series-status').textContent='Loading…';
  try{const [meta,facts]=await Promise.all([companyMetadata(ticker),companyFacts(ticker)]);if(generation!==seriesGeneration)return;
@@ -96,15 +96,15 @@ function drawSeries(){
  const from=selected[0][0],through=selected.at(-1)[0],mode=$('series-mode').value,points=chartSeries(activePoints,from,through,mode),unit=mode==='growth'?'%':mode==='indexed'?'Index (start = 100)':activeUnit;
  if(!points.length)throw Error('No values in this range.');
  const source=activeSources.filter(s=>s.year>=from&&s.year<=through&&s.url).at(-1);
- graphSpec={title:`${symbol} · ${$('series-label').value}${$('metric').value==='custom'?'':' (GAAP)'}`,points,unit,source:source?.url,sourceLabel:source?.label,sources:activeSources};
+ graphSpec={title:`${symbol} · ${$('series-label').value}${$('metric').value==='custom'?'':' (GAAP)'}`,points,unit,source:source?.url,sourceLabel:source?.label,sources:activeSources,frequency:state.series[symbol]?.frequency==='quarter'&&$('metric').value==='custom'?'quarter':'year'};
  for(const [year,value]of points){const tr=document.createElement('tr');for(const v of [year,activePoints.find(p=>p[0]===year)?.[1],value]){const td=document.createElement('td');td.textContent=tr.children.length?formatAmount(v):String(v);tr.append(td);}$('series-values').append(tr);}
- $('series-status').textContent=`${from}–${through} · ${points.length} values`;$('series-create').disabled=false;
+ $('series-status').textContent=`${periodLabel(from,graphSpec.frequency)}–${periodLabel(through,graphSpec.frequency)} · ${points.length} values`;$('series-create').disabled=false;
  }catch(e){$('series-status').textContent=e.message;}
 }
 $('series-create').onclick=()=>{drawSeries();if(!graphSpec)return;document.dispatchEvent(new CustomEvent('research-open-graph',{detail:graphSpec}));$('series-source').hidden=!graphSpec.source;if(graphSpec.source){$('series-source').href=graphSpec.source;$('series-source').textContent=graphSpec.sourceLabel;}};
 $('metric').onchange=()=>{state.chartPrefs[symbol]={...state.chartPrefs[symbol],metric:$('metric').value};series();};
 ['series-past','series-mode'].forEach(id=>$(id).onchange=drawSeries);
-$('series-label').onchange=()=>{if(state.series[symbol]&&$('metric').value==='custom'){state.series[symbol].label=$('series-label').value;activeUnit=$('series-label').value;persist();drawSeries();}};
+$('series-label').onchange=()=>{if(state.series[symbol]&&$('metric').value==='custom'){state.series[symbol].label=$('series-label').value;activeUnit=state.series[symbol].unit||'$';persist();drawSeries();}};
 $('series-upload').onchange=async e=>{try{const f=e.target.files[0];if(!f)return;if(f.size>100000)throw Error('CSV must be smaller than 100 KB.');const points=parseSeries(await f.text());state.series[symbol]={label:`${symbol} imported series — specify units`,points};state.chartPrefs[symbol]={metric:"custom"};persist();series();}catch(error){$('series-status').textContent=error.message;}finally{e.target.value='';}};
 async function filings(){const ticker=symbol,year=$('filing-year').value;$('filing-links').replaceChildren();$('filing-results').replaceChildren();try{const meta=await companyMetadata(ticker);if(symbol!==ticker||$('filing-year').value!==year)return;const rows=meta.filings.filter(f=>f.date.startsWith(year));$('filing-status').textContent=`${rows.length} filings · as of ${meta.asOf}`;for(const f of rows){const a=document.createElement('a');a.textContent=filingLabel(f);a.href=f.url;a.dataset.documentUrl=f.url;a.dataset.documentLabel=filingLabel(f);a.title=`Filed ${f.date}; period ${f.period||'—'}`;$('filing-results').append(a);}}catch{$('filing-status').textContent='Filings unavailable.';}}
 $('filing-year').onchange=filings;
@@ -120,8 +120,12 @@ root.classList.toggle('compact',Boolean(state.compact));$('density').setAttribut
 
 function reviewMode(view){state.view=view;document.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===view)));$('review-fields').hidden=view!=='detailed';$('research').hidden=view!=='detailed';document.dispatchEvent(new Event('research-view'));if(view==='detailed'){$('research').open=true;$('notes-panel').open=true;setNotes(true);}persist();}
 document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>reviewMode(b.dataset.view));reviewMode(state.view||'quick');
-$('series-apply').onclick=()=>{try{const text=$('series-table').value.replace(/\t/g,','),points=parseSeries(text);state.series[symbol]={label:$('metric').value==='custom'?$('series-label').value:`${symbol} imported value`,points};state.chartPrefs[symbol]={metric:"custom"};persist();series();}catch(e){$('series-status').textContent=e.message;}};
+$('series-apply').onclick=()=>{try{const parsed=parseManualSeries($('series-table').value,$('series-start').value,$('series-frequency').value);state.series[symbol]={label:$('series-name').value.trim()||'Manual series',...parsed};state.chartPrefs[symbol]={metric:'custom'};persist();series();}catch(e){$('series-status').textContent=e.message;}};
 
 let resizeTimer;window.addEventListener("resize",()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>width(Number(state.noteWidth)||400,false),150);});
 
-import("./research.mjs?v=workbench5").then(()=>import("./stages.mjs?v=workbench5")).catch(()=>status("Research library could not load. Reload to retry.",true));
+import("./research.mjs?v=workbench7").then(()=>import("./stages.mjs?v=workbench7")).catch(()=>status("Research library could not load. Reload to retry.",true));
+
+$('series-frequency').onchange=()=>{const y=$('series-start').value.match(/\d{4}/)?.[0]||'2020';$('series-start').value=$('series-frequency').value==='quarter'?y+' Q1':y;};
+
+$('series-unit').onchange=()=>{const custom=state.series[symbol];if(custom&&$('metric').value==='custom'){custom.unit=$('series-unit').value.trim()||'$';activeUnit=custom.unit;persist();drawSeries();}};

@@ -132,3 +132,10 @@ Evidence lists source filing links and the expression/alignment applied. Structu
 Additional checks: `node tests/formulas.mjs` covers arithmetic, ratios, rolling functions, date intersection, prior-period lookback, invalid inputs and discounting. Use Node 22 or later.
 
 UI regression checks for the polish pass: empty-bottom drag recovery and menu relocation; detailed Reset layout keeps Notes visible; full catalogue hide/show; compact note sizing; constant formulas after clearing dates; preview invalidation; draft preservation during source loading; five-series legends.
+
+
+### Live research data
+
+Research Desk uses the separate [SEC Worker](sec-worker/README.md) for on-demand filing lists and financial facts. The existing comments/publishing Worker is unchanged. Select filings to make their fields and filing-date annotations available; open names to read documents independently. Saved models and notes remain browser-local. The writing footer links to the desk.
+
+Manual series accept comma-separated values, a starting year or quarter, currency symbols and m/b/t suffixes. Empty entries preserve missing periods. Fullscreen uses a full-window layout to retain browser pinch zoom; Escape exits.

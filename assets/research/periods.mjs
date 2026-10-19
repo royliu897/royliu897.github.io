@@ -18,7 +18,7 @@ export function pastRange(points,input){
  if(text==='all')return points;
  if(!/^\d+$/.test(text)||Number(text)<1)throw Error('Enter a positive number of years, or all.');
  const last=points.at(-1)[0],first=last-Number(text)+1;
- return points.filter(([year])=>year>=first);
+ return points.filter(([year])=>year>last-Number(text));
 }
 
 export function periodInput(date,end=false){if(!validDate(date))return date||'';const q=quarterLabel(date);return parsePeriod(q,end)===date?q:date;}

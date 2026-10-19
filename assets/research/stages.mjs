@@ -55,6 +55,6 @@ for(const id of toolIds){const grip=$(id).querySelector('.panel-grip');grip.drag
 
 const reset=button('Reset layout',()=>{layout={active};stage();save();});reset.className='reset-layout-short';document.querySelector('.desk-toolbar').append(reset);
 document.addEventListener('research-view',stage);window.addEventListener('resize',size);document.addEventListener('fullscreenchange',size);
-show(active);stage();import('./dashboard.mjs?v=workbench5').then(()=>document.dispatchEvent(new Event('modeling-ready')));
+show(active);stage();import('./dashboard.mjs?v=workbench7').then(()=>document.dispatchEvent(new Event('modeling-ready')));
 
-import('./viewer-tabs.mjs?v=2');
+import('./viewer-tabs.mjs?v=4');

@@ -158,3 +158,18 @@ html[data-theme=dark] .model-legend i,html[data-theme=dark] .panel-body svg poly
 .cache-toggle:before{content:'';width:8px;height:8px;border-radius:50%;border:1px solid var(--muted)}
 .desk .cache-toggle[aria-pressed=true]{color:var(--blue);border-color:var(--blue);background:color-mix(in srgb,var(--blue) 10%,var(--paper))}
 .cache-toggle[aria-pressed=true]:before{background:var(--blue);border-color:var(--blue)}
+
+/* Filing help stays out of the document area until requested. */
+.embed-help{position:relative;flex:none}
+.embed-help>summary{list-style:none;cursor:pointer;font-size:17px;line-height:1;padding:4px;color:var(--muted)}
+.embed-help>summary::-webkit-details-marker{display:none}
+.embed-help-content{display:none;position:absolute;right:0;top:100%;z-index:30;width:min(280px,70vw);padding:12px;border:1px solid var(--line);border-radius:5px;background:var(--paper,#fff);color:var(--ink);box-shadow:0 4px 18px #0002;font-size:12px;line-height:1.5}
+.embed-help[open]>.embed-help-content,.embed-help:hover>.embed-help-content{display:block}
+.embed-help-content p{margin:0 0 8px}.embed-help-content p:last-child{margin:8px 0 0}.embed-help-content a+a{margin-left:14px}
+
+.panel-data-picker{display:grid;grid-template-columns:minmax(0,1fr) 100px 100px auto;gap:8px;align-items:end}.panel-data-picker[hidden]{display:none}.panel-data-picker p{grid-column:1/-1;margin:0;font-size:12px}.graph-source{display:flex;align-items:center;gap:10px;margin:8px 0}@media(max-width:650px){.panel-data-picker{grid-template-columns:1fr 1fr}.panel-data-picker>select:first-of-type{grid-column:1/-1}}
+
+.panel-data-picker>input{grid-column:1/-1}
+
+/* Browser pinch is retained in full-window mode; only drag grips capture touch. */
+.desk,.desk-expanded,.viewer-page,#report-frame{touch-action:pan-x pan-y pinch-zoom}

@@ -5,7 +5,7 @@
   <meta name="theme-color" content="#f5f3ec"><meta name="robots" content="noindex">
   <title>Research desk — Roy Liu</title>
   <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="assets/research/desk.css">
-  <link rel="stylesheet" href="assets/research/depth.css"><link rel="stylesheet" href="assets/research/workbench.css?v=5"><script type="module" src="assets/research/desk.mjs?v=workbench5"></script><script type="module" src="assets/research/workspace.mjs"></script>
+  <link rel="stylesheet" href="assets/research/depth.css"><link rel="stylesheet" href="assets/research/workbench.css?v=7"><script type="module" src="assets/research/desk.mjs?v=workbench7"></script><script type="module" src="assets/research/workspace.mjs?v=2"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -102,12 +102,12 @@
 
         <details class="desk-drawer" id="financials"><summary><span>Financials</span></summary><div class="drawer-body">
 <label>Metric<select id="metric"><option value="revenue">Revenue</option><option value="profit">Net income</option><option value="eps">Diluted EPS</option><option value="custom">Imported series</option></select></label>
-<label id="series-label-field" hidden>Label / units<input id="series-label"></label>
+<label id="series-label-field" hidden>Name<input id="series-label"></label><label id="series-unit-field" hidden>Units<input id="series-unit"></label>
 <div class="series-range"><label>Past <input id="series-past" value="all" placeholder="5 or all"> years</label></div>
 <label>Display<select id="series-mode"><option value="level">Reported values</option><option value="growth">Annual change · %</option><option value="indexed">Starting value = 100</option></select></label>
 <div class="series-create-row"><button id="series-create" type="button">Create graph</button><span id="series-status" class="desk-muted"></span></div>
 <a id="series-source" target="_blank" rel="noopener" hidden>Source filing ↗</a>
-<details class="desk-subdrawer"><summary>Import data</summary><div class="desk-actions"><label class="desk-file">CSV<input id="series-upload" type="file" accept=".csv,text/csv"></label></div><label>Year, value<textarea id="series-table" rows="4" spellcheck="false" placeholder="year,value&#10;2023,100&#10;2024,110"></textarea></label><button id="series-apply">Use table</button></details>
+<details class="desk-subdrawer"><summary>Import data</summary><div class="desk-actions"><label class="desk-file">CSV<input id="series-upload" type="file" accept=".csv,text/csv"></label></div><div class="desk-inputs"><label>Frequency<select id="series-frequency"><option value="year">Year</option><option value="quarter">Quarter</option></select></label><label>Starting period<input id="series-start" value="2020" placeholder="2020 or 2020 Q1"></label></div><label>Name<input id="series-name" placeholder="Revenue"></label><label>Values<textarea id="series-table" rows="3" spellcheck="false" placeholder="$60m, $65m, $72m"></textarea></label><button id="series-apply">Use values</button></details>
 <div id="series-values" hidden></div>
 </div></details>
         <details class="desk-drawer" id="filings"><summary><span>Filings</span><small>10-K · 10-Q · proxy</small></summary><div class="drawer-body"><div class="desk-inputs"><label>Calendar filing year<input id="filing-year" type="number" min="1994" max="2100" value="2025"></label></div><div id="filing-links" class="desk-links"></div><p id="filing-status" class="desk-muted"></p><div id="filing-results" class="desk-links"></div></div></details>

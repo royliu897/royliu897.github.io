@@ -30,7 +30,7 @@ export async function renderEvidence(host,series,point){
  const pending=element('p','Loading…');host.append(pending);
  try{const cached=await cachedFiling(url);if(!host.isConnected||host.firstChild!==header)return;pending.remove();const concept=series.definition||point.concept;
  const match=cached&&matchFact(cached,{concept,start:point.start,date:point.date,unit:series.unit,value:point.value});
- if(!match){host.append(element('p',cached?'Exact excerpt not matched.':'No cached excerpt.'));return;}
+ if(!match)return;
  const open=element('button','Full filing');open.type='button';open.onclick=()=>{document.dispatchEvent(new CustomEvent('research-open-document',{detail:{url:cached.url,label:cached.label,anchor:match.anchor}}));host.closest('dialog')?.close();};header.append(open);
  host.append(filingFrame(cached.base+match.excerpt,`${concept} · ${point.date}`,match.anchor));
  const disclosure=element('details'),summary=element('summary','Copy details');disclosure.append(summary,element('p',cached.changes.join(' · ')));host.append(disclosure);
