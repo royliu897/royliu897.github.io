@@ -138,4 +138,4 @@ UI regression checks for the polish pass: empty-bottom drag recovery and menu re
 
 Research Desk uses the separate [SEC Worker](sec-worker/README.md) for on-demand filing lists and financial facts. The existing comments/publishing Worker is unchanged. Select filings to make their fields and filing-date annotations available; open names to read documents independently. Saved models and notes remain browser-local. The writing footer links to the desk.
 
-Manual series accept comma-separated values, a starting year or quarter, currency symbols and m/b/t suffixes. Empty entries preserve missing periods. Fullscreen uses a full-window layout to retain browser pinch zoom; Escape exits.
+Manual series accept comma-separated values, a starting year or quarter, currency symbols and m/b/t suffixes. Empty entries preserve missing periods. Fullscreen requests native fullscreen, with a full-window fallback where unavailable. Embedded documents have independent minus/plus/reset zoom controls; Escape exits fullscreen. Drag panel handles into the reader (or onto Report in detailed review) to open live panels as tabs. Closing a panel tab restores its original position.

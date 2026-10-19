@@ -1,3 +1,4 @@
+import {parseSeriesCSV,decimalDate,dateFromDecimal,manualObservations} from '../assets/research/series-input.mjs';
 import assert from 'node:assert/strict';
 import worker,{rows} from '../sec-worker/worker.mjs';
 import {parseManualSeries,periodLabel} from '../assets/research/manual-series.mjs';
@@ -22,3 +23,12 @@ assert.equal((await worker.fetch(req('/company/MCD/filings?from=1800'),env,ctx))
 assert.equal((await worker.fetch(req('/company/MCD/facts'),{...env,CLIENT_LIMIT:{limit:async()=>({success:false})}},ctx)).status,429);
 assert.equal(rows({form:['10-K'],accessionNumber:['bad'],primaryDocument:['x.htm']},63908).length,0);
 console.log('Live SEC: constrained routes, origins, rates and cache reuse; manual currency, magnitude, missing and quarterly periods pass.');
+
+const csv=parseSeriesCSV('date,value\n2024-02-29,$2m\n2025-03-31,3m');
+assert.equal(csv.observations[0].value,2e6);
+assert.equal(dateFromDecimal(csv.points[0][0]),'2024-02-29');
+assert.equal(dateFromDecimal(decimalDate('2025-12-31')),'2025-12-31');
+assert.throws(()=>parseSeriesCSV('date,value\n2025-02-30,2'));
+assert.throws(()=>parseSeriesCSV('date,value\n2025-01-01,2\n2025-01-01,3'));
+assert.deepEqual(manualObservations(parseManualSeries('2,3','2024 Q4','quarter')).map(p=>p.date),['2024-12-31','2025-03-31']);
+console.log('Shared manual/CSV: currency, exact dates, leap years, duplicate rejection and quarter rollover pass.');

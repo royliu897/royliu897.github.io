@@ -5,8 +5,7 @@ applyTheme(stored?stored==='dark':matchMedia('(prefers-color-scheme: dark)').mat
 theme.onclick=()=>{const dark=root.dataset.theme!=='dark';applyTheme(dark);try{localStorage.setItem('roy-research-theme',dark?'dark':'light');}catch{}};
 function sync(){const active=Boolean(document.fullscreenElement)||desk.classList.contains('desk-expanded');full.textContent=active?'Exit fullscreen':'Fullscreen';full.setAttribute('aria-pressed',String(active));}
 async function exit(){if(document.fullscreenElement)await document.exitFullscreen();desk.classList.remove('desk-expanded');document.body.classList.remove('desk-is-expanded');sync();window.dispatchEvent(new Event('resize'));}
-// Full-window layout preserves browser pinch zoom, including embedded documents.
-full.onclick=async()=>{if(document.fullscreenElement||desk.classList.contains('desk-expanded')){await exit();return;}desk.classList.add('desk-expanded');document.body.classList.add('desk-is-expanded');sync();window.dispatchEvent(new Event('resize'));};
+full.onclick=async()=>{if(document.fullscreenElement||desk.classList.contains('desk-expanded')){await exit();return;}try{if(!desk.requestFullscreen)throw Error();await desk.requestFullscreen();}catch{desk.classList.add('desk-expanded');document.body.classList.add('desk-is-expanded');}sync();window.dispatchEvent(new Event('resize'));};
 document.addEventListener('fullscreenchange',sync);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&(document.fullscreenElement||desk.classList.contains('desk-expanded'))){e.preventDefault();exit();}});
 

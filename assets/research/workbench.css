@@ -173,3 +173,13 @@ html[data-theme=dark] .model-legend i,html[data-theme=dark] .panel-body svg poly
 
 /* Browser pinch is retained in full-window mode; only drag grips capture touch. */
 .desk,.desk-expanded,.viewer-page,#report-frame{touch-action:pan-x pan-y pinch-zoom}
+
+.document-zoom{display:flex;align-items:center;gap:2px;flex:none}.desk .document-zoom button{font-size:11px;padding:2px 6px}.filing-host{display:block;overflow:hidden}.desk .viewer-page .filing-host>iframe{width:calc(100% / var(--document-zoom,1));height:calc(100% / var(--document-zoom,1));max-width:none;min-height:0;transform:scale(var(--document-zoom,1));transform-origin:top left}
+
+.reader-mounted{width:100%!important;height:auto!important;min-height:0;flex:1;margin:0!important;overflow:auto;grid-column:auto!important}.reader-mounted>.drawer-body{padding:12px}.reader-mounted textarea{min-height:45vh!important}.reader-mounted.dashboard-panel{height:100%!important}.reader-mounted .panel-resize{display:none}.reader-mounted#valuation-chart .desk-chart{min-height:300px}.dragging-panels #reports{outline:2px dashed var(--blue);outline-offset:-3px}.reader-mounted>summary .quick-menu-button{display:none}
+
+.panel-data-picker{display:block}.panel-data-picker>select{margin-bottom:10px}.sec-field-controls{display:grid;grid-template-columns:minmax(0,1fr) 90px 95px auto;gap:7px;align-items:end}.sec-field-controls>input,.sec-field-controls>p{grid-column:1/-1}.sec-field-controls[hidden]{display:none}.panel-data-picker>details>summary{display:none}.series-entry label{margin:7px 0}.series-entry p:empty{display:none}.series-entry details{margin:8px 0}@media(max-width:650px){.sec-field-controls{grid-template-columns:1fr 1fr}.sec-field-controls>select:first-of-type{grid-column:1/-1}}
+
+.viewer-page>.reader-mounted[open]{max-height:none;display:flex;flex-direction:column;flex:1 1 auto}.viewer-page>.reader-mounted>.drawer-body{flex:1;min-height:0;overflow:auto}.viewer-page>.reader-mounted#notes-panel>.drawer-body{height:auto!important;display:flex!important;flex-direction:column}.viewer-page>.reader-mounted#notes-panel label:has(#note-body){flex:1;min-height:0}.viewer-page>.reader-mounted#notes-panel #note-body{min-height:180px!important;height:100%!important}.reader-mounted details[open]{max-height:none}.dragging-panels [data-tab=Report]{outline:2px dashed var(--blue)}.dashboard-grip{touch-action:none}
+
+.viewer-page .panel-menu[open],.viewer-page .embed-help[open]{overflow:visible;max-height:none}
