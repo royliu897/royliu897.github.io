@@ -1,0 +1,65 @@
+{
+  "ticker": "000660",
+  "currency": "KRW",
+  "standard": "K-IFRS",
+  "asOf": "2026-10-21",
+  "provider": "Company reports \u00b7 imported",
+  "filings": [
+    {
+      "accession": "hynix-q226",
+      "date": "2026-07-29",
+      "period": "2026-06-30",
+      "url": "https://news.skhynix.com/en/q2-2026-business-results/",
+      "form": "Results",
+      "label": "Results \u00b7 Q2 2026"
+    },
+    {
+      "accession": "hynix-q126",
+      "date": "2026-04-23",
+      "period": "2026-03-31",
+      "url": "https://news.skhynix.com/en/q1-2026-business-results/",
+      "form": "Results",
+      "label": "Results \u00b7 Q1 2026"
+    },
+    {
+      "accession": "hynix-fy25",
+      "date": "2026-01-28",
+      "period": "2025-12-31",
+      "url": "https://news.skhynix.com/en/sk-hynix-announces-fy25-financial-results/",
+      "form": "Results",
+      "label": "Results \u00b7 2025"
+    },
+    {
+      "accession": "hynix-q225",
+      "date": "2025-07-23",
+      "period": "2025-06-30",
+      "url": "https://news.skhynix.com/en/sk-hynix-announces-2q25-financial-results/",
+      "form": "Results",
+      "label": "Results \u00b7 Q2 2025"
+    },
+    {
+      "accession": "hynix-q125",
+      "date": "2025-04-24",
+      "period": "2025-03-31",
+      "url": "https://news.skhynix.com/en/sk-hynix-announces-1q25-financial-results/",
+      "form": "Results",
+      "label": "Results \u00b7 Q1 2025"
+    },
+    {
+      "accession": "hynix-fy24",
+      "date": "2025-01-23",
+      "period": "2024-12-31",
+      "url": "https://news.skhynix.com/en/sk-hynix-announces-4q24-financial-results/",
+      "form": "Results",
+      "label": "Results \u00b7 2024"
+    },
+    {
+      "accession": "hynix-fy23",
+      "date": "2024-01-25",
+      "period": "2023-12-31",
+      "url": "https://news.skhynix.com/en/sk-hynix-reports-fourth-quarter-2023-financial-results/",
+      "form": "Results",
+      "label": "Results \u00b7 2023"
+    }
+  ]
+}

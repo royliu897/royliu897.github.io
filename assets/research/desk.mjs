@@ -1,19 +1,19 @@
 import {mountSeriesInput,dateFromDecimal,decimalDate} from './series-input.mjs';
-import {filingList,financialFacts} from './sec-client.mjs';
+import {filingList,financialFacts} from './sec-client.mjs?v=2';
 import {parseManualSeries,periodLabel} from './manual-series.mjs?v=2';
 import {formatAmount} from './amounts.mjs';
-import {filingLabel,pastRange} from './periods.mjs';
-import {annualFacts} from './research-data.mjs?v=4';
+import {filingLabel,pastRange} from './periods.mjs?v=2';
+import {annualFacts} from './research-data.mjs?v=5';
 import {ReportViewer} from './pdf-viewer.mjs?v=2';
 import {expression,model} from './finance.mjs?v=4';
-import {companies,symbols,draftKey,makeDraft,appendDraft,parseSeries,importedNotes,chartSeries} from './data.mjs';
+import {companies,symbols,draftKey,makeDraft,appendDraft,parseSeries,importedNotes,chartSeries} from './data.mjs?v=2';
 const $=id=>document.getElementById(id), form=$('valuation-form'), root=document.querySelector('.desk');
 const key='roy-research-desk-v1';let blocked=false,state={};
 try{state=JSON.parse(localStorage.getItem(key)||'{}');if(!state||typeof state!=='object'||Array.isArray(state))throw Error();}catch{blocked=true;state={};}
 if(state.notes&&(Array.isArray(state.notes)||typeof state.notes!=='object'||Object.values(state.notes).some(n=>!n||typeof n.body!=='string'))){blocked=true;state={};}
 state.notes=state.notes&&typeof state.notes==='object'?state.notes:{};state.models=state.models&&typeof state.models==='object'?state.models:{};state.series=state.series&&typeof state.series==='object'?state.series:{};state.open=state.open&&typeof state.open==='object'?state.open:{};state.pins=Array.isArray(state.pins)?state.pins:[];
 let symbol=symbols.includes(state.company)?state.company:'MCD',result=null,noteTimer,filingData,filingLoading,pdfURL,reportGeneration=0;
-const money=n=>n.toLocaleString('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2}),pct=n=>(n*100).toFixed(1)+'%';
+const money=n=>n.toLocaleString('en-US',{style:'currency',currency:companies[symbol].currency||'USD',maximumFractionDigits:2}),pct=n=>(n*100).toFixed(1)+'%';
 function status(text,error=false){$('workspace-status').textContent=text;$('workspace-status').classList.toggle('desk-error',error);}
 function persist(){try{if(blocked)throw Error();localStorage.setItem(key,JSON.stringify(state));return true;}catch{status('Browser storage unavailable. Export notes before leaving.',true);return false;}}
 function download(name,text,type='application/json'){const url=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
@@ -46,9 +46,9 @@ function calculate(event){event?.preventDefault();try{const raw=inputs(),v=Objec
  }catch(e){clearResults();$('model-error').textContent=e.message;}}
 form.addEventListener('submit',calculate);form.addEventListener('input',()=>{clearResults();$('model-error').textContent='Inputs changed. Calculate to update results.';});
 $('model-reset').onclick=()=>{delete state.models[symbol];loadModel();persist();};
-function loadModel(){$('valuation-chart').open=false;$('value-chart').replaceChildren();const v=state.models[symbol]||modelDefaults();for(const [k,value] of Object.entries(v))if(form.elements[k])form.elements[k].value=value;$('model-source').textContent=symbol==='MCD'?'Example · Oct 15, 2026 · FY2025 adjusted EPS':`${symbol} · Assumptions`;$('model-error').textContent='';if(v.price&&v.eps)calculate();else clearResults();}
+function loadModel(){$('valuation-chart').open=false;$('value-chart').replaceChildren();const v=state.models[symbol]||modelDefaults();for(const [k,value] of Object.entries(v))if(form.elements[k])form.elements[k].value=value;$('model-source').textContent=symbol==='MCD'?'Example · Oct 15, 2026 · FY2025 adjusted EPS':`${symbol} · ${companies[symbol].currency||'USD'} · Assumptions`;$('model-error').textContent='';if(v.price&&v.eps)calculate();else clearResults();}
 $('model-export').onclick=()=>{if(result)download(`${symbol}-valuation.csv`,Object.keys(result.rows[0]).join(',')+'\n'+result.rows.map(r=>Object.values(r).join(',')).join('\n'),'text/csv');};
-$('model-to-note').onclick=()=>{if(!result)return;const v=inputs();$('note-body').value+=`${$('note-body').value?'\n\n':''}## Valuation — ${new Date().toISOString().slice(0,10)}\n\nPrice $${v.price}; starting EPS $${v.eps}; ${v.years} years; exit P/E ${v.exitPE}; EPS growth ${v.growth}; first-year dividend $${v.dividend}; dividend growth ${v.divGrowth}; required return ${v.hurdle}%.\n\nDiscounted value ${money(result.pv)} per share; reinvested CAGR ${pct(result.reinvestCAGR)}; cash-flow IRR ${pct(result.irr)}. Annual dividends; linear P/E path; no taxes or fees.\n`;saveNote();setNotes(true);};
+$('model-to-note').onclick=()=>{if(!result)return;const v=inputs();$('note-body').value+=`${$('note-body').value?'\n\n':''}## Valuation — ${new Date().toISOString().slice(0,10)}\n\nPrice ${companies[symbol].currency||'USD'} ${v.price}; starting EPS ${companies[symbol].currency||'USD'} ${v.eps}; ${v.years} years; exit P/E ${v.exitPE}; EPS growth ${v.growth}; first-year dividend ${companies[symbol].currency||'USD'} ${v.dividend}; dividend growth ${v.divGrowth}; required return ${v.hurdle}%.\n\nDiscounted value ${money(result.pv)} per share; reinvested CAGR ${pct(result.reinvestCAGR)}; cash-flow IRR ${pct(result.irr)}. Annual dividends; linear P/E path; no taxes or fees.\n`;saveNote();setNotes(true);};
 function draft(){return makeDraft(symbol,noteSnapshot(),crypto.randomUUID(),new Date().toISOString());}
 $('writing-draft').onclick=()=>{saveNote();try{const d=draft(),existing=JSON.parse(localStorage.getItem(draftKey)||'{}');localStorage.setItem(draftKey,JSON.stringify(appendDraft(existing,d)));window.location.href=`write.html?draft=${encodeURIComponent(d.id)}`;}catch(e){status(e.message||'Could not create the writing draft. Export it instead.',true);}};
 $('note-export').onclick=()=>{try{download(`${symbol}-draft.json`,JSON.stringify(draft(),null,2));}catch(e){status(e.message,true);}};
@@ -82,22 +82,23 @@ async function series(){
  if(!$('financials').open)return;
  $('series-status').textContent='Loading…';
  try{const [meta,facts]=await Promise.all([companyMetadata(ticker),companyFacts(ticker)]);if(generation!==seriesGeneration)return;
- const names=metric==='revenue'?['RevenueFromContractWithCustomerExcludingAssessedTax','Revenues','SalesRevenueNet']:metric==='profit'?['NetIncomeLoss']:['EarningsPerShareDiluted'];
- const unit=metric==='eps'?'USD/shares':'USD',byYear=new Map();
+ const names=metric==='revenue'?['RevenueFromContractWithCustomerExcludingAssessedTax','Revenues','SalesRevenueNet']:metric==='profit'?['NetIncomeLoss']:[companies[ticker].eps||'EarningsPerShareDiluted'];
+ const currency=companies[ticker].currency||'USD',unit=metric==='eps'?currency+'/shares':currency,byYear=new Map();
+ const epsOption=$('metric').querySelector('[value=eps]');epsOption.disabled=!facts[companies[ticker].eps||"EarningsPerShareDiluted"];epsOption.textContent=companies[ticker].eps?'EPS (reported)':'Diluted EPS';
  for(const name of names){if(!facts[name])continue;for(const point of annualFacts(facts[name],unit,meta.asOf)){const year=Number(point.date.slice(0,4));if(!byYear.has(year))byYear.set(year,{...point,concept:name});}}
  const rows=[...byYear.entries()].sort((a,b)=>a[0]-b[0]);activePoints=rows.map(([y,v])=>[y,v.value]);
- activeSources=rows.map(([year,v])=>{const filing=meta.filings.find(f=>f.accession===v.accession);return {year,url:filing?.url||`https://www.sec.gov/Archives/edgar/data/${meta.cik}/${v.accession.replaceAll('-','')}/${v.accession}-index.html`,label:filing?filingLabel(filing):`10-K · ${year}`,date:v.date,start:v.start,value:v.value,concept:v.concept,unit};});
- activeUnit=metric==='eps'?'USD / share':'USD';$('series-label').value=$('metric').selectedOptions[0].textContent;drawSeries();
+ activeSources=rows.map(([year,v])=>{const filing=meta.filings.find(f=>f.accession===v.accession);return {year,url:v.url||filing?.url||`https://www.sec.gov/Archives/edgar/data/${meta.cik}/${v.accession.replaceAll('-','')}/${v.accession}-index.html`,label:filing?filingLabel(filing):`10-K · ${year}`,date:v.date,start:v.start,value:v.value,concept:v.concept,unit};});
+ activeUnit=metric==='eps'?currency+' / share':currency;$('series-label').value=$('metric').selectedOptions[0].textContent;drawSeries();
  }catch(e){if(generation===seriesGeneration)$('series-status').textContent=e.message;}
 }
 function drawSeries(){
  graphSpec=null;$('series-create').disabled=true;$('series-values').replaceChildren();
  state.chartPrefs[symbol]={metric:$('metric').value,past:$('series-past').value,mode:$('series-mode').value};persist();
- try{const selected=pastRange(activePoints,$('series-past').value);if(!selected.length){$('series-status').textContent='No annual data.';return;}
+ try{const selected=pastRange(activePoints,$('series-past').value);if(!selected.length){$('series-status').textContent='This field is not available in the loaded reports.';return;}
  const from=selected[0][0],through=selected.at(-1)[0],mode=$('series-mode').value,points=$('metric').value==='custom'&&state.series[symbol]?.frequency==='date'&&mode==='growth'?selected.flatMap(([date,value])=>{const iso=dateFromDecimal(date),prior=new Date(iso+'T00:00:00Z');prior.setUTCFullYear(prior.getUTCFullYear()-1);const key=decimalDate(prior.toISOString().slice(0,10)),previous=activePoints.find(p=>Math.abs(p[0]-key)<1e-7)?.[1];return previous>0?[[date,(value/previous-1)*100]]:[];}):chartSeries(activePoints,from,through,mode),unit=mode==='growth'?'%':mode==='indexed'?'Index (start = 100)':activeUnit;
  if(!points.length)throw Error('No values in this range.');
  const source=activeSources.filter(s=>s.year>=from&&s.year<=through&&s.url).at(-1);
- graphSpec={title:`${symbol} · ${$('series-label').value}${$('metric').value==='custom'?'':' (GAAP)'}`,points,unit,source:source?.url,sourceLabel:source?.label,sources:activeSources,frequency:$('metric').value==='custom'?(state.series[symbol]?.frequency||'year'):'year'};
+ graphSpec={title:`${symbol} · ${$('series-label').value}${$('metric').value==='custom'?'':` (${companies[symbol].standard||'US GAAP'})`}`,points,unit,source:source?.url,sourceLabel:source?.label,sources:activeSources,frequency:$('metric').value==='custom'?(state.series[symbol]?.frequency||'year'):'year'};
  for(const [year,value]of points){const tr=document.createElement('tr');for(const v of [year,activePoints.find(p=>p[0]===year)?.[1],value]){const td=document.createElement('td');td.textContent=tr.children.length?formatAmount(v):String(v);tr.append(td);}$('series-values').append(tr);}
  $('series-status').textContent=`${periodLabel(from,graphSpec.frequency)}–${periodLabel(through,graphSpec.frequency)} · ${points.length} values`;$('series-create').disabled=false;
  }catch(e){$('series-status').textContent=e.message;}
@@ -107,7 +108,7 @@ $('metric').onchange=()=>{state.chartPrefs[symbol]={...state.chartPrefs[symbol],
 ['series-past','series-mode'].forEach(id=>$(id).onchange=drawSeries);
 $('series-label').onchange=()=>{if(state.series[symbol]&&$('metric').value==='custom'){state.series[symbol].label=$('series-label').value;activeUnit=state.series[symbol].unit||'$';persist();drawSeries();}};
 
-async function filings(){const ticker=symbol,year=$('filing-year').value;$('filing-links').replaceChildren();$('filing-results').replaceChildren();try{const meta=await companyMetadata(ticker);if(symbol!==ticker||$('filing-year').value!==year)return;const rows=meta.filings.filter(f=>f.date.startsWith(year));$('filing-status').textContent=`${rows.length} filings · as of ${meta.asOf}`;for(const f of rows){const a=document.createElement('a');a.textContent=filingLabel(f);a.href=f.url;a.dataset.documentUrl=f.url;a.dataset.documentLabel=filingLabel(f);a.title=`Filed ${f.date}; period ${f.period||'—'}`;$('filing-results').append(a);}}catch{$('filing-status').textContent='Filings unavailable.';}}
+async function filings(){const ticker=symbol,year=$('filing-year').value;$('filing-links').replaceChildren();$('filing-results').replaceChildren();try{const meta=await companyMetadata(ticker);if(symbol!==ticker||$('filing-year').value!==year)return;const rows=meta.filings.filter(f=>f.date.startsWith(year));$('filing-status').textContent=`${rows.length} filings · as of ${meta.asOf}${meta.provider?' · imported':''}`;const ir=document.createElement('a');ir.textContent=companies[ticker].provider==='company'?'Company reports ↗':'EDGAR ↗';ir.href=companies[ticker].ir||`https://www.sec.gov/edgar/browse/?CIK=${meta.cik}`;ir.target='_blank';ir.rel='noopener';$('filing-links').append(ir);for(const f of rows){const a=document.createElement('a');a.textContent=filingLabel(f);a.href=f.url;a.dataset.documentUrl=f.url;a.dataset.documentLabel=filingLabel(f);a.title=`Filed ${f.date}; period ${f.period||'—'}`;$('filing-results').append(a);}}catch{$('filing-status').textContent='Filings unavailable.';}}
 $('filing-year').onchange=filings;
 function reportDB(){return new Promise((resolve,reject)=>{const r=indexedDB.open('roy-research-documents',1);r.onupgradeneeded=()=>r.result.createObjectStore('reports');r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});}
 async function savedPDF(ticker,value){const db=await reportDB();try{return await new Promise((resolve,reject)=>{const tx=db.transaction('reports',value?'readwrite':'readonly'),store=tx.objectStore('reports'),request=value?store.put(value,ticker):store.get(ticker);let found;request.onsuccess=()=>{found=request.result;};tx.oncomplete=()=>resolve(found);tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);});}finally{db.close();}}
@@ -125,7 +126,7 @@ document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>reviewMode(b.d
 
 let resizeTimer;window.addEventListener("resize",()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>width(Number(state.noteWidth)||400,false),150);});
 
-import("./research.mjs?v=workbench10").then(()=>import("./stages.mjs?v=workbench10")).catch(()=>status("Research library could not load. Reload to retry.",true));
+import("./research.mjs?v=workbench11").then(()=>import("./stages.mjs?v=workbench11")).catch(()=>status("Research library could not load. Reload to retry.",true));
 
 
 

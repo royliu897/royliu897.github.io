@@ -24,10 +24,10 @@ export function relationship(a,b,formula){
  if(!points.length)throw Error('No matching dates with finite results. Choose explicit annual alignment if needed.');return {points,skipped};
 }
 export function annualFacts(fact,unit,cutoff){
- const byEnd=new Map();for(const p of fact.units[unit]||[]){if(!['10-K','10-K/A'].includes(p.form)||p.filed>cutoff||p.end>cutoff)continue;if(p.start){const days=(Date.parse(p.end)-Date.parse(p.start))/86400000;if(days<330||days>380)continue;}
+ const byEnd=new Map();for(const p of fact.units[unit]||[]){if(!(p.frequency==='year'||['10-K','10-K/A'].includes(p.form))||p.filed>cutoff||p.end>cutoff)continue;if(p.start){const days=(Date.parse(p.end)-Date.parse(p.start))/86400000;if(days<330||days>380)continue;}
   if(!Number.isFinite(p.val))continue;const previous=byEnd.get(p.end);if(!previous||p.filed>previous.filed)byEnd.set(p.end,p);
  }
- return [...byEnd.values()].sort((a,b)=>a.end.localeCompare(b.end)).map(p=>({date:p.end,value:p.val,filed:p.filed,start:p.start||null,accession:p.accn}));
+ return [...byEnd.values()].sort((a,b)=>a.end.localeCompare(b.end)).map(p=>({date:p.end,value:p.val,filed:p.filed,start:p.start||null,accession:p.accn,...(p.url?{url:p.url}:{})}));
 }
 
 // Preserve extrema and endpoints when a long daily series exceeds chart resolution.

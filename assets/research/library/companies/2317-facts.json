@@ -1,0 +1,919 @@
+{
+  "ticker": "2317",
+  "currency": "TWD",
+  "standard": "Taiwan IFRS",
+  "asOf": "2026-10-21",
+  "provider": "Company reports \u00b7 imported",
+  "facts": {
+    "Revenues": {
+      "label": "Revenue",
+      "description": "Revenue; Taiwan IFRS; company-reported.",
+      "units": {
+        "TWD": [
+          {
+            "val": 6626997000000,
+            "end": "2022-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=5",
+            "start": "2022-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 6162221000000,
+            "end": "2023-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=5",
+            "start": "2023-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 6859615000000,
+            "end": "2024-12-31",
+            "filed": "2025-03-14",
+            "form": "Results",
+            "accn": "honhai-2024",
+            "url": "https://image.honhai.com/upload/law_talk/Hon%20Hai%204Q24%20Results_English_20250314_8469.pdf#page=5",
+            "start": "2024-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 8103105000000,
+            "end": "2025-12-31",
+            "filed": "2026-03-16",
+            "form": "Results",
+            "accn": "honhai-2025",
+            "url": "https://image.honhai.com/upload/202603/law_talk/Hon_Hai_4Q25_Results_English_20260316_0435.pdf#page=6",
+            "start": "2025-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 2525894000000,
+            "end": "2026-06-30",
+            "filed": "2026-08-18",
+            "form": "Results",
+            "accn": "honhai-2026",
+            "url": "https://image.honhai.com/upload/202608/law_talk/Hon_Hai_2Q26_Results_English(%E6%8A%95%E5%BD%B1%E7%89%88)_revised(wp)_20260818_8282.pdf#page=6",
+            "start": "2026-04-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 2119533000000,
+            "end": "2026-03-31",
+            "filed": "2026-08-18",
+            "form": "Results",
+            "accn": "honhai-2026",
+            "url": "https://image.honhai.com/upload/202608/law_talk/Hon_Hai_2Q26_Results_English(%E6%8A%95%E5%BD%B1%E7%89%88)_revised(wp)_20260818_8282.pdf#page=6",
+            "start": "2026-01-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 1793468000000,
+            "end": "2025-06-30",
+            "filed": "2026-08-18",
+            "form": "Results",
+            "accn": "honhai-2026",
+            "url": "https://image.honhai.com/upload/202608/law_talk/Hon_Hai_2Q26_Results_English(%E6%8A%95%E5%BD%B1%E7%89%88)_revised(wp)_20260818_8282.pdf#page=6",
+            "start": "2025-04-01",
+            "frequency": "quarter"
+          }
+        ]
+      }
+    },
+    "GrossProfit": {
+      "label": "Gross profit",
+      "description": "Gross profit; Taiwan IFRS; company-reported.",
+      "units": {
+        "TWD": [
+          {
+            "val": 400085000000,
+            "end": "2022-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=5",
+            "start": "2022-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 387947000000,
+            "end": "2023-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=5",
+            "start": "2023-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 428946000000,
+            "end": "2024-12-31",
+            "filed": "2025-03-14",
+            "form": "Results",
+            "accn": "honhai-2024",
+            "url": "https://image.honhai.com/upload/law_talk/Hon%20Hai%204Q24%20Results_English_20250314_8469.pdf#page=5",
+            "start": "2024-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 498161000000,
+            "end": "2025-12-31",
+            "filed": "2026-03-16",
+            "form": "Results",
+            "accn": "honhai-2025",
+            "url": "https://image.honhai.com/upload/202603/law_talk/Hon_Hai_4Q25_Results_English_20260316_0435.pdf#page=6",
+            "start": "2025-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 154533000000,
+            "end": "2026-06-30",
+            "filed": "2026-08-18",
+            "form": "Results",
+            "accn": "honhai-2026",
+            "url": "https://image.honhai.com/upload/202608/law_talk/Hon_Hai_2Q26_Results_English(%E6%8A%95%E5%BD%B1%E7%89%88)_revised(wp)_20260818_8282.pdf#page=6",
+            "start": "2026-04-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 130981000000,
+            "end": "2026-03-31",
+            "filed": "2026-08-18",
+            "form": "Results",
+            "accn": "honhai-2026",
+            "url": "https://image.honhai.com/upload/202608/law_talk/Hon_Hai_2Q26_Results_English(%E6%8A%95%E5%BD%B1%E7%89%88)_revised(wp)_20260818_8282.pdf#page=6",
+            "start": "2026-01-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 113529000000,
+            "end": "2025-06-30",
+            "filed": "2026-08-18",
+            "form": "Results",
+            "accn": "honhai-2026",
+            "url": "https://image.honhai.com/upload/202608/law_talk/Hon_Hai_2Q26_Results_English(%E6%8A%95%E5%BD%B1%E7%89%88)_revised(wp)_20260818_8282.pdf#page=6",
+            "start": "2025-04-01",
+            "frequency": "quarter"
+          }
+        ]
+      }
+    },
+    "OperatingIncomeLoss": {
+      "label": "Operating profit",
+      "description": "Operating profit; Taiwan IFRS; company-reported.",
+      "units": {
+        "TWD": [
+          {
+            "val": 173788000000,
+            "end": "2022-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=5",
+            "start": "2022-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 166528000000,
+            "end": "2023-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=5",
+            "start": "2023-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 200607000000,
+            "end": "2024-12-31",
+            "filed": "2025-03-14",
+            "form": "Results",
+            "accn": "honhai-2024",
+            "url": "https://image.honhai.com/upload/law_talk/Hon%20Hai%204Q24%20Results_English_20250314_8469.pdf#page=5",
+            "start": "2024-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 259223000000,
+            "end": "2025-12-31",
+            "filed": "2026-03-16",
+            "form": "Results",
+            "accn": "honhai-2025",
+            "url": "https://image.honhai.com/upload/202603/law_talk/Hon_Hai_4Q25_Results_English_20260316_0435.pdf#page=6",
+            "start": "2025-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 94803000000,
+            "end": "2026-06-30",
+            "filed": "2026-08-18",
+            "form": "Results",
+            "accn": "honhai-2026",
+            "url": "https://image.honhai.com/upload/202608/law_talk/Hon_Hai_2Q26_Results_English(%E6%8A%95%E5%BD%B1%E7%89%88)_revised(wp)_20260818_8282.pdf#page=6",
+            "start": "2026-04-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 75649000000,
+            "end": "2026-03-31",
+            "filed": "2026-08-18",
+            "form": "Results",
+            "accn": "honhai-2026",
+            "url": "https://image.honhai.com/upload/202608/law_talk/Hon_Hai_2Q26_Results_English(%E6%8A%95%E5%BD%B1%E7%89%88)_revised(wp)_20260818_8282.pdf#page=6",
+            "start": "2026-01-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 56596000000,
+            "end": "2025-06-30",
+            "filed": "2026-08-18",
+            "form": "Results",
+            "accn": "honhai-2026",
+            "url": "https://image.honhai.com/upload/202608/law_talk/Hon_Hai_2Q26_Results_English(%E6%8A%95%E5%BD%B1%E7%89%88)_revised(wp)_20260818_8282.pdf#page=6",
+            "start": "2025-04-01",
+            "frequency": "quarter"
+          }
+        ]
+      }
+    },
+    "NetIncomeLoss": {
+      "label": "Net income attributable to parent",
+      "description": "Net income attributable to parent; Taiwan IFRS; company-reported.",
+      "units": {
+        "TWD": [
+          {
+            "val": 141483000000,
+            "end": "2022-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=5",
+            "start": "2022-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 142098000000,
+            "end": "2023-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=5",
+            "start": "2023-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 152705000000,
+            "end": "2024-12-31",
+            "filed": "2025-03-14",
+            "form": "Results",
+            "accn": "honhai-2024",
+            "url": "https://image.honhai.com/upload/law_talk/Hon%20Hai%204Q24%20Results_English_20250314_8469.pdf#page=5",
+            "start": "2024-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 189354000000,
+            "end": "2025-12-31",
+            "filed": "2026-03-16",
+            "form": "Results",
+            "accn": "honhai-2025",
+            "url": "https://image.honhai.com/upload/202603/law_talk/Hon_Hai_4Q25_Results_English_20260316_0435.pdf#page=6",
+            "start": "2025-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 59974000000,
+            "end": "2026-06-30",
+            "filed": "2026-08-18",
+            "form": "Results",
+            "accn": "honhai-2026",
+            "url": "https://image.honhai.com/upload/202608/law_talk/Hon_Hai_2Q26_Results_English(%E6%8A%95%E5%BD%B1%E7%89%88)_revised(wp)_20260818_8282.pdf#page=6",
+            "start": "2026-04-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 49919000000,
+            "end": "2026-03-31",
+            "filed": "2026-08-18",
+            "form": "Results",
+            "accn": "honhai-2026",
+            "url": "https://image.honhai.com/upload/202608/law_talk/Hon_Hai_2Q26_Results_English(%E6%8A%95%E5%BD%B1%E7%89%88)_revised(wp)_20260818_8282.pdf#page=6",
+            "start": "2026-01-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 44361000000,
+            "end": "2025-06-30",
+            "filed": "2026-08-18",
+            "form": "Results",
+            "accn": "honhai-2026",
+            "url": "https://image.honhai.com/upload/202608/law_talk/Hon_Hai_2Q26_Results_English(%E6%8A%95%E5%BD%B1%E7%89%88)_revised(wp)_20260818_8282.pdf#page=6",
+            "start": "2025-04-01",
+            "frequency": "quarter"
+          }
+        ]
+      }
+    },
+    "EarningsPerShareBasic": {
+      "label": "EPS (reported)",
+      "description": "EPS (reported); Taiwan IFRS; company-reported.",
+      "units": {
+        "TWD/shares": [
+          {
+            "val": 10.21,
+            "end": "2022-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=5",
+            "start": "2022-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 10.25,
+            "end": "2023-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=5",
+            "start": "2023-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 11.01,
+            "end": "2024-12-31",
+            "filed": "2025-03-14",
+            "form": "Results",
+            "accn": "honhai-2024",
+            "url": "https://image.honhai.com/upload/law_talk/Hon%20Hai%204Q24%20Results_English_20250314_8469.pdf#page=5",
+            "start": "2024-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 13.61,
+            "end": "2025-12-31",
+            "filed": "2026-03-16",
+            "form": "Results",
+            "accn": "honhai-2025",
+            "url": "https://image.honhai.com/upload/202603/law_talk/Hon_Hai_4Q25_Results_English_20260316_0435.pdf#page=6",
+            "start": "2025-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 4.27,
+            "end": "2026-06-30",
+            "filed": "2026-08-18",
+            "form": "Results",
+            "accn": "honhai-2026",
+            "url": "https://image.honhai.com/upload/202608/law_talk/Hon_Hai_2Q26_Results_English(%E6%8A%95%E5%BD%B1%E7%89%88)_revised(wp)_20260818_8282.pdf#page=6",
+            "start": "2026-04-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 3.56,
+            "end": "2026-03-31",
+            "filed": "2026-08-18",
+            "form": "Results",
+            "accn": "honhai-2026",
+            "url": "https://image.honhai.com/upload/202608/law_talk/Hon_Hai_2Q26_Results_English(%E6%8A%95%E5%BD%B1%E7%89%88)_revised(wp)_20260818_8282.pdf#page=6",
+            "start": "2026-01-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 3.19,
+            "end": "2025-06-30",
+            "filed": "2026-08-18",
+            "form": "Results",
+            "accn": "honhai-2026",
+            "url": "https://image.honhai.com/upload/202608/law_talk/Hon_Hai_2Q26_Results_English(%E6%8A%95%E5%BD%B1%E7%89%88)_revised(wp)_20260818_8282.pdf#page=6",
+            "start": "2025-04-01",
+            "frequency": "quarter"
+          }
+        ]
+      }
+    },
+    "CashAndCashEquivalentsAtCarryingValue": {
+      "label": "Cash and equivalents",
+      "description": "Cash and equivalents; Taiwan IFRS; company-reported.",
+      "units": {
+        "TWD": [
+          {
+            "val": 1062326000000,
+            "end": "2022-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 1197663000000,
+            "end": "2023-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 937108000000,
+            "end": "2024-12-31",
+            "filed": "2025-03-14",
+            "form": "Results",
+            "accn": "honhai-2024",
+            "url": "https://image.honhai.com/upload/law_talk/Hon%20Hai%204Q24%20Results_English_20250314_8469.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 1016440000000,
+            "end": "2025-12-31",
+            "filed": "2026-03-16",
+            "form": "Results",
+            "accn": "honhai-2025",
+            "url": "https://image.honhai.com/upload/202603/law_talk/Hon_Hai_4Q25_Results_English_20260316_0435.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 963002000000,
+            "end": "2026-06-30",
+            "filed": "2026-08-18",
+            "form": "Results",
+            "accn": "honhai-2026",
+            "url": "https://image.honhai.com/upload/202608/law_talk/Hon_Hai_2Q26_Results_English(%E6%8A%95%E5%BD%B1%E7%89%88)_revised(wp)_20260818_8282.pdf#page=8",
+            "frequency": "quarter"
+          }
+        ]
+      }
+    },
+    "AccountsReceivableNetCurrent": {
+      "label": "Accounts receivable",
+      "description": "Accounts receivable; Taiwan IFRS; company-reported.",
+      "units": {
+        "TWD": [
+          {
+            "val": 1098690000000,
+            "end": "2022-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 872270000000,
+            "end": "2023-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 1141418000000,
+            "end": "2024-12-31",
+            "filed": "2025-03-14",
+            "form": "Results",
+            "accn": "honhai-2024",
+            "url": "https://image.honhai.com/upload/law_talk/Hon%20Hai%204Q24%20Results_English_20250314_8469.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 1181307000000,
+            "end": "2025-12-31",
+            "filed": "2026-03-16",
+            "form": "Results",
+            "accn": "honhai-2025",
+            "url": "https://image.honhai.com/upload/202603/law_talk/Hon_Hai_4Q25_Results_English_20260316_0435.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 1385237000000,
+            "end": "2026-06-30",
+            "filed": "2026-08-18",
+            "form": "Results",
+            "accn": "honhai-2026",
+            "url": "https://image.honhai.com/upload/202608/law_talk/Hon_Hai_2Q26_Results_English(%E6%8A%95%E5%BD%B1%E7%89%88)_revised(wp)_20260818_8282.pdf#page=8",
+            "frequency": "quarter"
+          }
+        ]
+      }
+    },
+    "InventoryNet": {
+      "label": "Inventory",
+      "description": "Inventory; Taiwan IFRS; company-reported.",
+      "units": {
+        "TWD": [
+          {
+            "val": 939022000000,
+            "end": "2022-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 730765000000,
+            "end": "2023-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 835016000000,
+            "end": "2024-12-31",
+            "filed": "2025-03-14",
+            "form": "Results",
+            "accn": "honhai-2024",
+            "url": "https://image.honhai.com/upload/law_talk/Hon%20Hai%204Q24%20Results_English_20250314_8469.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 1095574000000,
+            "end": "2025-12-31",
+            "filed": "2026-03-16",
+            "form": "Results",
+            "accn": "honhai-2025",
+            "url": "https://image.honhai.com/upload/202603/law_talk/Hon_Hai_4Q25_Results_English_20260316_0435.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 1370073000000,
+            "end": "2026-06-30",
+            "filed": "2026-08-18",
+            "form": "Results",
+            "accn": "honhai-2026",
+            "url": "https://image.honhai.com/upload/202608/law_talk/Hon_Hai_2Q26_Results_English(%E6%8A%95%E5%BD%B1%E7%89%88)_revised(wp)_20260818_8282.pdf#page=8",
+            "frequency": "quarter"
+          }
+        ]
+      }
+    },
+    "PropertyPlantAndEquipmentNet": {
+      "label": "Property, plant and equipment",
+      "description": "Property, plant and equipment; Taiwan IFRS; company-reported.",
+      "units": {
+        "TWD": [
+          {
+            "val": 362405000000,
+            "end": "2022-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 393967000000,
+            "end": "2023-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 468838000000,
+            "end": "2024-12-31",
+            "filed": "2025-03-14",
+            "form": "Results",
+            "accn": "honhai-2024",
+            "url": "https://image.honhai.com/upload/law_talk/Hon%20Hai%204Q24%20Results_English_20250314_8469.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 543393000000,
+            "end": "2025-12-31",
+            "filed": "2026-03-16",
+            "form": "Results",
+            "accn": "honhai-2025",
+            "url": "https://image.honhai.com/upload/202603/law_talk/Hon_Hai_4Q25_Results_English_20260316_0435.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 576855000000,
+            "end": "2026-06-30",
+            "filed": "2026-08-18",
+            "form": "Results",
+            "accn": "honhai-2026",
+            "url": "https://image.honhai.com/upload/202608/law_talk/Hon_Hai_2Q26_Results_English(%E6%8A%95%E5%BD%B1%E7%89%88)_revised(wp)_20260818_8282.pdf#page=8",
+            "frequency": "quarter"
+          }
+        ]
+      }
+    },
+    "Assets": {
+      "label": "Assets",
+      "description": "Assets; Taiwan IFRS; company-reported.",
+      "units": {
+        "TWD": [
+          {
+            "val": 4133974000000,
+            "end": "2022-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 3939789000000,
+            "end": "2023-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 4394500000000,
+            "end": "2024-12-31",
+            "filed": "2025-03-14",
+            "form": "Results",
+            "accn": "honhai-2024",
+            "url": "https://image.honhai.com/upload/law_talk/Hon%20Hai%204Q24%20Results_English_20250314_8469.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 5104672000000,
+            "end": "2025-12-31",
+            "filed": "2026-03-16",
+            "form": "Results",
+            "accn": "honhai-2025",
+            "url": "https://image.honhai.com/upload/202603/law_talk/Hon_Hai_4Q25_Results_English_20260316_0435.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 5622576000000,
+            "end": "2026-06-30",
+            "filed": "2026-08-18",
+            "form": "Results",
+            "accn": "honhai-2026",
+            "url": "https://image.honhai.com/upload/202608/law_talk/Hon_Hai_2Q26_Results_English(%E6%8A%95%E5%BD%B1%E7%89%88)_revised(wp)_20260818_8282.pdf#page=8",
+            "frequency": "quarter"
+          }
+        ]
+      }
+    },
+    "AccountsPayableCurrent": {
+      "label": "Accounts payable",
+      "description": "Accounts payable; Taiwan IFRS; company-reported.",
+      "units": {
+        "TWD": [
+          {
+            "val": 1068941000000,
+            "end": "2022-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 893119000000,
+            "end": "2023-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 1133052000000,
+            "end": "2024-12-31",
+            "filed": "2025-03-14",
+            "form": "Results",
+            "accn": "honhai-2024",
+            "url": "https://image.honhai.com/upload/law_talk/Hon%20Hai%204Q24%20Results_English_20250314_8469.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 1331933000000,
+            "end": "2025-12-31",
+            "filed": "2026-03-16",
+            "form": "Results",
+            "accn": "honhai-2025",
+            "url": "https://image.honhai.com/upload/202603/law_talk/Hon_Hai_4Q25_Results_English_20260316_0435.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 1527523000000,
+            "end": "2026-06-30",
+            "filed": "2026-08-18",
+            "form": "Results",
+            "accn": "honhai-2026",
+            "url": "https://image.honhai.com/upload/202608/law_talk/Hon_Hai_2Q26_Results_English(%E6%8A%95%E5%BD%B1%E7%89%88)_revised(wp)_20260818_8282.pdf#page=8",
+            "frequency": "quarter"
+          }
+        ]
+      }
+    },
+    "Liabilities": {
+      "label": "Liabilities",
+      "description": "Liabilities; Taiwan IFRS; company-reported.",
+      "units": {
+        "TWD": [
+          {
+            "val": 2483443000000,
+            "end": "2022-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 2253545000000,
+            "end": "2023-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 2542911000000,
+            "end": "2024-12-31",
+            "filed": "2025-03-14",
+            "form": "Results",
+            "accn": "honhai-2024",
+            "url": "https://image.honhai.com/upload/law_talk/Hon%20Hai%204Q24%20Results_English_20250314_8469.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 3133909000000,
+            "end": "2025-12-31",
+            "filed": "2026-03-16",
+            "form": "Results",
+            "accn": "honhai-2025",
+            "url": "https://image.honhai.com/upload/202603/law_talk/Hon_Hai_4Q25_Results_English_20260316_0435.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 3502989000000,
+            "end": "2026-06-30",
+            "filed": "2026-08-18",
+            "form": "Results",
+            "accn": "honhai-2026",
+            "url": "https://image.honhai.com/upload/202608/law_talk/Hon_Hai_2Q26_Results_English(%E6%8A%95%E5%BD%B1%E7%89%88)_revised(wp)_20260818_8282.pdf#page=8",
+            "frequency": "quarter"
+          }
+        ]
+      }
+    },
+    "EquityIncludingNoncontrollingInterests": {
+      "label": "Equity including noncontrolling interests",
+      "description": "Equity including noncontrolling interests; Taiwan IFRS; company-reported.",
+      "units": {
+        "TWD": [
+          {
+            "val": 1650531000000,
+            "end": "2022-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 1686244000000,
+            "end": "2023-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 1851588000000,
+            "end": "2024-12-31",
+            "filed": "2025-03-14",
+            "form": "Results",
+            "accn": "honhai-2024",
+            "url": "https://image.honhai.com/upload/law_talk/Hon%20Hai%204Q24%20Results_English_20250314_8469.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 1970763000000,
+            "end": "2025-12-31",
+            "filed": "2026-03-16",
+            "form": "Results",
+            "accn": "honhai-2025",
+            "url": "https://image.honhai.com/upload/202603/law_talk/Hon_Hai_4Q25_Results_English_20260316_0435.pdf#page=7",
+            "frequency": "year"
+          },
+          {
+            "val": 2119588000000,
+            "end": "2026-06-30",
+            "filed": "2026-08-18",
+            "form": "Results",
+            "accn": "honhai-2026",
+            "url": "https://image.honhai.com/upload/202608/law_talk/Hon_Hai_2Q26_Results_English(%E6%8A%95%E5%BD%B1%E7%89%88)_revised(wp)_20260818_8282.pdf#page=8",
+            "frequency": "quarter"
+          }
+        ]
+      }
+    },
+    "NetCashProvidedByUsedInOperatingActivities": {
+      "label": "Operating cash flow",
+      "description": "Operating cash flow; Taiwan IFRS; company-reported.",
+      "units": {
+        "TWD": [
+          {
+            "val": 109708000000,
+            "end": "2022-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=8",
+            "start": "2022-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 445553000000,
+            "end": "2023-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=8",
+            "start": "2023-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 166029000000,
+            "end": "2024-12-31",
+            "filed": "2025-03-14",
+            "form": "Results",
+            "accn": "honhai-2024",
+            "url": "https://image.honhai.com/upload/law_talk/Hon%20Hai%204Q24%20Results_English_20250314_8469.pdf#page=8",
+            "start": "2024-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 226852000000,
+            "end": "2025-12-31",
+            "filed": "2026-03-16",
+            "form": "Results",
+            "accn": "honhai-2025",
+            "url": "https://image.honhai.com/upload/202603/law_talk/Hon_Hai_4Q25_Results_English_20260316_0435.pdf#page=8",
+            "start": "2025-01-01",
+            "frequency": "year"
+          }
+        ]
+      }
+    },
+    "CapitalExpenditures": {
+      "label": "Capital expenditure (outflow)",
+      "description": "Capital expenditure (outflow); Taiwan IFRS; company-reported.",
+      "units": {
+        "TWD": [
+          {
+            "val": 97935000000,
+            "end": "2022-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=8",
+            "start": "2022-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 111745000000,
+            "end": "2023-12-31",
+            "filed": "2024-03-14",
+            "form": "Results",
+            "accn": "honhai-2023",
+            "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf#page=8",
+            "start": "2023-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 136339000000,
+            "end": "2024-12-31",
+            "filed": "2025-03-14",
+            "form": "Results",
+            "accn": "honhai-2024",
+            "url": "https://image.honhai.com/upload/law_talk/Hon%20Hai%204Q24%20Results_English_20250314_8469.pdf#page=8",
+            "start": "2024-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 173763000000,
+            "end": "2025-12-31",
+            "filed": "2026-03-16",
+            "form": "Results",
+            "accn": "honhai-2025",
+            "url": "https://image.honhai.com/upload/202603/law_talk/Hon_Hai_4Q25_Results_English_20260316_0435.pdf#page=8",
+            "start": "2025-01-01",
+            "frequency": "year"
+          }
+        ]
+      }
+    }
+  }
+}

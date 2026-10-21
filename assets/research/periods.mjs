@@ -1,4 +1,4 @@
-import {validDate} from './research-data.mjs?v=4';
+import {validDate} from './research-data.mjs?v=5';
 export function parsePeriod(value,end=false){
  const s=String(value).trim();if(validDate(s))return s;
  const direct=s.match(/^(\d{4})(?:[\s-]*Q([1-4]))?$/i),reverse=s.match(/^Q([1-4])\s+(\d{4})$/i);const m=direct||(reverse?[reverse[0],reverse[2],reverse[1]]:null);
@@ -9,6 +9,7 @@ export function parsePeriod(value,end=false){
 }
 export function quarterLabel(date){if(!validDate(date))return date||'';return `${date.slice(0,4)} Q${Math.ceil(Number(date.slice(5,7))/3)}`;}
 export function filingLabel(f){
+ if(f.label)return f.label;
  const form=f.form,date=f.date||f.filingDate,period=f.period||f.reportDate;
  if(/^10-[KQ]/.test(form))return `${form} · ${quarterLabel(period||date).replace(/^(\d{4}) (Q[1-4])$/, '$2 $1')}`;
  return `${form} · ${date||''}`;

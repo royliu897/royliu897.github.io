@@ -1,5 +1,5 @@
 import {periodLabel} from './manual-series.mjs?v=2';
-import {safeURL} from './research-data.mjs?v=4';
+import {safeURL} from './research-data.mjs?v=5';
 import {formatAmount} from './amounts.mjs';
 const $=id=>document.getElementById(id),root=$('reports'),node=(tag,text)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;return e;};
 const button=(text,fn,label)=>{const b=node('button',text);b.type='button';b.onclick=fn;if(label)b.setAttribute('aria-label',label);return b;};

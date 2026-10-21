@@ -1,0 +1,49 @@
+{
+  "ticker": "2317",
+  "currency": "TWD",
+  "standard": "Taiwan IFRS",
+  "asOf": "2026-10-21",
+  "provider": "Company reports \u00b7 imported",
+  "filings": [
+    {
+      "accession": "honhai-2026",
+      "date": "2026-08-18",
+      "period": "2026-06-30",
+      "url": "https://image.honhai.com/upload/202608/law_talk/Hon_Hai_2Q26_Results_English(%E6%8A%95%E5%BD%B1%E7%89%88)_revised(wp)_20260818_8282.pdf",
+      "form": "Results",
+      "label": "Results \u00b7 Q2 2026"
+    },
+    {
+      "accession": "honhai-annual-2025",
+      "date": "2026-05-23",
+      "period": "2025-12-31",
+      "url": "https://image.honhai.com/upload/202605/financy_by_year/2025_Annual_Report_20260523_7728.pdf",
+      "form": "Annual report",
+      "label": "Annual report \u00b7 2025"
+    },
+    {
+      "accession": "honhai-2025",
+      "date": "2026-03-16",
+      "period": "2025-12-31",
+      "url": "https://image.honhai.com/upload/202603/law_talk/Hon_Hai_4Q25_Results_English_20260316_0435.pdf",
+      "form": "Results",
+      "label": "Results \u00b7 2025"
+    },
+    {
+      "accession": "honhai-2024",
+      "date": "2025-03-14",
+      "period": "2024-12-31",
+      "url": "https://image.honhai.com/upload/law_talk/Hon%20Hai%204Q24%20Results_English_20250314_8469.pdf",
+      "form": "Results",
+      "label": "Results \u00b7 2024"
+    },
+    {
+      "accession": "honhai-2023",
+      "date": "2024-03-14",
+      "period": "2023-12-31",
+      "url": "https://image.honhai.com/law_talk/Hon_Hai_4Q23_Results_English.pdf",
+      "form": "Results",
+      "label": "Results \u00b7 2023"
+    }
+  ]
+}

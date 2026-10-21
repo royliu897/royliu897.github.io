@@ -1,0 +1,513 @@
+{
+  "ticker": "000660",
+  "currency": "KRW",
+  "standard": "K-IFRS",
+  "asOf": "2026-10-21",
+  "provider": "Company reports \u00b7 imported",
+  "facts": {
+    "Revenues": {
+      "label": "Revenue",
+      "description": "Revenue; K-IFRS; company-reported.",
+      "units": {
+        "KRW": [
+          {
+            "val": 44622000000000,
+            "end": "2022-12-31",
+            "filed": "2024-01-25",
+            "form": "Results",
+            "accn": "hynix-fy23",
+            "url": "https://news.skhynix.com/en/sk-hynix-reports-fourth-quarter-2023-financial-results/",
+            "start": "2022-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 32765700000000,
+            "end": "2023-12-31",
+            "filed": "2025-01-23",
+            "form": "Results",
+            "accn": "hynix-fy24",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-4q24-financial-results/",
+            "start": "2023-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 66193000000000,
+            "end": "2024-12-31",
+            "filed": "2026-01-28",
+            "form": "Results",
+            "accn": "hynix-fy25",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-fy25-financial-results/",
+            "start": "2024-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 97146700000000,
+            "end": "2025-12-31",
+            "filed": "2026-01-28",
+            "form": "Results",
+            "accn": "hynix-fy25",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-fy25-financial-results/",
+            "start": "2025-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 66193000000000,
+            "end": "2024-12-31",
+            "filed": "2025-01-23",
+            "form": "Results",
+            "accn": "hynix-fy24",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-4q24-financial-results/",
+            "start": "2024-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 32766000000000,
+            "end": "2023-12-31",
+            "filed": "2024-01-25",
+            "form": "Results",
+            "accn": "hynix-fy23",
+            "url": "https://news.skhynix.com/en/sk-hynix-reports-fourth-quarter-2023-financial-results/",
+            "start": "2023-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 12429600000000,
+            "end": "2024-03-31",
+            "filed": "2025-04-24",
+            "form": "Results",
+            "accn": "hynix-q125",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-1q25-financial-results/",
+            "start": "2024-01-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 16423300000000,
+            "end": "2024-06-30",
+            "filed": "2025-07-23",
+            "form": "Results",
+            "accn": "hynix-q225",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-2q25-financial-results/",
+            "start": "2024-04-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 17573100000000,
+            "end": "2024-09-30",
+            "filed": "2025-01-23",
+            "form": "Results",
+            "accn": "hynix-fy24",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-4q24-financial-results/",
+            "start": "2024-07-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 19767000000000,
+            "end": "2024-12-31",
+            "filed": "2025-01-23",
+            "form": "Results",
+            "accn": "hynix-fy24",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-4q24-financial-results/",
+            "start": "2024-10-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 17639100000000,
+            "end": "2025-03-31",
+            "filed": "2025-04-24",
+            "form": "Results",
+            "accn": "hynix-q125",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-1q25-financial-results/",
+            "start": "2025-01-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 22232000000000,
+            "end": "2025-06-30",
+            "filed": "2025-07-23",
+            "form": "Results",
+            "accn": "hynix-q225",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-2q25-financial-results/",
+            "start": "2025-04-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 24448900000000,
+            "end": "2025-09-30",
+            "filed": "2026-01-28",
+            "form": "Results",
+            "accn": "hynix-fy25",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-fy25-financial-results/",
+            "start": "2025-07-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 32826700000000,
+            "end": "2025-12-31",
+            "filed": "2026-01-28",
+            "form": "Results",
+            "accn": "hynix-fy25",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-fy25-financial-results/",
+            "start": "2025-10-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 52576300000000,
+            "end": "2026-03-31",
+            "filed": "2026-04-23",
+            "form": "Results",
+            "accn": "hynix-q126",
+            "url": "https://news.skhynix.com/en/q1-2026-business-results/",
+            "start": "2026-01-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 79318700000000,
+            "end": "2026-06-30",
+            "filed": "2026-07-29",
+            "form": "Results",
+            "accn": "hynix-q226",
+            "url": "https://news.skhynix.com/en/q2-2026-business-results/",
+            "start": "2026-04-01",
+            "frequency": "quarter"
+          }
+        ]
+      }
+    },
+    "OperatingIncomeLoss": {
+      "label": "Operating profit",
+      "description": "Operating profit; K-IFRS; company-reported.",
+      "units": {
+        "KRW": [
+          {
+            "val": 6809000000000,
+            "end": "2022-12-31",
+            "filed": "2024-01-25",
+            "form": "Results",
+            "accn": "hynix-fy23",
+            "url": "https://news.skhynix.com/en/sk-hynix-reports-fourth-quarter-2023-financial-results/",
+            "start": "2022-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": -7730300000000,
+            "end": "2023-12-31",
+            "filed": "2025-01-23",
+            "form": "Results",
+            "accn": "hynix-fy24",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-4q24-financial-results/",
+            "start": "2023-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 23467300000000,
+            "end": "2024-12-31",
+            "filed": "2026-01-28",
+            "form": "Results",
+            "accn": "hynix-fy25",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-fy25-financial-results/",
+            "start": "2024-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 47206300000000,
+            "end": "2025-12-31",
+            "filed": "2026-01-28",
+            "form": "Results",
+            "accn": "hynix-fy25",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-fy25-financial-results/",
+            "start": "2025-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 23467300000000,
+            "end": "2024-12-31",
+            "filed": "2025-01-23",
+            "form": "Results",
+            "accn": "hynix-fy24",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-4q24-financial-results/",
+            "start": "2024-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": -7730000000000,
+            "end": "2023-12-31",
+            "filed": "2024-01-25",
+            "form": "Results",
+            "accn": "hynix-fy23",
+            "url": "https://news.skhynix.com/en/sk-hynix-reports-fourth-quarter-2023-financial-results/",
+            "start": "2023-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 2886000000000,
+            "end": "2024-03-31",
+            "filed": "2025-04-24",
+            "form": "Results",
+            "accn": "hynix-q125",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-1q25-financial-results/",
+            "start": "2024-01-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 5468500000000,
+            "end": "2024-06-30",
+            "filed": "2025-07-23",
+            "form": "Results",
+            "accn": "hynix-q225",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-2q25-financial-results/",
+            "start": "2024-04-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 7030000000000,
+            "end": "2024-09-30",
+            "filed": "2025-01-23",
+            "form": "Results",
+            "accn": "hynix-fy24",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-4q24-financial-results/",
+            "start": "2024-07-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 8082800000000,
+            "end": "2024-12-31",
+            "filed": "2025-01-23",
+            "form": "Results",
+            "accn": "hynix-fy24",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-4q24-financial-results/",
+            "start": "2024-10-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 7440500000000,
+            "end": "2025-03-31",
+            "filed": "2025-04-24",
+            "form": "Results",
+            "accn": "hynix-q125",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-1q25-financial-results/",
+            "start": "2025-01-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 9212900000000,
+            "end": "2025-06-30",
+            "filed": "2025-07-23",
+            "form": "Results",
+            "accn": "hynix-q225",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-2q25-financial-results/",
+            "start": "2025-04-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 11383400000000,
+            "end": "2025-09-30",
+            "filed": "2026-01-28",
+            "form": "Results",
+            "accn": "hynix-fy25",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-fy25-financial-results/",
+            "start": "2025-07-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 19169600000000,
+            "end": "2025-12-31",
+            "filed": "2026-01-28",
+            "form": "Results",
+            "accn": "hynix-fy25",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-fy25-financial-results/",
+            "start": "2025-10-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 37610300000000,
+            "end": "2026-03-31",
+            "filed": "2026-04-23",
+            "form": "Results",
+            "accn": "hynix-q126",
+            "url": "https://news.skhynix.com/en/q1-2026-business-results/",
+            "start": "2026-01-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 60542600000000,
+            "end": "2026-06-30",
+            "filed": "2026-07-29",
+            "form": "Results",
+            "accn": "hynix-q226",
+            "url": "https://news.skhynix.com/en/q2-2026-business-results/",
+            "start": "2026-04-01",
+            "frequency": "quarter"
+          }
+        ]
+      }
+    },
+    "NetIncomeLoss": {
+      "label": "Net income",
+      "description": "Net income; K-IFRS; company-reported.",
+      "units": {
+        "KRW": [
+          {
+            "val": 2242000000000,
+            "end": "2022-12-31",
+            "filed": "2024-01-25",
+            "form": "Results",
+            "accn": "hynix-fy23",
+            "url": "https://news.skhynix.com/en/sk-hynix-reports-fourth-quarter-2023-financial-results/",
+            "start": "2022-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": -9137500000000,
+            "end": "2023-12-31",
+            "filed": "2025-01-23",
+            "form": "Results",
+            "accn": "hynix-fy24",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-4q24-financial-results/",
+            "start": "2023-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 19796900000000,
+            "end": "2024-12-31",
+            "filed": "2026-01-28",
+            "form": "Results",
+            "accn": "hynix-fy25",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-fy25-financial-results/",
+            "start": "2024-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 42947900000000,
+            "end": "2025-12-31",
+            "filed": "2026-01-28",
+            "form": "Results",
+            "accn": "hynix-fy25",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-fy25-financial-results/",
+            "start": "2025-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 19796900000000,
+            "end": "2024-12-31",
+            "filed": "2025-01-23",
+            "form": "Results",
+            "accn": "hynix-fy24",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-4q24-financial-results/",
+            "start": "2024-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": -9138000000000,
+            "end": "2023-12-31",
+            "filed": "2024-01-25",
+            "form": "Results",
+            "accn": "hynix-fy23",
+            "url": "https://news.skhynix.com/en/sk-hynix-reports-fourth-quarter-2023-financial-results/",
+            "start": "2023-01-01",
+            "frequency": "year"
+          },
+          {
+            "val": 1917000000000,
+            "end": "2024-03-31",
+            "filed": "2025-04-24",
+            "form": "Results",
+            "accn": "hynix-q125",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-1q25-financial-results/",
+            "start": "2024-01-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 4120000000000,
+            "end": "2024-06-30",
+            "filed": "2025-07-23",
+            "form": "Results",
+            "accn": "hynix-q225",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-2q25-financial-results/",
+            "start": "2024-04-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 5753400000000,
+            "end": "2024-09-30",
+            "filed": "2025-01-23",
+            "form": "Results",
+            "accn": "hynix-fy24",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-4q24-financial-results/",
+            "start": "2024-07-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 8006500000000,
+            "end": "2024-12-31",
+            "filed": "2025-01-23",
+            "form": "Results",
+            "accn": "hynix-fy24",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-4q24-financial-results/",
+            "start": "2024-10-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 8108200000000,
+            "end": "2025-03-31",
+            "filed": "2025-04-24",
+            "form": "Results",
+            "accn": "hynix-q125",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-1q25-financial-results/",
+            "start": "2025-01-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 6996200000000,
+            "end": "2025-06-30",
+            "filed": "2025-07-23",
+            "form": "Results",
+            "accn": "hynix-q225",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-2q25-financial-results/",
+            "start": "2025-04-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 12597500000000,
+            "end": "2025-09-30",
+            "filed": "2026-01-28",
+            "form": "Results",
+            "accn": "hynix-fy25",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-fy25-financial-results/",
+            "start": "2025-07-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 15246000000000,
+            "end": "2025-12-31",
+            "filed": "2026-01-28",
+            "form": "Results",
+            "accn": "hynix-fy25",
+            "url": "https://news.skhynix.com/en/sk-hynix-announces-fy25-financial-results/",
+            "start": "2025-10-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 40345900000000,
+            "end": "2026-03-31",
+            "filed": "2026-04-23",
+            "form": "Results",
+            "accn": "hynix-q126",
+            "url": "https://news.skhynix.com/en/q1-2026-business-results/",
+            "start": "2026-01-01",
+            "frequency": "quarter"
+          },
+          {
+            "val": 93922600000000,
+            "end": "2026-06-30",
+            "filed": "2026-07-29",
+            "form": "Results",
+            "accn": "hynix-q226",
+            "url": "https://news.skhynix.com/en/q2-2026-business-results/",
+            "start": "2026-04-01",
+            "frequency": "quarter"
+          }
+        ]
+      }
+    }
+  }
+}

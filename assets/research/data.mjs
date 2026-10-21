@@ -1,5 +1,5 @@
-export const symbols=['MCD','AAPL','CAT','KO','NKE'];
-export const companies={MCD:{name:'McDonald’s',cik:'63908'},AAPL:{name:'Apple',cik:'320193'},CAT:{name:'Caterpillar',cik:'18230'},KO:{name:'Coca-Cola',cik:'21344'},NKE:{name:'Nike',cik:'320187'}};
+export const symbols=['MCD','AAPL','CAT','KO','NKE','2317','000660'];
+export const companies={MCD:{name:'McDonald’s',cik:'63908'},AAPL:{name:'Apple',cik:'320193'},CAT:{name:'Caterpillar',cik:'18230'},KO:{name:'Coca-Cola',cik:'21344'},NKE:{name:'Nike',cik:'320187'},'2317':{name:'Foxconn (Hon Hai)',currency:'TWD',standard:'Taiwan IFRS',eps:'EarningsPerShareBasic',provider:'company',ir:'https://www.honhai.com/en-us/investor-relations/financial-information/reports?category=annual'},'000660':{name:'SK hynix',currency:'KRW',standard:'K-IFRS',provider:'company',ir:'https://www.skhynix.com/ir/UI-FR-IR07/'}};
 export const draftKey='roy-writing-drafts-v1';
 export function parseSeries(text){
  const lines=text.trim().split(/\r?\n/);if(!/^year,value$/i.test(lines.shift()?.trim()||''))throw Error('CSV header must be year,value.');
