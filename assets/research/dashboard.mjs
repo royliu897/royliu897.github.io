@@ -1,6 +1,6 @@
 import {parsePeriod,quarterLabel,periodInput} from './periods.mjs?v=2';
 import {formatAmount} from './amounts.mjs';
-import {getResearchCollection,ensureFinancialData,selectedFields,addFinancialSeries} from './research.mjs?v=company12';
+import {getResearchCollection,ensureFinancialData,selectedFields,addFinancialSeries} from './research.mjs?v=company13';
 import {plotSample,safeURL,validDate} from './research-data.mjs?v=6';
 import {parseFormula,variables} from './formulas.mjs?v=4';
 const $=id=>document.getElementById(id),el=(tag,text)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;return e;};

@@ -1,5 +1,5 @@
-import {renderOverview} from './company-overview.mjs';
-import './company-search.mjs';
+import {renderOverview} from './company-overview.mjs?v=2';
+import './company-search.mjs?v=2';
 import {periodLabel} from './manual-series.mjs?v=2';
 import {safeURL} from './research-data.mjs?v=6';
 import {formatAmount} from './amounts.mjs';

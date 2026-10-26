@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {rectangle,summarize,chartLines,appliedFormula,definition} from '../assets/research/overview-tools.mjs';
+assert.deepEqual(rectangle({r:2,c:2},{r:1,c:1}),['1:1','1:2','2:1','2:2']);
+const groups=summarize([{value:10,unit:'USD'},{value:20,unit:'USD'},{value:50,unit:'%'},{value:NaN,unit:'USD'}]);
+assert.equal(groups.length,2);assert.equal(groups[0].average,15);assert.equal(groups[0].sum,30);assert.equal(groups[1].average,50);
+const report={periods:['2023-12-31','2024-12-31'],series:{revenue:{label:'Revenue',unit:'USD',points:[{date:'2023-12-31',value:100},{date:'2024-12-31',value:120}]},eps:{label:'EPS',unit:'USD/shares',points:[{date:'2023-12-31',value:2},{date:'2024-12-31',value:3}]}}};
+assert.throws(()=>chartLines(report,{keys:['revenue','eps']}),/matching units/);
+const indexed=chartLines(report,{keys:['revenue','eps'],mode:'indexed'});assert.equal(indexed[0].points[1].value,120);assert.equal(indexed[1].points[1].value,150);assert.equal(report.series.eps.points[1].value,3);
+assert.equal(chartLines(report,{keys:['revenue'],dates:{revenue:['2024-12-31']}})[0].points.length,1);
+assert.equal(chartLines(report,{keys:['revenue'],from:'2024-01-01'})[0].points.length,1);
+assert.throws(()=>chartLines(report,{keys:[]}),/No values/);
+const negative=structuredClone(report);negative.series.eps.points[0].value=-2;assert.throws(()=>chartLines(negative,{keys:['eps'],mode:'indexed'}),/positive first/);
+assert.equal(appliedFormula('netMargin',{value:20,unit:'%',inputs:[{value:20},{value:100}]}),'20 ÷ 100 × 100 = 20%');
+assert.equal(appliedFormula('fcf',{value:80,unit:'USD',inputs:[{value:100},{value:20}]}),'100 − 20 = 80 USD');
+assert.equal(definition('netMargin',{points:[]},{}).derived,true);
+console.log('Overview tools: rectangular selection, unit-separated statistics, chart ranges, indexed comparisons and formulas pass.');

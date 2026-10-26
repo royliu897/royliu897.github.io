@@ -54,9 +54,9 @@ $('writing-draft').onclick=()=>{saveNote();try{const d=draft(),existing=JSON.par
 $('note-export').onclick=()=>{try{download(`${symbol}-draft.json`,JSON.stringify(draft(),null,2));}catch(e){status(e.message,true);}};
 $('notes-export').onclick=()=>{saveNote();download('research-notes.json',JSON.stringify({version:1,companies:symbols.filter(id=>companies[id].cik&&companies[id].ticker).map(id=>companies[id]),notes:state.notes},null,2));};
 $('notes-import').onchange=async e=>{try{const f=e.target.files[0];if(!f)return;if(f.size>1500000)throw Error('Notebook must be smaller than 1.5 MB.');saveNote();const imported=importedNotes(JSON.parse(await f.text()));for(const [ticker,n] of Object.entries(imported)){const old=state.notes[ticker];state.notes[ticker]=old?.body&&old.body!==n.body?{...old,body:`${old.body}\n\n---\nImported note\n\n${n.body}`}:{...n,type:$('note-type').value,review:Object.fromEntries(['business','risks','valuation','sources'].map(k=>[k,$('review-'+k).value])),updated:new Date().toISOString()};}persist();loadNote();status('Notes imported. Existing text was retained.');}catch(e){status(e.message,true);}finally{e.target.value='';}};
-function loadNote(){const n=state.notes[symbol]||{};$('note-heading').textContent=`${symbol} · Note`;$('note-title').value=n.title||`${companies[symbol].name} (${symbol})`;$('note-body').value=n.body||'';$('note-decision').value=n.decision||'Unreviewed';$('note-type').value=n.type||'note';for(const k of ['business','risks','valuation','sources'])$('review-'+k).value=n.review?.[k]||'';$('note-status').textContent='Local';}
+function loadNote(){const n=state.notes[symbol]||{};$('note-heading').textContent=`${symbol} · Note`;$('note-title').value=n.title||`${companies[symbol].name} (${symbol})`;$('note-body').value=n.body||'';$('note-decision').value=n.decision||'Unreviewed';$('note-type').value=n.type||'note';for(const k of ['business','risks','valuation','sources'])$('review-'+k).value=n.review?.[k]||'';$('note-status').textContent='Local';document.dispatchEvent(new Event('review-status-sync'));}
 function changeCompany(){saveNote();symbol=$('company').value;state.company=symbol;loadNote();loadModel();series();loadReport();if($('filings').open)filings();persist();document.dispatchEvent(new Event('research-company'));}
-$('company').replaceChildren(...symbols.map(id=>new Option(`${companies[id].ticker||id} · ${companies[id].name}`,id)));$('company').value=symbol;$('company').onchange=changeCompany;for(const [id,step] of [['prev',-1],['next',1]])$(id).onclick=()=>{$('company').value=symbols[(symbols.indexOf(symbol)+step+symbols.length)%symbols.length];changeCompany();};
+$('company').replaceChildren(...symbols.map(id=>new Option(`${companies[id].ticker||id} · ${companies[id].name}`,id)));$('company').value=symbol;$('company').onchange=changeCompany;for(const [id,step] of [['prev',-1],['next',1]])$(id).onclick=()=>{const ids=[...$('company').options].map(o=>o.value);$('company').value=ids[(ids.indexOf(symbol)+step+ids.length)%ids.length];changeCompany();};
 function setNotes(open){state.notesVisible=open;$('workspace').classList.toggle('tools-hidden',!open);$('notes-toggle').setAttribute('aria-expanded',String(open));persist();}
 $('notes-toggle').onclick=()=>setNotes(state.notesVisible===false);$('density').onclick=()=>{state.compact=!state.compact;root.classList.toggle('compact',state.compact);$('density').setAttribute('aria-pressed',String(state.compact));persist();};
 const drawerIds=['research','valuation','financials','filings','calculator','notes-panel'];
@@ -126,7 +126,7 @@ document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>reviewMode(b.d
 
 let resizeTimer;window.addEventListener("resize",()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>width(Number(state.noteWidth)||400,false),150);});
 
-import("./research.mjs?v=company12").then(()=>import("./stages.mjs?v=company12")).catch(()=>status("Research library could not load. Reload to retry.",true));
+import("./research.mjs?v=company13").then(()=>import("./stages.mjs?v=company13")).catch(()=>status("Research library could not load. Reload to retry.",true));
 
 
 

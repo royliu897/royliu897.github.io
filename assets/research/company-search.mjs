@@ -1,3 +1,4 @@
+import {mountCompanyControls} from './company-controls.mjs';
 import {companies,symbols,registerCompany} from './data.mjs?v=3';
 import {companyDirectory} from './sec-client.mjs?v=3';
 const select=document.getElementById('company'),host=document.createElement('form');host.className='company-search';host.setAttribute('role','search');
@@ -5,7 +6,7 @@ const input=document.createElement('input');input.type='search';input.placeholde
 const load=document.createElement('button');load.textContent='Load';load.type='submit';load.disabled=true;
 const results=document.createElement('div');results.className='company-results';results.hidden=true;
 const message=document.createElement('p');message.setAttribute('role','status');message.className='company-search-status';
-host.append(input,load,results);select.parentElement.after(host);select.setAttribute('aria-label','Recent companies');select.parentElement.firstChild.textContent='Recent';
+host.append(input,load,results);select.parentElement.after(host);mountCompanyControls(host);
 let directory=[],pending,selected=null;
 function known(){return symbols.map(id=>({id,...companies[id],ticker:companies[id].ticker||id,exchange:companies[id].exchange|| (companies[id].provider==='company'?'Company reports':'SEC')}));}
 function render(){const q=input.value.trim().toLowerCase();results.replaceChildren();if(!q){results.hidden=true;return;}const all=[...known(),...directory],seen=new Set();const matches=all.filter(c=>{const key=c.cik?`${c.cik}:${c.ticker}`:c.id;if(seen.has(key))return false;seen.add(key);return `${c.ticker} ${c.name}`.toLowerCase().includes(q);}).sort((a,b)=>(b.ticker.toLowerCase()===q)-(a.ticker.toLowerCase()===q)).slice(0,12);for(const c of matches){const b=document.createElement('button');b.type='button';b.className='company-result';const title=document.createElement('strong'),detail=document.createElement('span');title.textContent=`${c.ticker} · ${c.name}`;detail.textContent=c.exchange||'SEC filer';b.append(title,detail);b.onclick=()=>{selected=c;input.value=`${c.ticker} · ${c.name}`;load.disabled=false;results.hidden=true;load.focus();};results.append(b);}if(!matches.length){message.textContent=pending?'Searching…':'No SEC match. Try another ticker or company name.';results.append(message);}results.hidden=false;}
