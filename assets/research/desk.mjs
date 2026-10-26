@@ -1,12 +1,12 @@
 import {mountSeriesInput,dateFromDecimal,decimalDate} from './series-input.mjs';
-import {filingList,financialFacts} from './sec-client.mjs?v=2';
+import {filingList,financialFacts} from './sec-client.mjs?v=3';
 import {parseManualSeries,periodLabel} from './manual-series.mjs?v=2';
 import {formatAmount} from './amounts.mjs';
 import {filingLabel,pastRange} from './periods.mjs?v=2';
-import {annualFacts} from './research-data.mjs?v=5';
+import {annualFacts} from './research-data.mjs?v=6';
 import {ReportViewer} from './pdf-viewer.mjs?v=2';
 import {expression,model} from './finance.mjs?v=4';
-import {companies,symbols,draftKey,makeDraft,appendDraft,parseSeries,importedNotes,chartSeries} from './data.mjs?v=2';
+import {companies,symbols,draftKey,makeDraft,appendDraft,parseSeries,importedNotes,chartSeries} from './data.mjs?v=3';
 const $=id=>document.getElementById(id), form=$('valuation-form'), root=document.querySelector('.desk');
 const key='roy-research-desk-v1';let blocked=false,state={};
 try{state=JSON.parse(localStorage.getItem(key)||'{}');if(!state||typeof state!=='object'||Array.isArray(state))throw Error();}catch{blocked=true;state={};}
@@ -52,11 +52,11 @@ $('model-to-note').onclick=()=>{if(!result)return;const v=inputs();$('note-body'
 function draft(){return makeDraft(symbol,noteSnapshot(),crypto.randomUUID(),new Date().toISOString());}
 $('writing-draft').onclick=()=>{saveNote();try{const d=draft(),existing=JSON.parse(localStorage.getItem(draftKey)||'{}');localStorage.setItem(draftKey,JSON.stringify(appendDraft(existing,d)));window.location.href=`write.html?draft=${encodeURIComponent(d.id)}`;}catch(e){status(e.message||'Could not create the writing draft. Export it instead.',true);}};
 $('note-export').onclick=()=>{try{download(`${symbol}-draft.json`,JSON.stringify(draft(),null,2));}catch(e){status(e.message,true);}};
-$('notes-export').onclick=()=>{saveNote();download('research-notes.json',JSON.stringify({version:1,notes:state.notes},null,2));};
+$('notes-export').onclick=()=>{saveNote();download('research-notes.json',JSON.stringify({version:1,companies:symbols.filter(id=>companies[id].cik&&companies[id].ticker).map(id=>companies[id]),notes:state.notes},null,2));};
 $('notes-import').onchange=async e=>{try{const f=e.target.files[0];if(!f)return;if(f.size>1500000)throw Error('Notebook must be smaller than 1.5 MB.');saveNote();const imported=importedNotes(JSON.parse(await f.text()));for(const [ticker,n] of Object.entries(imported)){const old=state.notes[ticker];state.notes[ticker]=old?.body&&old.body!==n.body?{...old,body:`${old.body}\n\n---\nImported note\n\n${n.body}`}:{...n,type:$('note-type').value,review:Object.fromEntries(['business','risks','valuation','sources'].map(k=>[k,$('review-'+k).value])),updated:new Date().toISOString()};}persist();loadNote();status('Notes imported. Existing text was retained.');}catch(e){status(e.message,true);}finally{e.target.value='';}};
 function loadNote(){const n=state.notes[symbol]||{};$('note-heading').textContent=`${symbol} · Note`;$('note-title').value=n.title||`${companies[symbol].name} (${symbol})`;$('note-body').value=n.body||'';$('note-decision').value=n.decision||'Unreviewed';$('note-type').value=n.type||'note';for(const k of ['business','risks','valuation','sources'])$('review-'+k).value=n.review?.[k]||'';$('note-status').textContent='Local';}
 function changeCompany(){saveNote();symbol=$('company').value;state.company=symbol;loadNote();loadModel();series();loadReport();if($('filings').open)filings();persist();document.dispatchEvent(new Event('research-company'));}
-$('company').value=symbol;$('company').onchange=changeCompany;for(const [id,step] of [['prev',-1],['next',1]])$(id).onclick=()=>{$('company').value=symbols[(symbols.indexOf(symbol)+step+symbols.length)%symbols.length];changeCompany();};
+$('company').replaceChildren(...symbols.map(id=>new Option(`${companies[id].ticker||id} · ${companies[id].name}`,id)));$('company').value=symbol;$('company').onchange=changeCompany;for(const [id,step] of [['prev',-1],['next',1]])$(id).onclick=()=>{$('company').value=symbols[(symbols.indexOf(symbol)+step+symbols.length)%symbols.length];changeCompany();};
 function setNotes(open){state.notesVisible=open;$('workspace').classList.toggle('tools-hidden',!open);$('notes-toggle').setAttribute('aria-expanded',String(open));persist();}
 $('notes-toggle').onclick=()=>setNotes(state.notesVisible===false);$('density').onclick=()=>{state.compact=!state.compact;root.classList.toggle('compact',state.compact);$('density').setAttribute('aria-pressed',String(state.compact));persist();};
 const drawerIds=['research','valuation','financials','filings','calculator','notes-panel'];
@@ -82,9 +82,9 @@ async function series(){
  if(!$('financials').open)return;
  $('series-status').textContent='Loading…';
  try{const [meta,facts]=await Promise.all([companyMetadata(ticker),companyFacts(ticker)]);if(generation!==seriesGeneration)return;
- const names=metric==='revenue'?['RevenueFromContractWithCustomerExcludingAssessedTax','Revenues','SalesRevenueNet']:metric==='profit'?['NetIncomeLoss']:[companies[ticker].eps||'EarningsPerShareDiluted'];
+ const names=metric==='revenue'?['RevenueFromContractWithCustomerExcludingAssessedTax','Revenues','Revenue','SalesRevenueNet']:metric==='profit'?['NetIncomeLoss','ProfitLossAttributableToOwnersOfParent','ProfitLoss']:[companies[ticker].eps||'EarningsPerShareDiluted','DilutedEarningsLossPerShare'];
  const currency=companies[ticker].currency||'USD',unit=metric==='eps'?currency+'/shares':currency,byYear=new Map();
- const epsOption=$('metric').querySelector('[value=eps]');epsOption.disabled=!facts[companies[ticker].eps||"EarningsPerShareDiluted"];epsOption.textContent=companies[ticker].eps?'EPS (reported)':'Diluted EPS';
+ const epsOption=$('metric').querySelector('[value=eps]');epsOption.disabled=!(facts[companies[ticker].eps||"EarningsPerShareDiluted"]||facts.DilutedEarningsLossPerShare);epsOption.textContent=companies[ticker].eps?'EPS (reported)':'Diluted EPS';
  for(const name of names){if(!facts[name])continue;for(const point of annualFacts(facts[name],unit,meta.asOf)){const year=Number(point.date.slice(0,4));if(!byYear.has(year))byYear.set(year,{...point,concept:name});}}
  const rows=[...byYear.entries()].sort((a,b)=>a[0]-b[0]);activePoints=rows.map(([y,v])=>[y,v.value]);
  activeSources=rows.map(([year,v])=>{const filing=meta.filings.find(f=>f.accession===v.accession);return {year,url:v.url||filing?.url||`https://www.sec.gov/Archives/edgar/data/${meta.cik}/${v.accession.replaceAll('-','')}/${v.accession}-index.html`,label:filing?filingLabel(filing):`10-K · ${year}`,date:v.date,start:v.start,value:v.value,concept:v.concept,unit};});
@@ -126,7 +126,7 @@ document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>reviewMode(b.d
 
 let resizeTimer;window.addEventListener("resize",()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>width(Number(state.noteWidth)||400,false),150);});
 
-import("./research.mjs?v=workbench11").then(()=>import("./stages.mjs?v=workbench11")).catch(()=>status("Research library could not load. Reload to retry.",true));
+import("./research.mjs?v=company12").then(()=>import("./stages.mjs?v=company12")).catch(()=>status("Research library could not load. Reload to retry.",true));
 
 
 

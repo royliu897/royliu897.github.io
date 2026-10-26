@@ -5,8 +5,8 @@
   <meta name="theme-color" content="#f5f3ec"><meta name="robots" content="noindex">
   <title>Research desk — Roy Liu</title>
   <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="assets/research/desk.css">
-  <link rel="stylesheet" href="assets/research/depth.css"><link rel="stylesheet" href="assets/research/workbench.css?v=10"><script type="module" src="assets/research/desk.mjs?v=workbench11"></script><script type="module" src="assets/research/workspace.mjs?v=3"></script>
-</head>
+  <link rel="stylesheet" href="assets/research/depth.css"><link rel="stylesheet" href="assets/research/workbench.css?v=10"><script type="module" src="assets/research/desk.mjs?v=company12"></script><script type="module" src="assets/research/workspace.mjs?v=3"></script>
+<link rel="stylesheet" href="assets/research/company.css?v=1"></head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <nav class="site-nav shell" aria-label="Main navigation">
@@ -40,16 +40,16 @@
             <details class="desk-subdrawer"><summary>Starting inputs and source</summary><p id="model-source" class="desk-muted"></p></details>
             <form id="valuation-form">
               <fieldset class="valuation-group"><legend>Projected price</legend><div class="desk-inputs">
-                <label>Starting EPS ($)<input name="eps" type="number" step="any" required></label>
+                <label>Starting EPS<input name="eps" type="number" step="any" required></label>
                 <label>Years<input name="years" type="number" min="1" max="50" required></label>
                 <label>EPS growth<input name="growth" required title="Decimal: 0.05 = 5% annually"></label>
                 <label>Exit P/E<input name="exitPE" type="number" step="any" required></label>
               </div><div class="valuation-output"><span>Future price</span><strong id="projected-price">—</strong></div></fieldset>
               <fieldset class="valuation-group"><legend>Discounted value</legend><div class="desk-inputs">
                 <label>Required return (%)<input name="hurdle" type="number" step="any" required></label>
-                <label>First-year dividend ($)<input name="dividend" type="number" min="0" step="any" required></label>
+                <label>First-year dividend<input name="dividend" type="number" min="0" step="any" required></label>
                 <label>Dividend growth<input name="divGrowth" required title="Decimal: 0.05 = 5% annually"></label>
-                <label>Purchase price ($)<input name="price" type="number" step="any" required></label>
+                <label>Purchase price<input name="price" type="number" step="any" required></label>
               </div><div class="valuation-output"><span>Value today / share</span><strong id="pv">—</strong></div>
               <div class="valuation-returns"><span>Reinvested return <strong id="cagr">—</strong></span><span>Cash-flow IRR <strong id="irr">—</strong></span></div></fieldset>
               <div class="desk-actions"><button class="desk-primary" type="submit">Calculate</button><button type="button" id="model-reset">Reset</button><button type="button" id="model-export" disabled>Export CSV</button><button type="button" id="model-to-note" disabled>Add to note</button></div>

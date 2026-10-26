@@ -1,0 +1,22 @@
+import assert from 'node:assert/strict';
+import {buildOverview} from '../assets/research/company-overview-data.mjs';
+import worker from '../sec-worker/worker.mjs';
+const p=(val,start='2024-01-01',end='2024-12-31',filed='2025-02-01',form='20-F')=>({val,start,end,filed,form,accn:'0000000001-25-000001'});
+const data={asOf:'2025-06-01',facts:{Revenue:{units:{TWD:[p(100),p(120,undefined,undefined,'2025-03-01'),p(999,undefined,undefined,'2026-01-01'),p(30,'2025-01-01','2025-03-31','2025-05-01','6-K')]}},ProfitLossFromOperatingActivities:{units:{TWD:[p(30)]}},DilutedEarningsLossPerShare:{units:{'TWD/shares':[p(5)]}},CashFlowsFromUsedInOperatingActivities:{units:{TWD:[p(40)]}},PurchaseOfPropertyPlantAndEquipmentClassifiedAsInvestingActivities:{units:{TWD:[p(10)]}}}};
+const report=buildOverview(data);assert.equal(report.currency,'TWD');assert.equal(report.series.revenue.points[0].value,120);assert.equal(report.series.opMargin.points[0].value,25);assert.equal(report.series.fcf.points[0].value,30);assert.equal(report.series.eps.points[0].value,5);assert.equal(buildOverview(data,'quarter').series.revenue.points[0].value,30);
+const mixed=structuredClone(data);mixed.facts.Revenue.units.USD=[p(4)];assert.equal(buildOverview(mixed).currency,'TWD');assert.equal(buildOverview(mixed,'year','USD').series.revenue.points[0].value,4);assert.equal(buildOverview(mixed,'year','USD').series.opMargin.points.length,0);
+const mismatch=structuredClone(data);mismatch.facts.ProfitLossFromOperatingActivities.units.TWD[0].start='2024-02-01';assert.equal(buildOverview(mismatch).series.opMargin.points.length,0);
+const ytd=structuredClone(data);ytd.facts.Revenue.units.TWD=[p(60,'2025-01-01','2025-06-30','2025-08-01','10-Q')];ytd.asOf='2025-09-01';assert.equal(buildOverview(ytd,'quarter').periods.length,0);
+globalThis.caches={default:{match:async()=>null,put:async()=>{}}};let calls=[];
+globalThis.fetch=async(url)=>{calls.push(url);return Response.json(url.includes('company_tickers_exchange')?{fields:['cik','name','ticker','exchange'],data:[[1046179,'Taiwan Semiconductor','TSM','NYSE']]}:{entityName:'TSMC',facts:{'ifrs-full':data.facts}});};
+const env={SITE_ORIGIN:'https://royrliu.com',SEC_USER_AGENT:'test test@example.com'},ctx={waitUntil:p=>p};
+let response=await worker.fetch(new Request('https://api.example/directory'),env,ctx);assert.equal(response.status,200);assert.equal((await response.json()).companies[0].ticker,'TSM');assert.equal(calls[0],'https://www.sec.gov/files/company_tickers_exchange.json');
+response=await worker.fetch(new Request('https://api.example/company/CIK1046179/facts'),env,ctx);assert.equal(response.status,200);assert.equal((await response.json()).facts.Revenue.namespace,'ifrs-full');
+assert.equal((await worker.fetch(new Request('https://api.example/company/CIK1/facts?url=https://example.com'),env,ctx)).status,400);
+console.log('Company loading: directory, constrained CIK routes, IFRS, currency ambiguity, restatements, cutoff, period matching and YTD exclusion pass.');
+
+const {registerCompany,companies}=await import('../assets/research/data.mjs');
+const company={cik:'0001046179',ticker:'TSM',name:'Taiwan Semiconductor',exchange:'NYSE'};
+const id=registerCompany(company,false);assert.equal(id,'CIK1046179');assert.equal(companies[id].cik,'1046179');
+assert.equal(registerCompany({...company,ticker:'TSMWF'},false),id);
+assert.throws(()=>registerCompany({...company,cik:'../invalid'},false),/Invalid company/);

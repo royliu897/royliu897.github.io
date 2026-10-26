@@ -1,5 +1,14 @@
 export const symbols=['MCD','AAPL','CAT','KO','NKE','2317','000660'];
 export const companies={MCD:{name:'McDonald’s',cik:'63908'},AAPL:{name:'Apple',cik:'320193'},CAT:{name:'Caterpillar',cik:'18230'},KO:{name:'Coca-Cola',cik:'21344'},NKE:{name:'Nike',cik:'320187'},'2317':{name:'Foxconn (Hon Hai)',currency:'TWD',standard:'Taiwan IFRS',eps:'EarningsPerShareBasic',provider:'company',ir:'https://www.honhai.com/en-us/investor-relations/financial-information/reports?category=annual'},'000660':{name:'SK hynix',currency:'KRW',standard:'K-IFRS',provider:'company',ir:'https://www.skhynix.com/ir/UI-FR-IR07/'}};
+export function registerCompany(record,persist=true){
+ const cik=String(record.cik||'').replace(/^0+/,'');if(!/^[1-9][0-9]{0,9}$/.test(cik)||typeof record.name!=='string'||typeof record.ticker!=='string'||!/^[A-Z0-9.^-]{1,24}$/.test(record.ticker))throw Error('Invalid company.');
+ const existing=Object.keys(companies).find(k=>String(companies[k].cik)===cik),id=existing||'CIK'+cik;
+ companies[id]={...companies[id],cik,name:record.name.slice(0,180),ticker:record.ticker,exchange:String(record.exchange||'').slice(0,40)};
+ if(!symbols.includes(id))symbols.push(id);
+ if(persist){const records=symbols.filter(k=>companies[k].cik&&companies[k].ticker).map(k=>companies[k]);localStorage.setItem('roy-research-companies-v1',JSON.stringify(records));}
+ return id;
+}
+try{const records=JSON.parse(globalThis.localStorage?.getItem('roy-research-companies-v1')||'[]');if(Array.isArray(records))for(const record of records.slice(0,500)){try{registerCompany(record,false);}catch{}}}catch{}
 export const draftKey='roy-writing-drafts-v1';
 export function parseSeries(text){
  const lines=text.trim().split(/\r?\n/);if(!/^year,value$/i.test(lines.shift()?.trim()||''))throw Error('CSV header must be year,value.');
@@ -20,6 +29,7 @@ export function appendDraft(existing,draft){
 }
 export function importedNotes(data){
  if(!data||typeof data!=='object'||Array.isArray(data))throw Error('Invalid notebook file.');
+ if(Array.isArray(data.companies))for(const company of data.companies.slice(0,500))registerCompany(company);
  const notes=data.notes||data,result={};
  for(const symbol of symbols){const n=notes[symbol];if(!n)continue;const body=n.body??n.note;if(typeof body!=='string'||body.length>140000)throw Error('Invalid note content.');result[symbol]={type:['note','analysis','thesis'].includes(n.type)?n.type:'note',review:Object.fromEntries(Object.entries(n.review||{}).filter(([k,v])=>['business','risks','valuation','sources'].includes(k)&&typeof v==='string').map(([k,v])=>[k,v.slice(0,30000)])),title:typeof n.title==='string'?n.title.slice(0,140):`${symbol} research note`,body,decision:['Pass','Investigate','Unreviewed'].includes(n.decision)?n.decision:'Unreviewed'};}
  if(!Object.keys(result).length)throw Error('No supported company notes found.');return result;

@@ -1,5 +1,5 @@
 import {numberLiteral} from './amounts.mjs';
-import {annualize} from './research-data.mjs?v=5';
+import {annualize} from './research-data.mjs?v=6';
 export function parseFormula(source){
  if(typeof source!=='string'||source.length>500)throw Error('Use an expression of at most 500 characters.');
  const tokens=source.match(/(?:\d*\.\d+|\d+\.?\d*)(?:e[+-]?\d+)?[mMbBtT]?|[A-Za-z][A-Za-z0-9_]*|[()+\-*/^,]|\S/g)||[];let i=0,depth=0;

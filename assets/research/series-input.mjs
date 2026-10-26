@@ -1,5 +1,5 @@
 import {parseManualSeries} from './manual-series.mjs';
-import {validDate,safeURL} from './research-data.mjs?v=5';
+import {validDate,safeURL} from './research-data.mjs?v=6';
 export function decimalDate(date){const y=+date.slice(0,4),a=Date.UTC(y,0,1),b=Date.UTC(y+1,0,1);return y+(Date.parse(date)-a)/(b-a);}
 export function dateFromDecimal(value){const y=Math.floor(value),a=Date.UTC(y,0,1),b=Date.UTC(y+1,0,1);return new Date(a+Math.round((value-y)*(b-a)/86400000)*86400000).toISOString().slice(0,10);}
 export function manualObservations(parsed){return parsed.points.map(([position,value])=>{const year=Math.floor(position),month=parsed.frequency==='quarter'?Math.round((position-year)*4)*3+3:12;return {date:new Date(Date.UTC(year,month,0)).toISOString().slice(0,10),value};});}

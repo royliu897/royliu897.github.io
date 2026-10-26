@@ -1,4 +1,4 @@
-import {validDate} from './research-data.mjs?v=5';
+import {validDate} from './research-data.mjs?v=6';
 export function parsePeriod(value,end=false){
  const s=String(value).trim();if(validDate(s))return s;
  const direct=s.match(/^(\d{4})(?:[\s-]*Q([1-4]))?$/i),reverse=s.match(/^Q([1-4])\s+(\d{4})$/i);const m=direct||(reverse?[reverse[0],reverse[2],reverse[1]]:null);

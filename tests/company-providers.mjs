@@ -35,6 +35,6 @@ for(const ticker of ['2317','000660']){
  const current=await filingList(ticker,'2026','2026');assert.ok(current.filings.every(f=>f.date.startsWith('2026')));
  calls.length=0;refreshSEC();
 }
-await filingList('MCD');assert.match(calls[0],/^https:\/\/research-api\.royrliu\.com\/company\/MCD\/filings/);
-assert.throws(()=>financialFacts('UNKNOWN'),/Unknown company/);
+await filingList('MCD');assert.match(calls[0],/^https:\/\/research-api\.royrliu\.com\/company\/CIK63908\/filings/);
+await assert.rejects(()=>financialFacts('UNKNOWN'),/Unknown company/);
 console.log('Company providers: lazy requests, deduplication, annual/quarter separation, publication dates, currencies and source links pass.');
