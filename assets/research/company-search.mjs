@@ -1,4 +1,4 @@
-import {mountCompanyControls} from './company-controls.mjs';
+import {mountCompanyControls} from './company-controls.mjs?v=2';
 import {companies,symbols,registerCompany} from './data.mjs?v=3';
 import {companyDirectory} from './sec-client.mjs?v=3';
 const select=document.getElementById('company'),host=document.createElement('form');host.className='company-search';host.setAttribute('role','search');

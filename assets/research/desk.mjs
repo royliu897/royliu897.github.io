@@ -126,7 +126,7 @@ document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>reviewMode(b.d
 
 let resizeTimer;window.addEventListener("resize",()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>width(Number(state.noteWidth)||400,false),150);});
 
-import("./research.mjs?v=company13").then(()=>import("./stages.mjs?v=company13")).catch(()=>status("Research library could not load. Reload to retry.",true));
+import("./research.mjs?v=company14").then(()=>import("./stages.mjs?v=company14")).catch(()=>status("Research library could not load. Reload to retry.",true));
 
 
 

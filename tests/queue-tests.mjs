@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {parseQueue} from '../assets/research/review-queue-data.mjs';
+assert.deepEqual(parseQueue('Ticker,Company,Industry\r\nAAPL,"Apple, Inc.",Technology\r\nMCD,McDonalds,Restaurants'),[{ticker:'AAPL',industry:'Technology'},{ticker:'MCD',industry:'Restaurants'}]);
+assert.deepEqual(parseQueue('aapl\nAAPL\nMCD'),[{ticker:'AAPL',industry:'Other'},{ticker:'MCD',industry:'Other'}]);
+assert.deepEqual(parseQueue('Industry\tSymbol\nBanks\tJPM'),[{ticker:'JPM',industry:'Banks'}]);
+assert.throws(()=>parseQueue('Ticker,Company,Industry\nAAPL,Apple,Tech\nAAPL,Apple,Banks'),/Conflicting/);
+assert.throws(()=>parseQueue('Apple Inc.'),/Invalid/);
+assert.throws(()=>parseQueue('Ticker,Company\nAAPL,"Apple'),/quoted/);
+assert.throws(()=>parseQueue('Ticker,Company'),/No companies/);
+console.log('Queue import: CSV quoting, TSV headers, deduplication and invalid input checks passed.');
