@@ -5,7 +5,7 @@
   <meta name="theme-color" content="#f5f3ec"><meta name="robots" content="noindex">
   <title>Research desk — Roy Liu</title>
   <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="assets/research/desk.css">
-  <link rel="stylesheet" href="assets/research/depth.css"><link rel="stylesheet" href="assets/research/workbench.css?v=10"><script type="module" src="assets/research/desk.mjs?v=valuation15"></script><script type="module" src="assets/research/workspace.mjs?v=3"></script>
+  <link rel="stylesheet" href="assets/research/depth.css"><link rel="stylesheet" href="assets/research/workbench.css?v=10"><script type="module" src="assets/research/desk.mjs?v=valuation16"></script><script type="module" src="assets/research/workspace.mjs?v=3"></script>
 <link rel="stylesheet" href="assets/research/company.css?v=4"></head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -43,7 +43,7 @@
               <fieldset class="valuation-group"><legend>Projected price</legend><div class="desk-inputs">
                 <label>Starting EPS<input name="eps" type="number" step="any" required></label>
                 <label>Years<input name="years" type="number" min="1" max="50" required></label>
-                <label>EPS growth<input name="growth" required title="Decimal: 0.05 = 5% annually"></label>
+                <label>EPS growth<input name="growth" required></label>
                 <label>Exit P/E<input name="exitPE" type="number" step="any" required></label>
               </div><button type="button" class="desk-primary" id="project-calculate">Calculate projection</button><div class="valuation-output"><span>Projected price</span><strong id="projected-price">—</strong></div></fieldset>
               <fieldset class="valuation-group"><legend>Discounted value</legend><div class="desk-inputs">

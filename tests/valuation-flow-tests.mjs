@@ -1,13 +1,13 @@
 import assert from 'node:assert/strict';
 import {projectedPrice,discountedPrice} from '../assets/research/valuation-flow.mjs';
 const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-8,`${a} != ${b}`);
-near(projectedPrice({eps:10,years:2,growth:'.1',exitPE:15}),181.5);
-near(projectedPrice({eps:10,years:2,growth:'.05+.01*t',exitPE:20}),222.6);
+near(projectedPrice({eps:10,years:2,growth:'.1x',exitPE:15}),181.5);
+near(projectedPrice({eps:10,years:2,growth:'(.05+.01*(t-1))*x',exitPE:20}),222.6);
 const v={price:100,expectedPrice:121,discountYears:2,hurdle:.1,dividend:0,divGrowth:'0'};
 const r=discountedPrice(v);near(r.pv,100);near(r.irr,.1);near(r.reinvestCAGR,.1);
 near(discountedPrice({...v,dividend:5}).pv,100+5/1.1+5/1.21);
 near(discountedPrice({...v,price:80}).pv,100);
 assert.ok(discountedPrice({...v,price:80}).irr>r.irr);
-assert.throws(()=>projectedPrice({eps:10,years:2,growth:'-1',exitPE:15}));
+assert.throws(()=>projectedPrice({eps:10,years:2,growth:'-x',exitPE:15}));
 assert.throws(()=>discountedPrice({...v,discountYears:1.5}));
 console.log('Valuation flow: independent projection, discounted cash flows, purchase-price invariance, IRR and invalid inputs passed.');
