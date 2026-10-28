@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {expression} from '../assets/research/finance.mjs?v=5';
+import {discountedPrice,migrateDividend} from '../assets/research/valuation-flow.mjs';
+const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-8);
+near(expression('0.5x+5x^2+3',1,2),24);
+const base={price:100,expectedPrice:120,discountYears:3,hurdle:.1,dividend:2,divGrowth:'.5'};
+assert.deepEqual(discountedPrice(base).rows.map(r=>r.dividend),[2,2.5,3]);
+const compound=discountedPrice({...base,divGrowth:'.05x'}).rows.map(r=>r.dividend);near(compound[1],2.1);near(compound[2],2.205);
+assert.deepEqual(discountedPrice({...base,divGrowth:'t'}).rows.map(r=>r.dividend),[2,4,7]);
+const old=migrateDividend({...base,divGrowth:'.05+.01*t'});const values=discountedPrice(old).rows.map(r=>r.dividend);near(values[1],2*1.05);near(values[2],2*1.05*1.06);
+assert.deepEqual(migrateDividend(old),old);
+assert.throws(()=>discountedPrice({...base,divGrowth:'-3'}));
+console.log('Polynomial syntax, additive and compounded dividends, year indexing, migration and invalid values passed.');
