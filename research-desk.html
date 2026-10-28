@@ -5,8 +5,8 @@
   <meta name="theme-color" content="#f5f3ec"><meta name="robots" content="noindex">
   <title>Research desk — Roy Liu</title>
   <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="assets/research/desk.css">
-  <link rel="stylesheet" href="assets/research/depth.css"><link rel="stylesheet" href="assets/research/workbench.css?v=10"><script type="module" src="assets/research/desk.mjs?v=company14"></script><script type="module" src="assets/research/workspace.mjs?v=3"></script>
-<link rel="stylesheet" href="assets/research/company.css?v=3"></head>
+  <link rel="stylesheet" href="assets/research/depth.css"><link rel="stylesheet" href="assets/research/workbench.css?v=10"><script type="module" src="assets/research/desk.mjs?v=valuation15"></script><script type="module" src="assets/research/workspace.mjs?v=3"></script>
+<link rel="stylesheet" href="assets/research/company.css?v=4"></head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <nav class="site-nav shell" aria-label="Main navigation">
@@ -38,21 +38,23 @@
           <summary><span>Valuation</span><small>EPS · dividends · return</small></summary>
           <div class="drawer-body">
             <details class="desk-subdrawer"><summary>Starting inputs and source</summary><p id="model-source" class="desk-muted"></p></details>
-            <form id="valuation-form">
+            <form id="valuation-form" novalidate>
+              <label>Purchase price today<input name="price" type="number" min="0" step="any" required></label><div class="desk-actions"><small id="quote-status" class="desk-muted"></small><button type="button" id="quote-refresh">Use latest price</button></div>
               <fieldset class="valuation-group"><legend>Projected price</legend><div class="desk-inputs">
                 <label>Starting EPS<input name="eps" type="number" step="any" required></label>
                 <label>Years<input name="years" type="number" min="1" max="50" required></label>
                 <label>EPS growth<input name="growth" required title="Decimal: 0.05 = 5% annually"></label>
                 <label>Exit P/E<input name="exitPE" type="number" step="any" required></label>
-              </div><div class="valuation-output"><span>Future price</span><strong id="projected-price">—</strong></div></fieldset>
+              </div><button type="button" class="desk-primary" id="project-calculate">Calculate projection</button><div class="valuation-output"><span>Projected price</span><strong id="projected-price">—</strong></div></fieldset>
               <fieldset class="valuation-group"><legend>Discounted value</legend><div class="desk-inputs">
+                <label>Expected future price<input name="expectedPrice" type="number" min="0" step="any" required></label>
+                <label>Years to exit<input name="discountYears" type="number" min="1" max="50" required></label>
                 <label>Required return (%)<input name="hurdle" type="number" step="any" required></label>
                 <label>First-year dividend<input name="dividend" type="number" min="0" step="any" required></label>
                 <label>Dividend growth<input name="divGrowth" required title="Decimal: 0.05 = 5% annually"></label>
-                <label>Purchase price<input name="price" type="number" step="any" required></label>
-              </div><div class="valuation-output"><span>Value today / share</span><strong id="pv">—</strong></div>
+              </div><button type="submit" class="desk-primary">Calculate discounted value</button><div class="valuation-output"><span>Discounted price</span><strong id="pv">—</strong></div>
               <div class="valuation-returns"><span>Reinvested return <strong id="cagr">—</strong></span><span>Cash-flow IRR <strong id="irr">—</strong></span></div></fieldset>
-              <div class="desk-actions"><button class="desk-primary" type="submit">Calculate</button><button type="button" id="model-reset">Reset</button><button type="button" id="model-export" disabled>Export CSV</button><button type="button" id="model-to-note" disabled>Add to note</button></div>
+              <div class="desk-actions"><button type="button" id="model-reset">Reset</button><button type="button" id="model-export" disabled>Export CSV</button><button type="button" id="model-to-note" disabled>Add to note</button></div>
             </form>
             <p id="model-error" class="desk-error" role="alert"></p>
             <details id="valuation-chart" class="desk-subdrawer"><summary>Show valuation chart</summary><div class="desk-legend"><span>— Reinvested</span><span>— Dividends held as cash</span><span>— Share price</span></div><div id="value-chart" class="desk-chart"></div></details>

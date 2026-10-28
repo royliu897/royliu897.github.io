@@ -6,3 +6,5 @@ export async function filingList(ticker,from='2009',to=String(new Date().getFull
 export async function financialFacts(ticker){if(!companies[ticker])throw Error('Unknown company.');const result=await request(companies[ticker].provider==='company'?`./library/companies/${ticker}-facts.json`:`/company/${companies[ticker].cik?'CIK'+companies[ticker].cik:ticker}/facts`,300000);const units=reportingCurrencies(result);if(units.length)companies[ticker].currency=units[0];return result;}
 export function companyDirectory(){return request('/directory',86400000);}
 export function refreshSEC(){memory.clear();}
+
+export function latestQuote(id){const c=companies[id];if(!c)throw Error('Unknown company.');const ticker=c.provider==='company'?(id==='2317'?'2317.TW':id==='000660'?'000660.KS':c.ticker):(c.ticker||id).replaceAll('.','-');return request('/quote/'+encodeURIComponent(ticker),300000);}
