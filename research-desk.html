@@ -5,8 +5,8 @@
   <meta name="theme-color" content="#f5f3ec"><meta name="robots" content="noindex">
   <title>Research desk — Roy Liu</title>
   <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="assets/research/desk.css">
-  <link rel="stylesheet" href="assets/research/depth.css"><link rel="stylesheet" href="assets/research/workbench.css?v=10"><script type="module" src="assets/research/desk.mjs?v=valuation17"></script><script type="module" src="assets/research/workspace.mjs?v=3"></script>
-<link rel="stylesheet" href="assets/research/company.css?v=5"></head>
+  <link rel="stylesheet" href="assets/research/depth.css"><link rel="stylesheet" href="assets/research/workbench.css?v=10"><script type="module" src="assets/research/desk.mjs?v=valuation18"></script><script type="module" src="assets/research/workspace.mjs?v=3"></script>
+<link rel="stylesheet" href="assets/research/company.css?v=6"></head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <nav class="site-nav shell" aria-label="Main navigation">
@@ -45,12 +45,12 @@
                 <label>Years<input name="years" type="number" min="1" max="50" required></label>
                 <label>EPS growth<input name="growth" required></label>
                 <label>Exit P/E<input name="exitPE" type="number" step="any" required></label>
-              </div><button type="button" class="desk-primary" id="project-calculate">Calculate</button><label class="valuation-result">Projected price<input id="projected-price" name="expectedPrice" type="number" min="0" step="any" required></label></fieldset>
+              </div><div class="valuation-result"><button type="button" class="desk-primary" id="project-calculate">Calculate</button><input aria-label="Projected price" id="projected-price" name="expectedPrice" type="number" min="0" step="any" required></div></fieldset>
               <fieldset class="valuation-group"><legend>Discounted value</legend><div class="desk-inputs">
                 <label>Required return (%)<input name="hurdle" type="number" step="any" required></label>
                 <label>First-year dividend<input name="dividend" type="number" min="0" step="any" required></label>
                 <label>Dividend growth<input name="divGrowth" required></label>
-              </div><button type="submit" class="desk-primary">Calculate</button><div class="valuation-output"><span>Discounted price</span><strong id="pv">—</strong></div>
+              <button type="submit" class="desk-primary discount-calculate">Calculate</button></div><div class="valuation-output"><span>Discounted price</span><strong id="pv">—</strong></div>
               <div class="valuation-returns"><span>Reinvested return <strong id="cagr">—</strong></span><span>Cash-flow IRR <strong id="irr">—</strong></span></div></fieldset>
               <div class="desk-actions"><button type="button" id="model-reset">Reset</button><button type="button" id="model-export" disabled>Export CSV</button><button type="button" id="model-to-note" disabled>Add to note</button></div>
             </form>

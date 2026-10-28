@@ -7,4 +7,4 @@ export async function financialFacts(ticker){if(!companies[ticker])throw Error('
 export function companyDirectory(){return request('/directory',86400000);}
 export function refreshSEC(){memory.clear();}
 
-export function latestQuote(id){const c=companies[id];if(!c)throw Error('Unknown company.');const ticker=c.provider==='company'?(id==='2317'?'2317.TW':id==='000660'?'000660.KS':c.ticker):(c.ticker||id).replaceAll('.','-');return request('/quote/'+encodeURIComponent(ticker),300000);}
+export function latestQuote(id,refresh=false){const c=companies[id];if(!c)throw Error('Unknown company.');const ticker=c.provider==='company'?(id==='2317'?'2317.TW':id==='000660'?'000660.KS':c.ticker):(c.ticker||id).replaceAll('.','-');return request('/quote/'+encodeURIComponent(ticker)+(refresh?'?refresh=1':''),refresh?0:300000);}

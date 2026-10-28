@@ -61,4 +61,21 @@
 
 #valuation-form>.desk-actions{align-items:center;gap:5px;margin:4px 0 10px}#quote-status{font-size:10px;line-height:1.4;flex:1}#quote-refresh{font-size:10px;padding:3px 6px}#valuation-form .valuation-group>button{margin:8px 0 0}#valuation-form .valuation-group{margin-top:12px}#valuation-form>.desk-actions:last-child{margin-top:10px}
 
-.desk .valuation-start{display:flex;align-items:end;gap:6px;margin-bottom:8px}.desk .valuation-start>label{flex:1;min-width:0}.desk .valuation-start a{font-size:11px;padding-bottom:6px}.desk #quote-refresh{padding:2px 5px;height:26px;flex:none}.desk #quote-status{flex:none;max-width:65px;overflow:hidden;text-overflow:ellipsis}.desk #valuation-form .valuation-group{position:relative;padding:8px 0;margin:7px 0}.desk #valuation-form .valuation-group>button{position:absolute;right:0;top:-16px;padding:2px 7px;font-size:11px;line-height:1.4;margin:0}.desk #valuation-form .valuation-group legend{padding-right:74px}.desk #valuation-form .valuation-result{display:flex;align-items:center;gap:8px;margin-top:8px}.desk #valuation-form .valuation-result input{flex:1;min-width:0;margin:0;font-weight:600}.desk #valuation-form .desk-inputs{gap:6px}.desk #valuation-form .valuation-output{margin-top:6px;padding-top:6px}.desk #valuation-form .valuation-returns{gap:4px}
+/* Compact valuation controls and aligned results. */
+.desk .valuation-start{display:flex;align-items:end;gap:6px;margin-bottom:8px}
+.desk .valuation-start>label{flex:1;min-width:0}
+.desk .valuation-start a{font-size:11px;padding-bottom:6px;color:#579ce9;text-decoration:underline;text-underline-offset:2px}
+.desk #quote-refresh{padding:2px 5px;height:26px;flex:none;border:0;background:transparent;box-shadow:none;font-size:16px}
+.desk #quote-status{flex:none;max-width:65px;overflow:hidden;text-overflow:ellipsis}
+.desk #valuation-form .valuation-group{padding:8px 0;margin:7px 0}
+.desk #valuation-form .valuation-group legend{padding:0}
+.desk #valuation-form .desk-inputs{gap:6px}
+.desk #valuation-form .valuation-result{display:flex;align-items:center;gap:8px;margin-top:6px;padding-top:6px;border-top:1px solid var(--line)}
+.desk #valuation-form .valuation-result input{flex:1;width:0;min-width:0;margin:0;padding:2px 0;text-align:right;font-size:19px;font-weight:500;line-height:1.3;background:transparent;border:1px solid transparent;box-shadow:none;font-variant-numeric:tabular-nums}
+.desk #valuation-form .valuation-result input:focus{border-color:var(--blue);outline:1px solid var(--blue)}
+.desk #valuation-form .valuation-result button,.desk #valuation-form .discount-calculate{padding:3px 8px;font-size:11px;line-height:1.4;margin:0;justify-self:end;align-self:end}
+.desk #valuation-form .discount-calculate{margin-bottom:3px}
+.desk #valuation-form input[name=price],.desk #projected-price{appearance:textfield;-moz-appearance:textfield}
+.desk #valuation-form input[name=price]::-webkit-inner-spin-button,.desk #valuation-form input[name=price]::-webkit-outer-spin-button,.desk #projected-price::-webkit-inner-spin-button,.desk #projected-price::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.desk #valuation-form .valuation-output{margin-top:6px;padding-top:6px}
+.desk #valuation-form .valuation-returns{gap:4px}
