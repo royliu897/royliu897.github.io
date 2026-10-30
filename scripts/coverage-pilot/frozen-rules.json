@@ -1,0 +1,68 @@
+{
+  "frozen_at": "2026-10-29T20:39:07.660453+00:00",
+  "development": [
+    "PG",
+    "CAT",
+    "JPM",
+    "TRV"
+  ],
+  "held_out": [
+    "KO",
+    "COST",
+    "BAC",
+    "ALL"
+  ],
+  "reference_targets": {
+    "general": [
+      "cash",
+      "revenue",
+      "net_income",
+      "other_current_assets",
+      "pension_liabilities",
+      "treasury_stock",
+      "interest_expense",
+      "cash_from_operations"
+    ],
+    "bank": [
+      "interest_income",
+      "interest_expense",
+      "net_loans",
+      "loan_loss_reserve",
+      "treasury_stock",
+      "net_income",
+      "shareholders_equity",
+      "cash_from_operations"
+    ],
+    "insurance": [
+      "investment_income",
+      "loss_reserves",
+      "total_expenses",
+      "treasury_stock",
+      "net_income",
+      "total_assets",
+      "cash_from_operations",
+      "other_assets"
+    ]
+  },
+  "sha256": {
+    "scripts/coverage-pilot/resolver.mjs": "0feed443f512f2e7dcb79e8b8bcde0f0652841a4fd66f8cefb672253b8db7d27",
+    "scripts/coverage-pilot/extract.py": "38a01b04ce56ba1211d3688d018670725edb49729e807e3d181733b784d4992d",
+    "assets/report/concept-registry.mjs": "ea9c9a98a75b870428f03017792ca7410fb78202abe9b290a59c769e1e508a53",
+    "assets/report/row-schema.mjs": "04370a9962dc9ea2097f11ec9b6d6dbcc43907de1521f29b7f4428d78b06dfed"
+  },
+  "policy": "No per-issuer mapping rules. Freeze precedes held-out inventory extraction or inspection. Populated-cell count is not disclosure completeness.",
+  "initial_frozen_sha256": {
+    "scripts/coverage-pilot/resolver.mjs": "984719f71f2970cf112eb247abf670919b9181f041042cfa5663096d11606d73",
+    "scripts/coverage-pilot/extract.py": "38a01b04ce56ba1211d3688d018670725edb49729e807e3d181733b784d4992d",
+    "assets/report/concept-registry.mjs": "ea9c9a98a75b870428f03017792ca7410fb78202abe9b290a59c769e1e508a53",
+    "assets/report/row-schema.mjs": "04370a9962dc9ea2097f11ec9b6d6dbcc43907de1521f29b7f4428d78b06dfed"
+  },
+  "post_freeze_changes": [
+    {
+      "at": "2026-10-29T20:47:25.104276+00:00",
+      "kind": "Global display-sign bug fix found during UI review of development cases PG/CAT",
+      "change": "Noncontrolling profit is a deduction from consolidated profit; noncontrolling loss is an addition. No ticker rules or new tag mappings.",
+      "evaluation_note": "Initial held-out run preceded this fix. Final results are not a pristine untouched held-out benchmark."
+    }
+  ]
+}

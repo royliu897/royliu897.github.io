@@ -1,0 +1,125 @@
+{
+  "sourceURL": "https://fastfs.org/assets/index-DEfpewR9.js",
+  "sourceSHA256": "4c371a904ff683cd19193125443499589e2e8b85745713613ba6352d348a3348",
+  "modifiedSHA256": "e99b2bb47bd8a7dff3f68bed53f03c3229c63346e3130d592e17fb59b0c48c6a",
+  "cssSHA256": "25489ddfc9674c10fbc86e5d6ad607058ec72d1267b0abb60f3c283de3f20796",
+  "changes": [
+    "vC/gX use SEC adapter",
+    "$x disables Guru catalog/key flow",
+    "Hash history supports static hosting",
+    "Ka removes brand/navigation and adds theme toggle",
+    "qW/KW/DW/XW labels query a shared recursive definition graph",
+    "Bt uses source/denominator-based TTM EPS rather than summing quarterly EPS",
+    "iZ replaces extracted description with local company notes and Latest Price label",
+    "ta/uZ/jZ remove footer/promo/version poll",
+    "vZ removes static sample banner and branded page title",
+    "Bootstrap retains company route and scroll restoration; no health call"
+  ],
+  "edits": [
+    {
+      "start": 824090,
+      "end": 824779,
+      "unit": "UTF-16 code units"
+    },
+    {
+      "start": 824054,
+      "end": 824090,
+      "unit": "UTF-16 code units"
+    },
+    {
+      "start": 824023,
+      "end": 824054,
+      "unit": "UTF-16 code units"
+    },
+    {
+      "start": 776155,
+      "end": 785057,
+      "unit": "UTF-16 code units"
+    },
+    {
+      "start": 774900,
+      "end": 775940,
+      "unit": "UTF-16 code units"
+    },
+    {
+      "start": 773358,
+      "end": 774543,
+      "unit": "UTF-16 code units"
+    },
+    {
+      "start": 770654,
+      "end": 771652,
+      "unit": "UTF-16 code units"
+    },
+    {
+      "start": 760696,
+      "end": 764324,
+      "unit": "UTF-16 code units"
+    },
+    {
+      "start": 751565,
+      "end": 752956,
+      "unit": "UTF-16 code units"
+    },
+    {
+      "start": 736109,
+      "end": 736266,
+      "unit": "UTF-16 code units"
+    },
+    {
+      "start": 733366,
+      "end": 735004,
+      "unit": "UTF-16 code units"
+    },
+    {
+      "start": 729437,
+      "end": 732529,
+      "unit": "UTF-16 code units"
+    },
+    {
+      "start": 728628,
+      "end": 729437,
+      "unit": "UTF-16 code units"
+    },
+    {
+      "start": 720906,
+      "end": 720999,
+      "unit": "UTF-16 code units"
+    },
+    {
+      "start": 719405,
+      "end": 720507,
+      "unit": "UTF-16 code units"
+    },
+    {
+      "start": 708585,
+      "end": 708955,
+      "unit": "UTF-16 code units"
+    },
+    {
+      "start": 708189,
+      "end": 708585,
+      "unit": "UTF-16 code units"
+    },
+    {
+      "start": 632758,
+      "end": 633877,
+      "unit": "UTF-16 code units"
+    },
+    {
+      "start": 620228,
+      "end": 620288,
+      "unit": "UTF-16 code units"
+    },
+    {
+      "start": 614126,
+      "end": 614307,
+      "unit": "UTF-16 code units"
+    },
+    {
+      "start": 197205,
+      "end": 197456,
+      "unit": "UTF-16 code units"
+    }
+  ]
+}

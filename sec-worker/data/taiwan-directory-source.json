@@ -1,0 +1,7 @@
+{
+  "url": "https://openapi.twse.com.tw/v1/opendata/t187ap03_L",
+  "retrieved_date": "2026-10-29",
+  "sha256": "a570af5f99db012ba532809c327ac1e91b300cc8a6f9e8d7b2d9f1a558489d20",
+  "issuers": 1098,
+  "scope": "TWSE listed companies. Issued shares are not assumed outstanding net of treasury."
+}

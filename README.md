@@ -139,3 +139,31 @@ UI regression checks for the polish pass: empty-bottom drag recovery and menu re
 Research Desk uses the separate [SEC Worker](sec-worker/README.md) for on-demand filing lists and financial facts. The existing comments/publishing Worker is unchanged. Select filings to make their fields and filing-date annotations available; open names to read documents independently. Saved models and notes remain browser-local. The writing footer links to the desk.
 
 Manual series accept comma-separated values, a starting year or quarter, currency symbols and m/b/t suffixes. Empty entries preserve missing periods. Fullscreen requests native fullscreen, with a full-window fallback where unavailable. Embedded documents have independent minus/plus/reset zoom controls; Escape exits fullscreen. Drag panel handles into the reader (or onto Report in detailed review) to open live panels as tabs. Closing a panel tab restores its original position.
+
+
+### Standalone financial report
+
+The Research Desk's Report button opens `report.html` in a separate tab. The
+report supports SEC company facts and reviewed primary-statement supplements,
+bank/insurance templates, native Taiwan/Korea templates, an optional USD display,
+local company notes, dark mode and recursive formula definitions. BDJ uses SEC
+fund shareholder reports. Missing values remain dashes; clicking a dash explains
+the available source evidence.
+
+Build and validation instructions: [report frontend](scripts/report-frontend/README.md).
+Data-source cache instructions: [SEC](scripts/filing-cache/README.md),
+[native issuers](scripts/native-cache/README.md), [funds](scripts/fund-cache/README.md).
+`docs/` contains historical implementation/review notes; their local/unpushed
+status statements describe those earlier checkpoints.
+
+Deploy the backward-compatible API Worker from `sec-worker/` using the existing
+Cloudflare account (`npx wrangler@4.154.0 deploy`). Secrets remain in Cloudflare.
+GitHub Pages publishes the repository root from `main` to `royrliu.com`.
+The report is an unlisted page, not an access-controlled service; notes remain
+local to the browser. There are no runtime model calls or paid data dependencies.
+
+The bounded native fallback cache does not update itself. Refresh source captures
+and rebuild it when adding new reporting periods. Refresh the dated TWSE market
+ratio snapshot with `node scripts/refresh-taiwan-market.mjs`; it expires after
+seven days. Report/source validation is scoped to the checked fixtures and live
+cohorts and does not establish universal financial coverage.

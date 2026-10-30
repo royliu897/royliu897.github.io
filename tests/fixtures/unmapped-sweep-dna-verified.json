@@ -1,0 +1,92 @@
+{
+  "note": "Recorded SEC CompanyFacts slice; primary cash-flow statements verified 2026-10-29.",
+  "issuers": [
+    {
+      "ticker": "V",
+      "cik": "1403161",
+      "asOf": "2026-10-29",
+      "latest_annual_end": "2025-09-30",
+      "expected_millions": 1220,
+      "facts": {
+        "DepreciationAndAmortization": {
+          "label": "Depreciation, Depletion and Amortization, Nonproduction",
+          "namespace": "us-gaap",
+          "description": "The current period expense charged against earnings on long-lived, physical assets not used in production, and which are not intended for resale, to allocate or recognize the cost of such assets over their useful lives; or to record the reduction in book value of an intangible asset over the benefit period of such asset; or to reflect consumption during the period of an asset that is not used in production.",
+          "units": {
+            "USD": [
+              {
+                "start": "2024-10-01",
+                "end": "2025-09-30",
+                "val": 1220000000,
+                "accn": "0001403161-25-000089",
+                "fy": 2025,
+                "fp": "FY",
+                "form": "10-K",
+                "filed": "2025-11-06",
+                "frame": "CY2025"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "ticker": "MCD",
+      "cik": "63908",
+      "asOf": "2026-10-29",
+      "latest_annual_end": "2025-12-31",
+      "expected_millions": 2199,
+      "facts": {
+        "DepreciationAndAmortization": {
+          "label": "Depreciation, Depletion and Amortization, Nonproduction",
+          "namespace": "us-gaap",
+          "description": "The current period expense charged against earnings on long-lived, physical assets not used in production, and which are not intended for resale, to allocate or recognize the cost of such assets over their useful lives; or to record the reduction in book value of an intangible asset over the benefit period of such asset; or to reflect consumption during the period of an asset that is not used in production.",
+          "units": {
+            "USD": [
+              {
+                "start": "2025-01-01",
+                "end": "2025-12-31",
+                "val": 2199000000,
+                "accn": "0000063908-26-000035",
+                "fy": 2025,
+                "fp": "FY",
+                "form": "10-K",
+                "filed": "2026-02-24",
+                "frame": "CY2025"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "ticker": "UNH",
+      "cik": "731766",
+      "asOf": "2026-10-29",
+      "latest_annual_end": "2025-12-31",
+      "expected_millions": 4361,
+      "facts": {
+        "DepreciationAndAmortization": {
+          "label": "Depreciation, Depletion and Amortization, Nonproduction",
+          "namespace": "us-gaap",
+          "description": "The current period expense charged against earnings on long-lived, physical assets not used in production, and which are not intended for resale, to allocate or recognize the cost of such assets over their useful lives; or to record the reduction in book value of an intangible asset over the benefit period of such asset; or to reflect consumption during the period of an asset that is not used in production.",
+          "units": {
+            "USD": [
+              {
+                "start": "2025-01-01",
+                "end": "2025-12-31",
+                "val": 4361000000,
+                "accn": "0000731766-26-000062",
+                "fy": 2025,
+                "fp": "FY",
+                "form": "10-K",
+                "filed": "2026-03-02",
+                "frame": "CY2025"
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

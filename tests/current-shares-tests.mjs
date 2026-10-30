@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {outstandingShares} from '../assets/report/outstanding-shares.mjs';
+const point=val=>({end:'2026-06-30',filed:'2026-08-03',accn:'0000034088-26-000093',val}),cover=val=>({namespace:'dei',units:{shares:[point(val)]}}),data={cik:'2115436',asOf:'2026-10-30',facts:{EntityCommonStockSharesOutstanding:cover(4111911960),CommonStockSharesOutstanding:{namespace:'us-gaap',units:{shares:[point(4112000000)]}}}};
+const current=outstandingShares(data,{tickers:['XOM']});
+assert.equal(current.status,'available');assert.equal(current.common_outstanding,4111911960);
+assert.equal(current.concept,'EntityCommonStockSharesOutstanding');assert.equal(current.source_cik,'2115436');
+const conflicting=structuredClone(data);conflicting.facts.EntityCommonStockSharesOutstanding.units.shares.push(point(4000000000));
+assert.equal(outstandingShares(conflicting).status,'unavailable','Conflicting cover facts remain withheld');
+const fake=structuredClone(data);fake.facts.EntityCommonStockSharesOutstanding.namespace='us-gaap';
+assert.equal(outstandingShares(fake).common_outstanding,4112000000,'Only an actual DEI concept can take cover precedence');
+const later=structuredClone(data);later.facts.CommonStockSharesOutstanding.units.shares.push({...point(4100000000),end:'2026-09-30',filed:'2026-10-29'});
+assert.equal(outstandingShares(later).common_outstanding,4100000000,'An older cover count cannot override a newer period');
+const history=structuredClone(data);delete history.facts.EntityCommonStockSharesOutstanding;history.facts.CommonStockSharesOutstanding.units.shares[0].source_cik='34088';history.facts.CommonStockSharesOutstanding.units.shares[0].source_url='https://www.sec.gov/Archives/edgar/data/34088/000003408826000093/';
+assert.equal(outstandingShares(history).source_cik,'34088');assert.match(outstandingShares(history).source_url,/data\/34088\//);
+assert.equal(outstandingShares(data,{},'2026-07-01').status,'unavailable','Future filing knowledge cannot leak into historical counts');
+console.log('Current shares: authoritative DEI cover count, source identity, duplicate conflicts, namespace and date priority pass.');

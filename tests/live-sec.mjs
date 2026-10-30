@@ -11,7 +11,7 @@ assert.throws(()=>parseManualSeries('2','2020 Q5','quarter'));
 assert.equal(periodLabel(2021.25,'quarter'),'2021 Q2');
 assert.equal(pastRange([[2020,1],[2020.25,2],[2020.5,3],[2020.75,4],[2021,5]],'1').length,4);
 let calls=0;const cached=new Map();globalThis.caches={default:{match:async r=>cached.get(r.url)?.clone(),put:async(r,v)=>cached.set(r.url,v)}};
-globalThis.fetch=async(url,options)=>{calls++;assert.equal(options.redirect,'manual');assert.match(url,/^https:\/\/data.sec.gov\//);return Response.json({facts:{'us-gaap':{Revenues:{units:{USD:[]}}}}});};
+globalThis.fetch=async(url,options)=>{calls++;assert.equal(options.redirect,'manual');assert.match(url,/^https:\/\/data.sec.gov\//);return Response.json({cik:63908,facts:{'us-gaap':{Revenues:{units:{USD:[]}}}}});};
 const env={SITE_ORIGIN:'https://royrliu.com',SEC_USER_AGENT:'test contact@example.com',CLIENT_LIMIT:{limit:async()=>({success:true})},UPSTREAM_LIMIT:{limit:async()=>({success:true})}},ctx={waitUntil:p=>p};
 const req=(path,origin='https://royrliu.com')=>new Request('https://research-api.royrliu.com'+path,{headers:{Origin:origin}});
 assert.equal((await worker.fetch(req('/company/MCD/facts'),env,ctx)).status,200);

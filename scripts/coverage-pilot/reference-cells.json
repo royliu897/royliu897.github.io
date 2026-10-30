@@ -1,0 +1,644 @@
+[
+  {
+    "ticker": "PG",
+    "key": "cash",
+    "expected": 9942,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000103/pg-20260630.htm",
+    "period": "2026-06-30",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "PG",
+    "key": "revenue",
+    "expected": 87032,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000103/pg-20260630.htm",
+    "period": "2026-06-30",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "PG",
+    "key": "net_income",
+    "expected": 16046,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000103/pg-20260630.htm",
+    "period": "2026-06-30",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "PG",
+    "key": "other_current_assets",
+    "expected": 2040,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000103/pg-20260630.htm",
+    "period": "2026-06-30",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "PG",
+    "key": "pension_liabilities",
+    "expected": 2204,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000103/pg-20260630.htm",
+    "period": "2026-06-30",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "PG",
+    "key": "treasury_stock",
+    "expected": -143008,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000103/pg-20260630.htm",
+    "period": "2026-06-30",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "PG",
+    "key": "interest_expense",
+    "expected": -877,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000103/pg-20260630.htm",
+    "period": "2026-06-30",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "PG",
+    "key": "cash_from_operations",
+    "expected": 19556,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000103/pg-20260630.htm",
+    "period": "2026-06-30",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "CAT",
+    "key": "cash",
+    "expected": 9980,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000008/cat-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "CAT",
+    "key": "revenue",
+    "expected": 67589,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000008/cat-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "CAT",
+    "key": "net_income",
+    "expected": 8884,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000008/cat-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "CAT",
+    "key": "other_current_assets",
+    "expected": 2801,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000008/cat-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "CAT",
+    "key": "pension_liabilities",
+    "expected": 3838,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000008/cat-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "CAT",
+    "key": "treasury_stock",
+    "expected": -49539,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000008/cat-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "CAT",
+    "key": "interest_expense",
+    "expected": -502,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000008/cat-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": "",
+    "production_assessment": "scope_excluded",
+    "scope_warning": "Primary caption excludes Financial Products. This historical pilot target is not a company-wide interest-expense total."
+  },
+  {
+    "ticker": "CAT",
+    "key": "cash_from_operations",
+    "expected": 11739,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000008/cat-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "JPM",
+    "key": "interest_income",
+    "expected": 193341,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026008131/jpm-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "JPM",
+    "key": "interest_expense",
+    "expected": -97898,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026008131/jpm-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "JPM",
+    "key": "net_loans",
+    "expected": 1467664,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026008131/jpm-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "JPM",
+    "key": "loan_loss_reserve",
+    "expected": -25765,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026008131/jpm-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "JPM",
+    "key": "treasury_stock",
+    "expected": -164591,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026008131/jpm-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "JPM",
+    "key": "net_income",
+    "expected": 57048,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026008131/jpm-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "JPM",
+    "key": "shareholders_equity",
+    "expected": 362438,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026008131/jpm-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "JPM",
+    "key": "cash_from_operations",
+    "expected": -147782,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026008131/jpm-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "TRV",
+    "key": "investment_income",
+    "expected": 3959,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/86312/000008631226000065/trv-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "TRV",
+    "key": "loss_reserves",
+    "expected": 65737,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/86312/000008631226000065/trv-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "TRV",
+    "key": "total_expenses",
+    "expected": 41032,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/86312/000008631226000065/trv-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "TRV",
+    "key": "treasury_stock",
+    "expected": -45447,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/86312/000008631226000065/trv-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "TRV",
+    "key": "net_income",
+    "expected": 6288,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/86312/000008631226000065/trv-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "TRV",
+    "key": "total_assets",
+    "expected": 143708,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/86312/000008631226000065/trv-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "TRV",
+    "key": "cash_from_operations",
+    "expected": 10606,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/86312/000008631226000065/trv-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "TRV",
+    "key": "other_assets",
+    "expected": 4279,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/86312/000008631226000065/trv-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "KO",
+    "key": "cash",
+    "expected": 10270,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026010047/ko-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "KO",
+    "key": "revenue",
+    "expected": 47941,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026010047/ko-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "KO",
+    "key": "net_income",
+    "expected": 13107,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026010047/ko-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "KO",
+    "key": "other_current_assets",
+    "expected": 2433,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026010047/ko-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "KO",
+    "key": "pension_liabilities",
+    "expected": null,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026010047/ko-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Not numerically assessed in this bounded review; not asserted to be zero or undisclosed",
+    "note": "Pension liability reference is not resolved in this review"
+  },
+  {
+    "ticker": "KO",
+    "key": "treasury_stock",
+    "expected": -56423,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026010047/ko-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "KO",
+    "key": "interest_expense",
+    "expected": -1654,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026010047/ko-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "KO",
+    "key": "cash_from_operations",
+    "expected": 7408,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026010047/ko-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "COST",
+    "key": "cash",
+    "expected": 20207,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/909832/000090983226000093/cost-20260830.htm",
+    "period": "2026-08-30",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "COST",
+    "key": "revenue",
+    "expected": 303154,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/909832/000090983226000093/cost-20260830.htm",
+    "period": "2026-08-30",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "COST",
+    "key": "net_income",
+    "expected": 9226,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/909832/000090983226000093/cost-20260830.htm",
+    "period": "2026-08-30",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "COST",
+    "key": "other_current_assets",
+    "expected": 1998,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/909832/000090983226000093/cost-20260830.htm",
+    "period": "2026-08-30",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "COST",
+    "key": "pension_liabilities",
+    "expected": null,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/909832/000090983226000093/cost-20260830.htm",
+    "period": "2026-08-30",
+    "verification": "Not numerically assessed in this bounded review; not asserted to be zero or undisclosed",
+    "note": "Pension liability reference is not resolved in this review"
+  },
+  {
+    "ticker": "COST",
+    "key": "treasury_stock",
+    "expected": null,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/909832/000090983226000093/cost-20260830.htm",
+    "period": "2026-08-30",
+    "verification": "Not numerically assessed in this bounded review; not asserted to be zero or undisclosed",
+    "note": "No separate treasury-stock balance established for this reference"
+  },
+  {
+    "ticker": "COST",
+    "key": "interest_expense",
+    "expected": -145,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/909832/000090983226000093/cost-20260830.htm",
+    "period": "2026-08-30",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "COST",
+    "key": "cash_from_operations",
+    "expected": 15817,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/909832/000090983226000093/cost-20260830.htm",
+    "period": "2026-08-30",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "BAC",
+    "key": "interest_income",
+    "expected": 138566,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085826000157/bac-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "BAC",
+    "key": "interest_expense",
+    "expected": -78470,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085826000157/bac-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "BAC",
+    "key": "net_loans",
+    "expected": 1172497,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085826000157/bac-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "BAC",
+    "key": "loan_loss_reserve",
+    "expected": -13203,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085826000157/bac-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "BAC",
+    "key": "treasury_stock",
+    "expected": null,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085826000157/bac-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Not numerically assessed in this bounded review; not asserted to be zero or undisclosed",
+    "note": "No separate treasury-stock balance established for this reference"
+  },
+  {
+    "ticker": "BAC",
+    "key": "net_income",
+    "expected": 30509,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085826000157/bac-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "BAC",
+    "key": "shareholders_equity",
+    "expected": 303243,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085826000157/bac-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "BAC",
+    "key": "cash_from_operations",
+    "expected": 12613,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085826000157/bac-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "ALL",
+    "key": "investment_income",
+    "expected": 3449,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/899051/000089905126000031/all-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "ALL",
+    "key": "loss_reserves",
+    "expected": 41079,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/899051/000089905126000031/all-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "ALL",
+    "key": "total_expenses",
+    "expected": 56132,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/899051/000089905126000031/all-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "ALL",
+    "key": "treasury_stock",
+    "expected": -38206,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/899051/000089905126000031/all-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "ALL",
+    "key": "net_income",
+    "expected": 10282,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/899051/000089905126000031/all-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "ALL",
+    "key": "total_assets",
+    "expected": 119758,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/899051/000089905126000031/all-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "ALL",
+    "key": "cash_from_operations",
+    "expected": 10110,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/899051/000089905126000031/all-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  },
+  {
+    "ticker": "ALL",
+    "key": "other_assets",
+    "expected": 5252,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/899051/000089905126000031/all-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Reviewer-curated filing-row/footnote reference; expected value is independent of resolver implementation",
+    "note": ""
+  }
+]

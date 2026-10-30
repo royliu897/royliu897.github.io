@@ -1,0 +1,15 @@
+{
+  "name": "research-report-build",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.11.0"
+  },
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "devDependencies": {
+    "@babel/parser": "8.0.4",
+    "@babel/generator": "8.0.6"
+  }
+}

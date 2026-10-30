@@ -8,7 +8,7 @@ const mixed=structuredClone(data);mixed.facts.Revenue.units.USD=[p(4)];assert.eq
 const mismatch=structuredClone(data);mismatch.facts.ProfitLossFromOperatingActivities.units.TWD[0].start='2024-02-01';assert.equal(buildOverview(mismatch).series.opMargin.points.length,0);
 const ytd=structuredClone(data);ytd.facts.Revenue.units.TWD=[p(60,'2025-01-01','2025-06-30','2025-08-01','10-Q')];ytd.asOf='2025-09-01';assert.equal(buildOverview(ytd,'quarter').periods.length,0);
 globalThis.caches={default:{match:async()=>null,put:async()=>{}}};let calls=[];
-globalThis.fetch=async(url)=>{calls.push(url);return Response.json(url.includes('company_tickers_exchange')?{fields:['cik','name','ticker','exchange'],data:[[1046179,'Taiwan Semiconductor','TSM','NYSE']]}:{entityName:'TSMC',facts:{'ifrs-full':data.facts}});};
+globalThis.fetch=async(url)=>{calls.push(url);return Response.json(url.includes('company_tickers_exchange')?{fields:['cik','name','ticker','exchange'],data:[[1046179,'Taiwan Semiconductor','TSM','NYSE']]}:{cik:1046179,entityName:'TSMC',facts:{'ifrs-full':data.facts}});};
 const env={SITE_ORIGIN:'https://royrliu.com',SEC_USER_AGENT:'test test@example.com'},ctx={waitUntil:p=>p};
 let response=await worker.fetch(new Request('https://api.example/directory'),env,ctx);assert.equal(response.status,200);assert.equal((await response.json()).companies[0].ticker,'TSM');assert.equal(calls[0],'https://www.sec.gov/files/company_tickers_exchange.json');
 response=await worker.fetch(new Request('https://api.example/company/CIK1046179/facts'),env,ctx);assert.equal(response.status,200);assert.equal((await response.json()).facts.Revenue.namespace,'ifrs-full');

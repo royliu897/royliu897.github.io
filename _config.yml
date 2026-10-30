@@ -1,0 +1,8 @@
+# Keep development sources and source-verification fixtures out of Pages.
+exclude:
+  - scripts
+  - tests
+  - docs
+  - sec-worker
+  - comments-worker
+  - README.md

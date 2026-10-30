@@ -1,0 +1,282 @@
+[
+  {
+    "ticker": "PG",
+    "key": "minority_interest_income",
+    "expected": -98,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000103/pg-20260630.htm",
+    "period": "2026-06-30",
+    "verification": "Supplemental reviewer-entered check after first pilot run; not part of preselected 64-target set",
+    "kind": "Source-line value with template sign convention"
+  },
+  {
+    "ticker": "PG",
+    "key": "total_operating_expenses",
+    "expected": 23922,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000103/pg-20260630.htm",
+    "period": "2026-06-30",
+    "verification": "Supplemental reviewer-entered check after first pilot run; not part of preselected 64-target set",
+    "kind": "Derivation/source subtotal check"
+  },
+  {
+    "ticker": "PG",
+    "key": "cf_net_income",
+    "expected": 16144,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/80424/000008042426000103/pg-20260630.htm",
+    "period": "2026-06-30",
+    "verification": "Supplemental reviewer-entered check after first pilot run; not part of preselected 64-target set",
+    "kind": "Source-line value with template sign convention"
+  },
+  {
+    "ticker": "CAT",
+    "key": "other_operating",
+    "expected": 1194,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000008/cat-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Supplemental reviewer-entered check after first pilot run; not part of preselected 64-target set",
+    "kind": "Source-line value with template sign convention"
+  },
+  {
+    "ticker": "CAT",
+    "key": "minority_interest_income",
+    "expected": 2,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000008/cat-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Supplemental reviewer-entered check after first pilot run; not part of preselected 64-target set",
+    "kind": "Source-line value with template sign convention"
+  },
+  {
+    "ticker": "CAT",
+    "key": "total_operating_expenses",
+    "expected": 11686,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000008/cat-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Supplemental reviewer-entered check after first pilot run; not part of preselected 64-target set",
+    "kind": "Derivation/source subtotal check"
+  },
+  {
+    "ticker": "CAT",
+    "key": "cf_net_income",
+    "expected": 8882,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/18230/000001823026000008/cat-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Supplemental reviewer-entered check after first pilot run; not part of preselected 64-target set",
+    "kind": "Source-line value with template sign convention"
+  },
+  {
+    "ticker": "JPM",
+    "key": "other_assets",
+    "expected": 198775,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026008131/jpm-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Supplemental reviewer-entered check after first pilot run; not part of preselected 64-target set",
+    "kind": "Source-line value with template sign convention"
+  },
+  {
+    "ticker": "JPM",
+    "key": "paid_in_capital",
+    "expected": 91114,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026008131/jpm-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Supplemental reviewer-entered check after first pilot run; not part of preselected 64-target set",
+    "kind": "Source-line value with template sign convention"
+  },
+  {
+    "ticker": "JPM",
+    "key": "preferred_stock",
+    "expected": 20045,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026008131/jpm-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Supplemental reviewer-entered check after first pilot run; not part of preselected 64-target set",
+    "kind": "Source-line value with template sign convention"
+  },
+  {
+    "ticker": "JPM",
+    "key": "gross_loans",
+    "expected": 1493429,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026008131/jpm-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Supplemental reviewer-entered check after first pilot run; not part of preselected 64-target set",
+    "kind": "Derivation/source subtotal check"
+  },
+  {
+    "ticker": "JPM",
+    "key": "securities_investments",
+    "expected": 777332,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026008131/jpm-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Supplemental reviewer-entered check after first pilot run; not part of preselected 64-target set",
+    "kind": "Derivation/source subtotal check"
+  },
+  {
+    "ticker": "JPM",
+    "key": "cf_net_income",
+    "expected": 57048,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026008131/jpm-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Supplemental reviewer-entered check after first pilot run; not part of preselected 64-target set",
+    "kind": "Source-line value with template sign convention"
+  },
+  {
+    "ticker": "TRV",
+    "key": "equity_investments",
+    "expected": 618,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/86312/000008631226000065/trv-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Supplemental reviewer-entered check after first pilot run; not part of preselected 64-target set",
+    "kind": "Source-line value with template sign convention"
+  },
+  {
+    "ticker": "TRV",
+    "key": "other_liabilities",
+    "expected": 7282,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/86312/000008631226000065/trv-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Supplemental reviewer-entered check after first pilot run; not part of preselected 64-target set",
+    "kind": "Source-line value with template sign convention"
+  },
+  {
+    "ticker": "TRV",
+    "key": "common_stock",
+    "expected": 25910,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/86312/000008631226000065/trv-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Supplemental reviewer-entered check after first pilot run; not part of preselected 64-target set",
+    "kind": "Source-line value with template sign convention"
+  },
+  {
+    "ticker": "KO",
+    "key": "minority_interest_income",
+    "expected": -30,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026010047/ko-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Supplemental reviewer-entered check after first pilot run; not part of preselected 64-target set",
+    "kind": "Source-line value with template sign convention"
+  },
+  {
+    "ticker": "KO",
+    "key": "paid_in_capital",
+    "expected": 20581,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026010047/ko-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Supplemental reviewer-entered check after first pilot run; not part of preselected 64-target set",
+    "kind": "Source-line value with template sign convention"
+  },
+  {
+    "ticker": "KO",
+    "key": "total_operating_expenses",
+    "expected": 15782,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026010047/ko-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Supplemental reviewer-entered check after first pilot run; not part of preselected 64-target set",
+    "kind": "Derivation/source subtotal check"
+  },
+  {
+    "ticker": "COST",
+    "key": "paid_in_capital",
+    "expected": 8830,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/909832/000090983226000093/cost-20260830.htm",
+    "period": "2026-08-30",
+    "verification": "Supplemental reviewer-entered check after first pilot run; not part of preselected 64-target set",
+    "kind": "Source-line value with template sign convention"
+  },
+  {
+    "ticker": "COST",
+    "key": "total_operating_expenses",
+    "expected": 27190,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/909832/000090983226000093/cost-20260830.htm",
+    "period": "2026-08-30",
+    "verification": "Supplemental reviewer-entered check after first pilot run; not part of preselected 64-target set",
+    "kind": "Derivation/source subtotal check"
+  },
+  {
+    "ticker": "BAC",
+    "key": "other_assets",
+    "expected": 164986,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085826000157/bac-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Supplemental reviewer-entered check after first pilot run; not part of preselected 64-target set",
+    "kind": "Source-line value with template sign convention"
+  },
+  {
+    "ticker": "BAC",
+    "key": "gross_loans",
+    "expected": 1185700,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085826000157/bac-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Supplemental reviewer-entered check after first pilot run; not part of preselected 64-target set",
+    "kind": "Derivation/source subtotal check"
+  },
+  {
+    "ticker": "ALL",
+    "key": "minority_interest_income",
+    "expected": 16,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/899051/000089905126000031/all-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Supplemental reviewer-entered check after first pilot run; not part of preselected 64-target set",
+    "kind": "Source-line value with template sign convention"
+  },
+  {
+    "ticker": "ALL",
+    "key": "other_liabilities",
+    "expected": 258,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/899051/000089905126000031/all-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Supplemental reviewer-entered check after first pilot run; not part of preselected 64-target set",
+    "kind": "Source-line value with template sign convention"
+  },
+  {
+    "ticker": "ALL",
+    "key": "paid_in_capital",
+    "expected": 4158,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/899051/000089905126000031/all-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Supplemental reviewer-entered check after first pilot run; not part of preselected 64-target set",
+    "kind": "Source-line value with template sign convention"
+  },
+  {
+    "ticker": "ALL",
+    "key": "common_stock",
+    "expected": 9,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/899051/000089905126000031/all-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Supplemental reviewer-entered check after first pilot run; not part of preselected 64-target set",
+    "kind": "Source-line value with template sign convention"
+  },
+  {
+    "ticker": "ALL",
+    "key": "cf_net_income",
+    "expected": 10266,
+    "unit": "USD millions",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/899051/000089905126000031/all-20251231.htm",
+    "period": "2025-12-31",
+    "verification": "Supplemental reviewer-entered check after first pilot run; not part of preselected 64-target set",
+    "kind": "Source-line value with template sign convention"
+  }
+]

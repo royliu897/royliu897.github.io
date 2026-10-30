@@ -1,0 +1,148 @@
+[
+  {
+    "ticker": "aapl",
+    "sourceBytes": 3800242,
+    "medianMs": 80.2,
+    "events": [
+      {
+        "date": "1987-06-16",
+        "ratio": 2
+      },
+      {
+        "date": "2000-06-21",
+        "ratio": 2
+      },
+      {
+        "date": "2005-02-28",
+        "ratio": 2
+      },
+      {
+        "date": "2014-06-09",
+        "ratio": 7
+      },
+      {
+        "date": "2020-08-31",
+        "ratio": 4
+      }
+    ],
+    "statuses": {
+      "inferred": 58,
+      "confirmed": 38,
+      "unresolved": 1
+    }
+  },
+  {
+    "ticker": "nvda",
+    "sourceBytes": 4097263,
+    "medianMs": 67.6,
+    "events": [
+      {
+        "date": "2000-06-27",
+        "ratio": 2
+      },
+      {
+        "date": "2001-09-12",
+        "ratio": 2
+      },
+      {
+        "date": "2006-04-07",
+        "ratio": 2
+      },
+      {
+        "date": "2007-09-11",
+        "ratio": 1.5
+      },
+      {
+        "date": "2021-07-20",
+        "ratio": 4
+      },
+      {
+        "date": "2024-06-10",
+        "ratio": 10
+      }
+    ],
+    "statuses": {
+      "inferred": 74,
+      "confirmed": 18
+    }
+  },
+  {
+    "ticker": "tsla",
+    "sourceBytes": 3708320,
+    "medianMs": 39.7,
+    "events": [
+      {
+        "date": "2020-08-31",
+        "ratio": 5
+      },
+      {
+        "date": "2022-08-25",
+        "ratio": 3
+      }
+    ],
+    "statuses": {
+      "inferred": 28,
+      "confirmed": 20
+    }
+  },
+  {
+    "ticker": "ge",
+    "sourceBytes": 6182941,
+    "medianMs": 58.3,
+    "events": [
+      {
+        "date": "1971-06-08",
+        "ratio": 2
+      },
+      {
+        "date": "1983-06-02",
+        "ratio": 2
+      },
+      {
+        "date": "1987-05-26",
+        "ratio": 2
+      },
+      {
+        "date": "1994-05-16",
+        "ratio": 2
+      },
+      {
+        "date": "1997-05-12",
+        "ratio": 2
+      },
+      {
+        "date": "2000-05-08",
+        "ratio": 3
+      },
+      {
+        "date": "2019-02-26",
+        "ratio": 1.04
+      },
+      {
+        "date": "2021-08-02",
+        "ratio": 0.125
+      },
+      {
+        "date": "2023-01-04",
+        "ratio": 1.281
+      },
+      {
+        "date": "2024-04-02",
+        "ratio": 1.253
+      }
+    ],
+    "statuses": {
+      "unresolved": 81,
+      "confirmed": 10
+    }
+  },
+  {
+    "ticker": "mcd",
+    "sourceBytes": 3581075,
+    "medianMs": 42.1,
+    "events": [],
+    "statuses": {
+      "confirmed": 100
+    }
+  }
+]

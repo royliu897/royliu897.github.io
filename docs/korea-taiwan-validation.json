@@ -1,0 +1,2312 @@
+[
+  {
+    "symbol": "KRX:000660",
+    "ms": 905,
+    "currency": "KRW",
+    "fy": "2025",
+    "columns": [
+      "2013",
+      "2014",
+      "2015",
+      "2016",
+      "2017",
+      "2018",
+      "2019",
+      "2020",
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025",
+      "TTM"
+    ],
+    "quote": {
+      "ticker": "000660.KS",
+      "price": 1526000,
+      "currency": "KRW",
+      "asOf": "2026-10-29T06:30:12.000Z",
+      "fetchedAt": "2026-10-29T19:45:10.995Z",
+      "source": "Yahoo Finance"
+    },
+    "valuation": {
+      "basis": "FY 2025",
+      "marketCap": 1085101213,
+      "ev": 1092425352,
+      "pe": 25.274106462618835,
+      "pb": 9.00378049659026,
+      "ps": 11.169720559144201,
+      "evToSales": 11.245113144634132,
+      "evToEbitda": null,
+      "evToEbit": 23.14150679700317,
+      "evToPretax": 21.646951409547647,
+      "evToFcf": 42.253299947142054,
+      "pPretax": 21.50181995433241,
+      "pPremiums": null,
+      "evToPremiums": null
+    },
+    "usd_valuation": {
+      "basis": "FY 2025",
+      "marketCap": 810212.3626127472,
+      "ev": 815681.0763992595,
+      "pe": 25.274106462618835,
+      "pb": 9.00378049659026,
+      "ps": 11.169720559144203,
+      "evToSales": 11.245113144634136,
+      "evToEbitda": null,
+      "evToEbit": 23.141506797003178,
+      "evToPretax": 21.64695140954765,
+      "evToFcf": 42.25329994714206,
+      "pPretax": 21.501819954332415,
+      "pPremiums": null,
+      "evToPremiums": null
+    },
+    "current_shares": {
+      "status": "available",
+      "common_outstanding": 711075500,
+      "total_outstanding": 711075500,
+      "multiple_classes": false,
+      "asOf": "2026-06-30",
+      "source": "OpenDART stock total report",
+      "source_url": "https://englishdart.fss.or.kr/dsbh001/main.do?rcpNo=20260814003509"
+    },
+    "latest_income": {
+      "revenue": 97146675,
+      "cogs": 38455885,
+      "gross_profit": 58690790,
+      "sga": 11484471,
+      "rd": null,
+      "other_operating": null,
+      "total_operating_expenses": null,
+      "operating_income": 47206319,
+      "interest_income": null,
+      "interest_expense": null,
+      "net_interest_income": null,
+      "other_nonoperating": 3259233,
+      "pretax_income": 50465552,
+      "income_tax": -7517650,
+      "minority_interest_income": null,
+      "other_nonrecurring": null,
+      "net_income": 42919287,
+      "preferred_dividends": null,
+      "net_income_discontinued": null,
+      "_nic_raw": null,
+      "eps_basic": 62044,
+      "eps_diluted": 60378,
+      "shares_basic": null,
+      "shares_diluted": null,
+      "net_income_continuing": 42919287,
+      "_net_income_available": 42919287
+    },
+    "latest_balance": {
+      "cash": 14923766,
+      "short_term_investments": 5338768,
+      "accounts_receivable": 18199078,
+      "inventory": 14289390,
+      "other_current_assets": 1378035,
+      "total_current_assets": 69458073,
+      "investments": null,
+      "ppe_gross": null,
+      "accumulated_depreciation": null,
+      "ppe": 77502704,
+      "goodwill": null,
+      "intangible_assets": null,
+      "other_assets": 144930,
+      "total_assets": 176107659,
+      "accounts_payable": 2848455,
+      "tax_payable": 7023813,
+      "current_accrued_liabilities": null,
+      "short_term_debt": 8161757,
+      "current_deferred_revenue": null,
+      "current_deferred_tax_liability": null,
+      "current_capital_leases": 547296,
+      "other_current_liabilities": null,
+      "total_current_liabilities": 37378999,
+      "long_term_debt": 14086148,
+      "noncurrent_deferred_revenue": null,
+      "noncurrent_capital_leases": 1962647,
+      "pension_liabilities": 66144,
+      "other_lt_liabilities": 1300977,
+      "total_noncurrent_liabilities": 18061909,
+      "total_liabilities": 55440908,
+      "retained_earnings": 106576548,
+      "paid_in_capital": null,
+      "common_stock": null,
+      "aoci": 2676862,
+      "preferred_stock": null,
+      "other_equity": 11262768,
+      "minority_interest": 150573,
+      "treasury_stock": null,
+      "shareholders_equity": 120516178,
+      "total_liabilities_equity": 176107659
+    },
+    "latest_cashflow": {
+      "cf_net_income": 42947902,
+      "cf_dna": null,
+      "cf_working_capital": null,
+      "cf_deferred_tax": null,
+      "cf_stock_comp": null,
+      "cf_other_operating": 10425224,
+      "cash_from_operations": 53373126,
+      "cf_capex": -27374096,
+      "cf_acquisitions": null,
+      "cf_investments": null,
+      "cf_other_investing": -20680155,
+      "cash_from_investing": -48054251,
+      "cf_net_preferred": null,
+      "cf_net_stock": null,
+      "cf_debt_net": 767604,
+      "cf_dividends": -1681166,
+      "cf_other_financing": -531430,
+      "cash_from_financing": -1444992,
+      "cf_forex": -155234,
+      "free_cash_flow": 25854202
+    },
+    "coverage": {
+      "status": "available",
+      "sources": [
+        {
+          "accession": "20260317000635",
+          "url": "https://englishdart.fss.or.kr/dsbh001/main.do?rcpNo=20260317000635",
+          "date": "2026-03-17",
+          "form": "DART annual",
+          "period": "2025-12-31"
+        },
+        {
+          "accession": "20230321001209",
+          "url": "https://englishdart.fss.or.kr/dsbh001/main.do?rcpNo=20230321001209",
+          "date": "2023-03-21",
+          "form": "DART annual",
+          "period": "2022-12-31"
+        },
+        {
+          "accession": "20200330004441",
+          "url": "https://englishdart.fss.or.kr/dsbh001/main.do?rcpNo=20200330004441",
+          "date": "2020-03-30",
+          "form": "DART annual",
+          "period": "2019-12-31"
+        },
+        {
+          "accession": "20170331004537",
+          "url": "https://englishdart.fss.or.kr/dsbh001/main.do?rcpNo=20170331004537",
+          "date": "2017-03-31",
+          "form": "DART annual",
+          "period": "2016-12-31"
+        },
+        {
+          "accession": "20160516001867",
+          "url": "https://englishdart.fss.or.kr/dsbh001/main.do?rcpNo=20160516001867",
+          "date": "2016-05-16",
+          "form": "DART annual",
+          "period": "2015-12-31"
+        },
+        {
+          "accession": "20260814003509",
+          "url": "https://englishdart.fss.or.kr/dsbh001/main.do?rcpNo=20260814003509",
+          "date": "2026-08-14",
+          "form": "DART interim",
+          "period": "2026-06-30"
+        },
+        {
+          "accession": "20260515002287",
+          "url": "https://englishdart.fss.or.kr/dsbh001/main.do?rcpNo=20260515002287",
+          "date": "2026-05-15",
+          "form": "DART interim",
+          "period": "2026-03-31"
+        }
+      ],
+      "unavailable_periods": [],
+      "conflicts": [],
+      "unresolved_contexts": 0,
+      "excluded_contexts": 581,
+      "scope": "Consolidated primary statements from selected OpenDART reports. Statements of changes in equity and dimensional account details are excluded; share counts and split history may be unavailable."
+    },
+    "validation": {
+      "scope": "Mapped annual core-field coverage and independently reported accounting identities; not full filing completeness",
+      "status": "checks_pass",
+      "checks": [
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2013",
+          "status": "pass",
+          "difference": 0,
+          "currency": "KRW",
+          "source_accessions": [
+            "20160516001867"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2014",
+          "status": "pass",
+          "difference": 0,
+          "currency": "KRW",
+          "source_accessions": [
+            "20170331004537"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2015",
+          "status": "pass",
+          "difference": 0,
+          "currency": "KRW",
+          "source_accessions": [
+            "20170331004537"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2016",
+          "status": "pass",
+          "difference": 0,
+          "currency": "KRW",
+          "source_accessions": [
+            "20170331004537"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2017",
+          "status": "pass",
+          "difference": 0,
+          "currency": "KRW",
+          "source_accessions": [
+            "20200330004441"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2018",
+          "status": "pass",
+          "difference": 0,
+          "currency": "KRW",
+          "source_accessions": [
+            "20200330004441"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2019",
+          "status": "pass",
+          "difference": 0,
+          "currency": "KRW",
+          "source_accessions": [
+            "20200330004441"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2020",
+          "status": "pass",
+          "difference": 0,
+          "currency": "KRW",
+          "source_accessions": [
+            "20230321001209"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2021",
+          "status": "pass",
+          "difference": 0,
+          "currency": "KRW",
+          "source_accessions": [
+            "20230321001209"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2022",
+          "status": "pass",
+          "difference": 0,
+          "currency": "KRW",
+          "source_accessions": [
+            "20230321001209"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2023",
+          "status": "pass",
+          "difference": 0,
+          "currency": "KRW",
+          "source_accessions": [
+            "20260317000635"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2024",
+          "status": "pass",
+          "difference": 0,
+          "currency": "KRW",
+          "source_accessions": [
+            "20260317000635"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2025",
+          "status": "pass",
+          "difference": 0,
+          "currency": "KRW",
+          "source_accessions": [
+            "20260814003509"
+          ]
+        }
+      ],
+      "coverage": [
+        {
+          "year": "2013",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2014",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2015",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2016",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2017",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2018",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2019",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2020",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2021",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2022",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2023",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2024",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2025",
+          "missing_core_fields": []
+        }
+      ],
+      "notes": [
+        "Cash-flow Other residuals are arithmetic constructions, so their reconciliation is not independent evidence of accuracy.",
+        "Coverage of CompanyFacts is not coverage of every custom, dimensional or untagged filing disclosure."
+      ]
+    },
+    "unmapped": 182,
+    "fx": {
+      "base": "USD",
+      "quote": "KRW",
+      "per_usd": 1339.28,
+      "usd_per_unit": 0.0007466698524580371,
+      "asOf": "2026-10-29T19:49:45.000Z",
+      "fetchedAt": "2026-10-29T19:49:55.809Z",
+      "kind": "market_quote",
+      "source": "Yahoo Finance FX",
+      "source_url": "https://finance.yahoo.com/quote/KRW%3DX/"
+    }
+  },
+  {
+    "symbol": "KRX:005930",
+    "ms": 331,
+    "currency": "KRW",
+    "fy": "2025",
+    "columns": [
+      "2013",
+      "2014",
+      "2015",
+      "2016",
+      "2017",
+      "2018",
+      "2019",
+      "2020",
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025",
+      "TTM"
+    ],
+    "quote": {
+      "ticker": "005930.KS",
+      "price": 232000,
+      "currency": "KRW",
+      "asOf": "2026-10-29T06:30:19.000Z",
+      "fetchedAt": "2026-10-29T19:49:56.186Z",
+      "source": "Yahoo Finance"
+    },
+    "valuation": {
+      "basis": "FY 2025",
+      "marketCap": null,
+      "ev": null,
+      "pe": 35.135544449492656,
+      "pb": null,
+      "ps": null,
+      "evToSales": null,
+      "evToEbitda": null,
+      "evToEbit": null,
+      "evToPretax": null,
+      "evToFcf": null,
+      "pPretax": null,
+      "pPremiums": null,
+      "evToPremiums": null
+    },
+    "usd_valuation": {
+      "basis": "FY 2025",
+      "marketCap": null,
+      "ev": null,
+      "pe": 35.135544449492656,
+      "pb": null,
+      "ps": null,
+      "evToSales": null,
+      "evToEbitda": null,
+      "evToEbit": null,
+      "evToPretax": null,
+      "evToFcf": null,
+      "pPretax": null,
+      "pPremiums": null,
+      "evToPremiums": null
+    },
+    "current_shares": {
+      "status": "available",
+      "common_outstanding": 5764191903,
+      "total_outstanding": 6566563106,
+      "multiple_classes": true,
+      "asOf": "2026-06-30",
+      "source": "OpenDART stock total report",
+      "source_url": "https://englishdart.fss.or.kr/dsbh001/main.do?rcpNo=20260814003699"
+    },
+    "latest_income": {
+      "revenue": 333605938,
+      "cogs": 202235513,
+      "gross_profit": 131370425,
+      "sga": 87769374,
+      "rd": null,
+      "other_operating": null,
+      "total_operating_expenses": null,
+      "operating_income": 43601051,
+      "interest_income": null,
+      "interest_expense": null,
+      "net_interest_income": null,
+      "other_nonoperating": 5880420,
+      "pretax_income": 49481471,
+      "income_tax": -4274666,
+      "minority_interest_income": null,
+      "other_nonrecurring": null,
+      "net_income": 44260956,
+      "preferred_dividends": null,
+      "net_income_discontinued": null,
+      "_nic_raw": null,
+      "eps_basic": 6605,
+      "eps_diluted": 6603,
+      "shares_basic": null,
+      "shares_diluted": null,
+      "net_income_continuing": 44260956,
+      "_net_income_available": 44260956
+    },
+    "latest_balance": {
+      "cash": 57856378,
+      "short_term_investments": null,
+      "accounts_receivable": 51127642,
+      "inventory": 52636828,
+      "other_current_assets": 6964529,
+      "total_current_assets": 247684612,
+      "investments": null,
+      "ppe_gross": null,
+      "accumulated_depreciation": null,
+      "ppe": 215304784,
+      "goodwill": null,
+      "intangible_assets": null,
+      "other_assets": 20012416,
+      "total_assets": 566942110,
+      "accounts_payable": 13039380,
+      "tax_payable": 7037174,
+      "current_accrued_liabilities": 32707431,
+      "short_term_debt": 18752488,
+      "current_deferred_revenue": null,
+      "current_deferred_tax_liability": null,
+      "current_capital_leases": null,
+      "other_current_liabilities": null,
+      "total_current_liabilities": 106411348,
+      "long_term_debt": 6486651,
+      "noncurrent_deferred_revenue": null,
+      "noncurrent_capital_leases": null,
+      "pension_liabilities": 558520,
+      "other_lt_liabilities": 7953586,
+      "total_noncurrent_liabilities": 24210425,
+      "total_liabilities": 130621773,
+      "retained_earnings": 402135600,
+      "paid_in_capital": 4403893,
+      "common_stock": null,
+      "aoci": null,
+      "preferred_stock": null,
+      "other_equity": 17773762,
+      "minority_interest": 12007082,
+      "treasury_stock": null,
+      "shareholders_equity": 424313255,
+      "total_liabilities_equity": 566942110
+    },
+    "latest_cashflow": {
+      "cf_net_income": 45206805,
+      "cf_dna": null,
+      "cf_working_capital": null,
+      "cf_deferred_tax": null,
+      "cf_stock_comp": null,
+      "cf_other_operating": 40108343,
+      "cash_from_operations": 85315148,
+      "cf_capex": -47372351,
+      "cf_acquisitions": null,
+      "cf_investments": null,
+      "cf_other_investing": -21139855,
+      "cash_from_investing": -68512206,
+      "cf_net_preferred": null,
+      "cf_net_stock": null,
+      "cf_debt_net": 2807001,
+      "cf_dividends": -9897183,
+      "cf_other_financing": -6387858,
+      "cash_from_financing": -13478040,
+      "cf_forex": 825897,
+      "free_cash_flow": 37792969
+    },
+    "coverage": {
+      "status": "available",
+      "sources": [
+        {
+          "accession": "20260310002820",
+          "url": "https://englishdart.fss.or.kr/dsbh001/main.do?rcpNo=20260310002820",
+          "date": "2026-03-10",
+          "form": "DART annual",
+          "period": "2025-12-31"
+        },
+        {
+          "accession": "20230307000542",
+          "url": "https://englishdart.fss.or.kr/dsbh001/main.do?rcpNo=20230307000542",
+          "date": "2023-03-07",
+          "form": "DART annual",
+          "period": "2022-12-31"
+        },
+        {
+          "accession": "20200330003851",
+          "url": "https://englishdart.fss.or.kr/dsbh001/main.do?rcpNo=20200330003851",
+          "date": "2020-03-30",
+          "form": "DART annual",
+          "period": "2019-12-31"
+        },
+        {
+          "accession": "20170331004518",
+          "url": "https://englishdart.fss.or.kr/dsbh001/main.do?rcpNo=20170331004518",
+          "date": "2017-03-31",
+          "form": "DART annual",
+          "period": "2016-12-31"
+        },
+        {
+          "accession": "20160330003536",
+          "url": "https://englishdart.fss.or.kr/dsbh001/main.do?rcpNo=20160330003536",
+          "date": "2016-03-30",
+          "form": "DART annual",
+          "period": "2015-12-31"
+        },
+        {
+          "accession": "20260814003699",
+          "url": "https://englishdart.fss.or.kr/dsbh001/main.do?rcpNo=20260814003699",
+          "date": "2026-08-14",
+          "form": "DART interim",
+          "period": "2026-06-30"
+        },
+        {
+          "accession": "20260515002181",
+          "url": "https://englishdart.fss.or.kr/dsbh001/main.do?rcpNo=20260515002181",
+          "date": "2026-05-15",
+          "form": "DART interim",
+          "period": "2026-03-31"
+        }
+      ],
+      "unavailable_periods": [],
+      "conflicts": [
+        {
+          "concept": "ifrs-full_ProfitLoss",
+          "storage_name": "ProfitLoss",
+          "unit": "KRW",
+          "start": "2026-01-01",
+          "end": "2026-06-30",
+          "accession": "20260814003699",
+          "source_url": "https://englishdart.fss.or.kr/dsbh001/main.do?rcpNo=20260814003699",
+          "resolution": "Explicit IS/CIS cumulative ProfitLoss preferred to conflicting CF extract",
+          "status": "resolved_with_source_precedence",
+          "observations": [
+            {
+              "statement": "IS",
+              "source_field": "thstrm_add_amount",
+              "source_label": "반기순이익",
+              "source_concept": "ifrs-full_ProfitLoss",
+              "val": 118849733000000
+            },
+            {
+              "statement": "CIS",
+              "source_field": "thstrm_add_amount",
+              "source_label": "반기순이익",
+              "source_concept": "ifrs-full_ProfitLoss",
+              "val": 118849733000000
+            },
+            {
+              "statement": "CF",
+              "source_field": "thstrm_amount",
+              "source_label": "반기순이익",
+              "source_concept": "ifrs-full_ProfitLoss",
+              "val": 71624461000000
+            }
+          ]
+        },
+        {
+          "concept": "ifrs-full_ProfitLoss",
+          "storage_name": "ProfitLoss",
+          "unit": "KRW",
+          "start": "2025-01-01",
+          "end": "2025-06-30",
+          "accession": "20260814003699",
+          "source_url": "https://englishdart.fss.or.kr/dsbh001/main.do?rcpNo=20260814003699",
+          "resolution": "Explicit IS/CIS cumulative ProfitLoss preferred to conflicting CF extract",
+          "status": "resolved_with_source_precedence",
+          "observations": [
+            {
+              "statement": "IS",
+              "source_field": "frmtrm_add_amount",
+              "source_label": "반기순이익",
+              "source_concept": "ifrs-full_ProfitLoss",
+              "val": 13339313000000
+            },
+            {
+              "statement": "CIS",
+              "source_field": "frmtrm_add_amount",
+              "source_label": "반기순이익",
+              "source_concept": "ifrs-full_ProfitLoss",
+              "val": 13339313000000
+            },
+            {
+              "statement": "CF",
+              "source_field": "frmtrm_q_amount",
+              "source_label": "반기순이익",
+              "source_concept": "ifrs-full_ProfitLoss",
+              "val": 5116435000000
+            }
+          ]
+        }
+      ],
+      "unresolved_contexts": 0,
+      "excluded_contexts": 578,
+      "scope": "Consolidated primary statements from selected OpenDART reports. Statements of changes in equity and dimensional account details are excluded; share counts and split history may be unavailable."
+    },
+    "validation": {
+      "scope": "Mapped annual core-field coverage and independently reported accounting identities; not full filing completeness",
+      "status": "checks_pass",
+      "checks": [
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2013",
+          "status": "pass",
+          "difference": 0,
+          "currency": "KRW",
+          "source_accessions": [
+            "20160330003536"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2014",
+          "status": "pass",
+          "difference": 0,
+          "currency": "KRW",
+          "source_accessions": [
+            "20170331004518"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2015",
+          "status": "pass",
+          "difference": 0,
+          "currency": "KRW",
+          "source_accessions": [
+            "20170331004518"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2016",
+          "status": "pass",
+          "difference": 0,
+          "currency": "KRW",
+          "source_accessions": [
+            "20170331004518"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2017",
+          "status": "pass",
+          "difference": 0,
+          "currency": "KRW",
+          "source_accessions": [
+            "20200330003851"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2018",
+          "status": "pass",
+          "difference": 0,
+          "currency": "KRW",
+          "source_accessions": [
+            "20200330003851"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2019",
+          "status": "pass",
+          "difference": 0,
+          "currency": "KRW",
+          "source_accessions": [
+            "20200330003851"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2020",
+          "status": "pass",
+          "difference": 0,
+          "currency": "KRW",
+          "source_accessions": [
+            "20230307000542"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2021",
+          "status": "pass",
+          "difference": 0,
+          "currency": "KRW",
+          "source_accessions": [
+            "20230307000542"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2022",
+          "status": "pass",
+          "difference": 0,
+          "currency": "KRW",
+          "source_accessions": [
+            "20230307000542"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2023",
+          "status": "pass",
+          "difference": 0,
+          "currency": "KRW",
+          "source_accessions": [
+            "20260310002820"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2024",
+          "status": "pass",
+          "difference": 0,
+          "currency": "KRW",
+          "source_accessions": [
+            "20260310002820"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2025",
+          "status": "pass",
+          "difference": 0,
+          "currency": "KRW",
+          "source_accessions": [
+            "20260814003699"
+          ]
+        }
+      ],
+      "coverage": [
+        {
+          "year": "2013",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2014",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2015",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2016",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2017",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2018",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2019",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2020",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2021",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2022",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2023",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2024",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2025",
+          "missing_core_fields": []
+        }
+      ],
+      "notes": [
+        "Cash-flow Other residuals are arithmetic constructions, so their reconciliation is not independent evidence of accuracy.",
+        "Coverage of CompanyFacts is not coverage of every custom, dimensional or untagged filing disclosure."
+      ]
+    },
+    "unmapped": 275,
+    "fx": {
+      "base": "USD",
+      "quote": "KRW",
+      "per_usd": 1339.28,
+      "usd_per_unit": 0.0007466698524580371,
+      "asOf": "2026-10-29T19:49:45.000Z",
+      "fetchedAt": "2026-10-29T19:49:55.809Z",
+      "kind": "market_quote",
+      "source": "Yahoo Finance FX",
+      "source_url": "https://finance.yahoo.com/quote/KRW%3DX/"
+    }
+  },
+  {
+    "symbol": "TWSE:2330",
+    "ms": 961,
+    "currency": "TWD",
+    "fy": "2025",
+    "columns": [
+      "2012",
+      "2013",
+      "2014",
+      "2015",
+      "2016",
+      "2017",
+      "2018",
+      "2019",
+      "2020",
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025",
+      "TTM"
+    ],
+    "quote": {
+      "ticker": "2330.TW",
+      "price": 2415,
+      "currency": "TWD",
+      "asOf": "2026-10-29T05:30:08.000Z",
+      "fetchedAt": "2026-10-29T19:49:56.615Z",
+      "source": "Yahoo Finance"
+    },
+    "valuation": {
+      "basis": "FY 2025",
+      "marketCap": null,
+      "ev": null,
+      "pe": 36.45283018867924,
+      "pb": null,
+      "ps": null,
+      "evToSales": null,
+      "evToEbitda": null,
+      "evToEbit": null,
+      "evToPretax": null,
+      "evToFcf": null,
+      "pPretax": null,
+      "pPremiums": null,
+      "evToPremiums": null
+    },
+    "usd_valuation": {
+      "basis": "FY 2025",
+      "marketCap": null,
+      "ev": null,
+      "pe": 36.45283018867925,
+      "pb": null,
+      "ps": null,
+      "evToSales": null,
+      "evToEbitda": null,
+      "evToEbit": null,
+      "evToPretax": null,
+      "evToFcf": null,
+      "pPretax": null,
+      "pPremiums": null,
+      "evToPremiums": null
+    },
+    "current_shares": null,
+    "latest_income": {
+      "revenue": 3809054.272,
+      "cogs": 1527760.293,
+      "gross_profit": 2281293.979,
+      "sga": 99222.366,
+      "rd": 246427.264,
+      "other_operating": null,
+      "total_operating_expenses": 345649.63,
+      "operating_income": 1936091.677,
+      "interest_income": 105739.081,
+      "interest_expense": null,
+      "net_interest_income": null,
+      "other_nonoperating": -167.918,
+      "pretax_income": 2041662.84,
+      "income_tax": -326266.06,
+      "minority_interest_income": null,
+      "other_nonrecurring": null,
+      "net_income": 1717882.627,
+      "preferred_dividends": null,
+      "net_income_discontinued": null,
+      "_nic_raw": null,
+      "eps_basic": 66.26,
+      "eps_diluted": 66.25,
+      "shares_basic": null,
+      "shares_diluted": null,
+      "net_income_continuing": 1717882.627,
+      "_net_income_available": 1717882.627
+    },
+    "latest_balance": {
+      "cash": 2767856.402,
+      "short_term_investments": null,
+      "accounts_receivable": 279051.553,
+      "inventory": 288109.485,
+      "other_current_assets": 178367.353,
+      "total_current_assets": 3817130.817,
+      "investments": null,
+      "ppe_gross": null,
+      "accumulated_depreciation": null,
+      "ppe": 3691840.916,
+      "goodwill": null,
+      "intangible_assets": null,
+      "other_assets": 119869.994,
+      "total_assets": 7933023.878,
+      "accounts_payable": 82551.595,
+      "tax_payable": 202337.872,
+      "current_accrued_liabilities": null,
+      "short_term_debt": 136925.71,
+      "current_deferred_revenue": null,
+      "current_deferred_tax_liability": null,
+      "current_capital_leases": null,
+      "other_current_liabilities": null,
+      "total_current_liabilities": 1458019.289,
+      "long_term_debt": 896061.999,
+      "noncurrent_deferred_revenue": null,
+      "noncurrent_capital_leases": 31594.992,
+      "pension_liabilities": 6012.286,
+      "other_lt_liabilities": 82663.52,
+      "total_noncurrent_liabilities": 1014209.306,
+      "total_liabilities": 2472228.595,
+      "retained_earnings": 5103501.56,
+      "paid_in_capital": 35234.807,
+      "common_stock": 259325.245,
+      "aoci": null,
+      "preferred_stock": null,
+      "other_equity": 21534.382,
+      "minority_interest": 41199.289,
+      "treasury_stock": 0,
+      "shareholders_equity": 5419595.994,
+      "total_liabilities_equity": 7933023.878
+    },
+    "latest_cashflow": {
+      "cf_net_income": 1715396.78,
+      "cf_dna": 688096.37,
+      "cf_working_capital": -96752.05,
+      "cf_deferred_tax": null,
+      "cf_stock_comp": null,
+      "cf_other_operating": -31765.475,
+      "cash_from_operations": 2274975.625,
+      "cf_capex": -1271613.484,
+      "cf_acquisitions": null,
+      "cf_investments": null,
+      "cf_other_investing": 127220.077,
+      "cash_from_investing": -1144393.407,
+      "cf_net_preferred": null,
+      "cf_net_stock": 0,
+      "cf_debt_net": 40448.092,
+      "cf_dividends": -466779.199,
+      "cf_other_financing": -14013.585,
+      "cash_from_financing": -440344.692,
+      "cf_forex": -50008.167,
+      "free_cash_flow": 1002565.096
+    },
+    "coverage": {
+      "status": "available",
+      "sources": [
+        {
+          "accession": "MOPS-2330-2025-Q4",
+          "url": "https://mopsov.twse.com.tw/server-java/FileDownLoad?functionName=t164sb01&step=9&co_id=2330&year=2025&season=4&report_id=C",
+          "date": "2026-10-29",
+          "publication_date_unknown": true,
+          "form": "MOPS annual",
+          "period": "2025-12-31"
+        },
+        {
+          "accession": "MOPS-2330-2023-Q4",
+          "url": "https://mopsov.twse.com.tw/server-java/FileDownLoad?functionName=t164sb01&step=9&co_id=2330&year=2023&season=4&report_id=C",
+          "date": "2026-10-29",
+          "publication_date_unknown": true,
+          "form": "MOPS annual",
+          "period": "2023-12-31"
+        },
+        {
+          "accession": "MOPS-2330-2021-Q4",
+          "url": "https://mopsov.twse.com.tw/server-java/FileDownLoad?functionName=t164sb01&step=9&co_id=2330&year=2021&season=4&report_id=C",
+          "date": "2026-10-29",
+          "publication_date_unknown": true,
+          "form": "MOPS annual",
+          "period": "2021-12-31"
+        },
+        {
+          "accession": "MOPS-2330-2019-Q4",
+          "url": "https://mopsov.twse.com.tw/server-java/FileDownLoad?functionName=t164sb01&step=9&co_id=2330&year=2019&season=4&report_id=C",
+          "date": "2026-10-29",
+          "publication_date_unknown": true,
+          "form": "MOPS annual",
+          "period": "2019-12-31"
+        },
+        {
+          "accession": "MOPS-2330-2017-Q4",
+          "url": "https://mopsov.twse.com.tw/server-java/FileDownLoad?functionName=t164sb01&step=9&co_id=2330&year=2017&season=4&report_id=C",
+          "date": "2026-10-29",
+          "publication_date_unknown": true,
+          "form": "MOPS annual",
+          "period": "2017-12-31"
+        },
+        {
+          "accession": "MOPS-2330-2015-Q4",
+          "url": "https://mopsov.twse.com.tw/server-java/FileDownLoad?functionName=t164sb01&step=9&co_id=2330&year=2015&season=4&report_id=C",
+          "date": "2026-10-29",
+          "publication_date_unknown": true,
+          "form": "MOPS annual",
+          "period": "2015-12-31"
+        },
+        {
+          "accession": "MOPS-2330-2013-Q4",
+          "url": "https://mopsov.twse.com.tw/server-java/FileDownLoad?functionName=t164sb01&step=9&co_id=2330&year=2013&season=4&report_id=C",
+          "date": "2026-10-29",
+          "publication_date_unknown": true,
+          "form": "MOPS annual",
+          "period": "2013-12-31"
+        },
+        {
+          "accession": "MOPS-2330-2026-Q2",
+          "url": "https://mopsov.twse.com.tw/server-java/FileDownLoad?functionName=t164sb01&step=9&co_id=2330&year=2026&season=2&report_id=C",
+          "date": "2026-10-29",
+          "publication_date_unknown": true,
+          "form": "MOPS interim",
+          "period": "2026-06-30"
+        },
+        {
+          "accession": "MOPS-2330-2026-Q1",
+          "url": "https://mopsov.twse.com.tw/server-java/FileDownLoad?functionName=t164sb01&step=9&co_id=2330&year=2026&season=1&report_id=C",
+          "date": "2026-10-29",
+          "publication_date_unknown": true,
+          "form": "MOPS interim",
+          "period": "2026-03-31"
+        }
+      ],
+      "unavailable_periods": [],
+      "conflicts": [],
+      "excluded_contexts": 2207,
+      "scope": "Taiwan-IFRS consolidated primary statements from MOPS. Entity-wide numeric contexts only; dimensional detail is excluded. Original filing publication times are not verified: retrieval dates are used as conservative knowledge dates, so these observations must not be used for historical point-in-time backtests. TWSE listed companies are supported; TPEx is not yet included."
+    },
+    "validation": {
+      "scope": "Mapped annual core-field coverage and independently reported accounting identities; not full filing completeness",
+      "status": "checks_pass",
+      "checks": [
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2012",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2330-2013-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2013",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2330-2013-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2014",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2330-2015-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2015",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2330-2015-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2016",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2330-2017-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2017",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2330-2017-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2018",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2330-2019-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2019",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2330-2019-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2020",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2330-2021-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2021",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2330-2021-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2022",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2330-2023-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2023",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2330-2023-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2024",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2330-2025-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2025",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2330-2025-Q4"
+          ]
+        }
+      ],
+      "coverage": [
+        {
+          "year": "2012",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2013",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2014",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2015",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2016",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2017",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2018",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2019",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2020",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2021",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2022",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2023",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2024",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2025",
+          "missing_core_fields": []
+        }
+      ],
+      "notes": [
+        "Cash-flow Other residuals are arithmetic constructions, so their reconciliation is not independent evidence of accuracy.",
+        "Coverage of CompanyFacts is not coverage of every custom, dimensional or untagged filing disclosure."
+      ]
+    },
+    "unmapped": 238,
+    "fx": {
+      "base": "USD",
+      "quote": "TWD",
+      "per_usd": 32.53,
+      "usd_per_unit": 0.03074085459575776,
+      "asOf": "2026-10-29T19:49:55.000Z",
+      "fetchedAt": "2026-10-29T19:49:57.128Z",
+      "kind": "market_quote",
+      "source": "Yahoo Finance FX",
+      "source_url": "https://finance.yahoo.com/quote/TWD%3DX/"
+    }
+  },
+  {
+    "symbol": "TWSE:2317",
+    "ms": 486,
+    "currency": "TWD",
+    "fy": "2025",
+    "columns": [
+      "2012",
+      "2013",
+      "2014",
+      "2015",
+      "2016",
+      "2017",
+      "2018",
+      "2019",
+      "2020",
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025",
+      "TTM"
+    ],
+    "quote": {
+      "ticker": "2317.TW",
+      "price": 248,
+      "currency": "TWD",
+      "asOf": "2026-10-29T05:30:05.000Z",
+      "fetchedAt": "2026-10-29T19:49:57.551Z",
+      "source": "Yahoo Finance"
+    },
+    "valuation": {
+      "basis": "FY 2025",
+      "marketCap": null,
+      "ev": null,
+      "pe": 18.507462686567163,
+      "pb": null,
+      "ps": null,
+      "evToSales": null,
+      "evToEbitda": null,
+      "evToEbit": null,
+      "evToPretax": null,
+      "evToFcf": null,
+      "pPretax": null,
+      "pPremiums": null,
+      "evToPremiums": null
+    },
+    "usd_valuation": {
+      "basis": "FY 2025",
+      "marketCap": null,
+      "ev": null,
+      "pe": 18.507462686567163,
+      "pb": null,
+      "ps": null,
+      "evToSales": null,
+      "evToEbitda": null,
+      "evToEbit": null,
+      "evToPretax": null,
+      "evToFcf": null,
+      "pPretax": null,
+      "pPremiums": null,
+      "evToPremiums": null
+    },
+    "current_shares": null,
+    "latest_income": {
+      "revenue": 8103104.763,
+      "cogs": 7604943.727,
+      "gross_profit": 498161.036,
+      "sga": 117232.918,
+      "rd": 121705.158,
+      "other_operating": null,
+      "total_operating_expenses": 238938.076,
+      "operating_income": 259222.96,
+      "interest_income": 31009.643,
+      "interest_expense": null,
+      "net_interest_income": null,
+      "other_nonoperating": 3212.263,
+      "pretax_income": 293444.866,
+      "income_tax": -78410.38,
+      "minority_interest_income": null,
+      "other_nonrecurring": null,
+      "net_income": 189353.852,
+      "preferred_dividends": null,
+      "net_income_discontinued": null,
+      "_nic_raw": null,
+      "eps_basic": 13.61,
+      "eps_diluted": 13.4,
+      "shares_basic": null,
+      "shares_diluted": null,
+      "net_income_continuing": 189353.852,
+      "_net_income_available": 189353.852
+    },
+    "latest_balance": {
+      "cash": 1016439.967,
+      "short_term_investments": null,
+      "accounts_receivable": 1151546.008,
+      "inventory": 1095574.319,
+      "other_current_assets": 1651.76,
+      "total_current_assets": 3961827.499,
+      "investments": null,
+      "ppe_gross": null,
+      "accumulated_depreciation": null,
+      "ppe": 543392.999,
+      "goodwill": null,
+      "intangible_assets": null,
+      "other_assets": 23612.352,
+      "total_assets": 5104672.223,
+      "accounts_payable": 1310148.512,
+      "tax_payable": 42174.938,
+      "current_accrued_liabilities": null,
+      "short_term_debt": 41191.749,
+      "current_deferred_revenue": null,
+      "current_deferred_tax_liability": null,
+      "current_capital_leases": 9226.565,
+      "other_current_liabilities": null,
+      "total_current_liabilities": 2710848.518,
+      "long_term_debt": 26448.598,
+      "noncurrent_deferred_revenue": null,
+      "noncurrent_capital_leases": 30740.229,
+      "pension_liabilities": null,
+      "other_lt_liabilities": 19320.096,
+      "total_noncurrent_liabilities": 423060.35,
+      "total_liabilities": 3133908.868,
+      "retained_earnings": 1459373.48,
+      "paid_in_capital": 121230.069,
+      "common_stock": 139642.223,
+      "aoci": null,
+      "preferred_stock": null,
+      "other_equity": 52541.049,
+      "minority_interest": 197991.728,
+      "treasury_stock": -15.194,
+      "shareholders_equity": 1772771.627,
+      "total_liabilities_equity": 5104672.223
+    },
+    "latest_cashflow": {
+      "cf_net_income": 215034.486,
+      "cf_dna": 97753.037,
+      "cf_working_capital": -81745.065,
+      "cf_deferred_tax": null,
+      "cf_stock_comp": null,
+      "cf_other_operating": -4189.984,
+      "cash_from_operations": 226852.474,
+      "cf_capex": -153154.904,
+      "cf_acquisitions": null,
+      "cf_investments": null,
+      "cf_other_investing": -151534.368,
+      "cash_from_investing": -304689.272,
+      "cf_net_preferred": null,
+      "cf_net_stock": null,
+      "cf_debt_net": 5269.979,
+      "cf_dividends": -106731.197,
+      "cf_other_financing": 271408.032,
+      "cash_from_financing": 169946.814,
+      "cf_forex": -12778.142,
+      "free_cash_flow": 53089.335
+    },
+    "coverage": {
+      "status": "available",
+      "sources": [
+        {
+          "accession": "MOPS-2317-2025-Q4",
+          "url": "https://mopsov.twse.com.tw/server-java/FileDownLoad?functionName=t164sb01&step=9&co_id=2317&year=2025&season=4&report_id=C",
+          "date": "2026-10-29",
+          "publication_date_unknown": true,
+          "form": "MOPS annual",
+          "period": "2025-12-31"
+        },
+        {
+          "accession": "MOPS-2317-2023-Q4",
+          "url": "https://mopsov.twse.com.tw/server-java/FileDownLoad?functionName=t164sb01&step=9&co_id=2317&year=2023&season=4&report_id=C",
+          "date": "2026-10-29",
+          "publication_date_unknown": true,
+          "form": "MOPS annual",
+          "period": "2023-12-31"
+        },
+        {
+          "accession": "MOPS-2317-2021-Q4",
+          "url": "https://mopsov.twse.com.tw/server-java/FileDownLoad?functionName=t164sb01&step=9&co_id=2317&year=2021&season=4&report_id=C",
+          "date": "2026-10-29",
+          "publication_date_unknown": true,
+          "form": "MOPS annual",
+          "period": "2021-12-31"
+        },
+        {
+          "accession": "MOPS-2317-2019-Q4",
+          "url": "https://mopsov.twse.com.tw/server-java/FileDownLoad?functionName=t164sb01&step=9&co_id=2317&year=2019&season=4&report_id=C",
+          "date": "2026-10-29",
+          "publication_date_unknown": true,
+          "form": "MOPS annual",
+          "period": "2019-12-31"
+        },
+        {
+          "accession": "MOPS-2317-2017-Q4",
+          "url": "https://mopsov.twse.com.tw/server-java/FileDownLoad?functionName=t164sb01&step=9&co_id=2317&year=2017&season=4&report_id=C",
+          "date": "2026-10-29",
+          "publication_date_unknown": true,
+          "form": "MOPS annual",
+          "period": "2017-12-31"
+        },
+        {
+          "accession": "MOPS-2317-2015-Q4",
+          "url": "https://mopsov.twse.com.tw/server-java/FileDownLoad?functionName=t164sb01&step=9&co_id=2317&year=2015&season=4&report_id=C",
+          "date": "2026-10-29",
+          "publication_date_unknown": true,
+          "form": "MOPS annual",
+          "period": "2015-12-31"
+        },
+        {
+          "accession": "MOPS-2317-2013-Q4",
+          "url": "https://mopsov.twse.com.tw/server-java/FileDownLoad?functionName=t164sb01&step=9&co_id=2317&year=2013&season=4&report_id=C",
+          "date": "2026-10-29",
+          "publication_date_unknown": true,
+          "form": "MOPS annual",
+          "period": "2013-12-31"
+        },
+        {
+          "accession": "MOPS-2317-2026-Q2",
+          "url": "https://mopsov.twse.com.tw/server-java/FileDownLoad?functionName=t164sb01&step=9&co_id=2317&year=2026&season=2&report_id=C",
+          "date": "2026-10-29",
+          "publication_date_unknown": true,
+          "form": "MOPS interim",
+          "period": "2026-06-30"
+        },
+        {
+          "accession": "MOPS-2317-2026-Q1",
+          "url": "https://mopsov.twse.com.tw/server-java/FileDownLoad?functionName=t164sb01&step=9&co_id=2317&year=2026&season=1&report_id=C",
+          "date": "2026-10-29",
+          "publication_date_unknown": true,
+          "form": "MOPS interim",
+          "period": "2026-03-31"
+        }
+      ],
+      "unavailable_periods": [],
+      "conflicts": [],
+      "excluded_contexts": 2214,
+      "scope": "Taiwan-IFRS consolidated primary statements from MOPS. Entity-wide numeric contexts only; dimensional detail is excluded. Original filing publication times are not verified: retrieval dates are used as conservative knowledge dates, so these observations must not be used for historical point-in-time backtests. TWSE listed companies are supported; TPEx is not yet included."
+    },
+    "validation": {
+      "scope": "Mapped annual core-field coverage and independently reported accounting identities; not full filing completeness",
+      "status": "partial",
+      "checks": [
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2012",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2317-2013-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2013",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2317-2013-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2014",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2317-2015-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2015",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2317-2015-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2016",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2317-2017-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2017",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2317-2017-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2018",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2317-2019-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2019",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2317-2019-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2020",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2317-2021-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2021",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2317-2021-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2022",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2317-2023-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2023",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2317-2023-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2024",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2317-2025-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2025",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2317-2025-Q4"
+          ]
+        }
+      ],
+      "coverage": [
+        {
+          "year": "2012",
+          "missing_core_fields": [
+            "eps_diluted"
+          ]
+        },
+        {
+          "year": "2013",
+          "missing_core_fields": [
+            "eps_diluted"
+          ]
+        },
+        {
+          "year": "2014",
+          "missing_core_fields": [
+            "eps_diluted"
+          ]
+        },
+        {
+          "year": "2015",
+          "missing_core_fields": [
+            "eps_diluted"
+          ]
+        },
+        {
+          "year": "2016",
+          "missing_core_fields": [
+            "eps_diluted"
+          ]
+        },
+        {
+          "year": "2017",
+          "missing_core_fields": [
+            "eps_diluted"
+          ]
+        },
+        {
+          "year": "2018",
+          "missing_core_fields": [
+            "eps_diluted"
+          ]
+        },
+        {
+          "year": "2019",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2020",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2021",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2022",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2023",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2024",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2025",
+          "missing_core_fields": []
+        }
+      ],
+      "notes": [
+        "Cash-flow Other residuals are arithmetic constructions, so their reconciliation is not independent evidence of accuracy.",
+        "Coverage of CompanyFacts is not coverage of every custom, dimensional or untagged filing disclosure."
+      ]
+    },
+    "unmapped": 221,
+    "fx": {
+      "base": "USD",
+      "quote": "TWD",
+      "per_usd": 32.53,
+      "usd_per_unit": 0.03074085459575776,
+      "asOf": "2026-10-29T19:49:55.000Z",
+      "fetchedAt": "2026-10-29T19:49:57.128Z",
+      "kind": "market_quote",
+      "source": "Yahoo Finance FX",
+      "source_url": "https://finance.yahoo.com/quote/TWD%3DX/"
+    }
+  },
+  {
+    "symbol": "TWSE:2303",
+    "ms": 638,
+    "currency": "TWD",
+    "fy": "2025",
+    "columns": [
+      "2012",
+      "2013",
+      "2014",
+      "2015",
+      "2016",
+      "2017",
+      "2018",
+      "2019",
+      "2020",
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025",
+      "TTM"
+    ],
+    "quote": {
+      "ticker": "2303.TW",
+      "price": 115.5,
+      "currency": "TWD",
+      "asOf": "2026-10-29T05:30:03.000Z",
+      "fetchedAt": "2026-10-29T19:49:58.073Z",
+      "source": "Yahoo Finance"
+    },
+    "valuation": {
+      "basis": "FY 2025",
+      "marketCap": null,
+      "ev": null,
+      "pe": 34.894259818731115,
+      "pb": null,
+      "ps": null,
+      "evToSales": null,
+      "evToEbitda": null,
+      "evToEbit": null,
+      "evToPretax": null,
+      "evToFcf": null,
+      "pPretax": null,
+      "pPremiums": null,
+      "evToPremiums": null
+    },
+    "usd_valuation": {
+      "basis": "FY 2025",
+      "marketCap": null,
+      "ev": null,
+      "pe": 34.894259818731115,
+      "pb": null,
+      "ps": null,
+      "evToSales": null,
+      "evToEbitda": null,
+      "evToEbit": null,
+      "evToPretax": null,
+      "evToFcf": null,
+      "pPretax": null,
+      "pPremiums": null,
+      "evToPremiums": null
+    },
+    "current_shares": null,
+    "latest_income": {
+      "revenue": 237553.199,
+      "cogs": 168646.7,
+      "gross_profit": 68906.499,
+      "sga": 9225.346,
+      "rd": 17724.752,
+      "other_operating": null,
+      "total_operating_expenses": 26947.69,
+      "operating_income": 43948.688,
+      "interest_income": 2278.551,
+      "interest_expense": null,
+      "net_interest_income": null,
+      "other_nonoperating": 3420.467,
+      "pretax_income": 49647.706,
+      "income_tax": -8112.958,
+      "minority_interest_income": null,
+      "other_nonrecurring": null,
+      "net_income": 41716.249,
+      "preferred_dividends": null,
+      "net_income_discontinued": null,
+      "_nic_raw": null,
+      "eps_basic": 3.34,
+      "eps_diluted": 3.31,
+      "shares_basic": null,
+      "shares_diluted": null,
+      "net_income_continuing": 41716.249,
+      "_net_income_available": 41716.249
+    },
+    "latest_balance": {
+      "cash": 110660.052,
+      "short_term_investments": null,
+      "accounts_receivable": 30772.159,
+      "inventory": 37228.383,
+      "other_current_assets": 1190.237,
+      "total_current_assets": 204783.258,
+      "investments": null,
+      "ppe_gross": null,
+      "accumulated_depreciation": null,
+      "ppe": 271395.296,
+      "goodwill": null,
+      "intangible_assets": null,
+      "other_assets": 6703.288,
+      "total_assets": 578996.009,
+      "accounts_payable": 9169.828,
+      "tax_payable": 3582.275,
+      "current_accrued_liabilities": null,
+      "short_term_debt": 19188.041,
+      "current_deferred_revenue": null,
+      "current_deferred_tax_liability": null,
+      "current_capital_leases": 624.825,
+      "other_current_liabilities": null,
+      "total_current_liabilities": 87598.137,
+      "long_term_debt": 11300.91,
+      "noncurrent_deferred_revenue": null,
+      "noncurrent_capital_leases": 5376.021,
+      "pension_liabilities": 866.219,
+      "other_lt_liabilities": 47084.617,
+      "total_noncurrent_liabilities": 111542.432,
+      "total_liabilities": 199140.569,
+      "retained_earnings": 232882.973,
+      "paid_in_capital": 5200.426,
+      "common_stock": 125881.563,
+      "aoci": null,
+      "preferred_stock": null,
+      "other_equity": 15803.303,
+      "minority_interest": 87.175,
+      "treasury_stock": 0,
+      "shareholders_equity": 379768.265,
+      "total_liabilities_equity": 578996.009
+    },
+    "latest_cashflow": {
+      "cf_net_income": 41534.748,
+      "cf_dna": 59258.917,
+      "cf_working_capital": 2109.133,
+      "cf_deferred_tax": null,
+      "cf_stock_comp": null,
+      "cf_other_operating": -3038.611,
+      "cash_from_operations": 99864.187,
+      "cf_capex": -47616.059,
+      "cf_acquisitions": null,
+      "cf_investments": null,
+      "cf_other_investing": -5538.373,
+      "cash_from_investing": -53154.432,
+      "cf_net_preferred": null,
+      "cf_net_stock": null,
+      "cf_debt_net": -1705.266,
+      "cf_dividends": -35784.383,
+      "cf_other_financing": -1714.21,
+      "cash_from_financing": -39203.859,
+      "cf_forex": -1846.07,
+      "free_cash_flow": 52119.291
+    },
+    "coverage": {
+      "status": "available",
+      "sources": [
+        {
+          "accession": "MOPS-2303-2025-Q4",
+          "url": "https://mopsov.twse.com.tw/server-java/FileDownLoad?functionName=t164sb01&step=9&co_id=2303&year=2025&season=4&report_id=C",
+          "date": "2026-10-29",
+          "publication_date_unknown": true,
+          "form": "MOPS annual",
+          "period": "2025-12-31"
+        },
+        {
+          "accession": "MOPS-2303-2023-Q4",
+          "url": "https://mopsov.twse.com.tw/server-java/FileDownLoad?functionName=t164sb01&step=9&co_id=2303&year=2023&season=4&report_id=C",
+          "date": "2026-10-29",
+          "publication_date_unknown": true,
+          "form": "MOPS annual",
+          "period": "2023-12-31"
+        },
+        {
+          "accession": "MOPS-2303-2021-Q4",
+          "url": "https://mopsov.twse.com.tw/server-java/FileDownLoad?functionName=t164sb01&step=9&co_id=2303&year=2021&season=4&report_id=C",
+          "date": "2026-10-29",
+          "publication_date_unknown": true,
+          "form": "MOPS annual",
+          "period": "2021-12-31"
+        },
+        {
+          "accession": "MOPS-2303-2019-Q4",
+          "url": "https://mopsov.twse.com.tw/server-java/FileDownLoad?functionName=t164sb01&step=9&co_id=2303&year=2019&season=4&report_id=C",
+          "date": "2026-10-29",
+          "publication_date_unknown": true,
+          "form": "MOPS annual",
+          "period": "2019-12-31"
+        },
+        {
+          "accession": "MOPS-2303-2017-Q4",
+          "url": "https://mopsov.twse.com.tw/server-java/FileDownLoad?functionName=t164sb01&step=9&co_id=2303&year=2017&season=4&report_id=C",
+          "date": "2026-10-29",
+          "publication_date_unknown": true,
+          "form": "MOPS annual",
+          "period": "2017-12-31"
+        },
+        {
+          "accession": "MOPS-2303-2015-Q4",
+          "url": "https://mopsov.twse.com.tw/server-java/FileDownLoad?functionName=t164sb01&step=9&co_id=2303&year=2015&season=4&report_id=C",
+          "date": "2026-10-29",
+          "publication_date_unknown": true,
+          "form": "MOPS annual",
+          "period": "2015-12-31"
+        },
+        {
+          "accession": "MOPS-2303-2013-Q4",
+          "url": "https://mopsov.twse.com.tw/server-java/FileDownLoad?functionName=t164sb01&step=9&co_id=2303&year=2013&season=4&report_id=C",
+          "date": "2026-10-29",
+          "publication_date_unknown": true,
+          "form": "MOPS annual",
+          "period": "2013-12-31"
+        },
+        {
+          "accession": "MOPS-2303-2026-Q2",
+          "url": "https://mopsov.twse.com.tw/server-java/FileDownLoad?functionName=t164sb01&step=9&co_id=2303&year=2026&season=2&report_id=C",
+          "date": "2026-10-29",
+          "publication_date_unknown": true,
+          "form": "MOPS interim",
+          "period": "2026-06-30"
+        },
+        {
+          "accession": "MOPS-2303-2026-Q1",
+          "url": "https://mopsov.twse.com.tw/server-java/FileDownLoad?functionName=t164sb01&step=9&co_id=2303&year=2026&season=1&report_id=C",
+          "date": "2026-10-29",
+          "publication_date_unknown": true,
+          "form": "MOPS interim",
+          "period": "2026-03-31"
+        }
+      ],
+      "unavailable_periods": [],
+      "conflicts": [],
+      "excluded_contexts": 2208,
+      "scope": "Taiwan-IFRS consolidated primary statements from MOPS. Entity-wide numeric contexts only; dimensional detail is excluded. Original filing publication times are not verified: retrieval dates are used as conservative knowledge dates, so these observations must not be used for historical point-in-time backtests. TWSE listed companies are supported; TPEx is not yet included."
+    },
+    "validation": {
+      "scope": "Mapped annual core-field coverage and independently reported accounting identities; not full filing completeness",
+      "status": "checks_pass",
+      "checks": [
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2012",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2303-2013-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2013",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2303-2013-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2014",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2303-2015-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2015",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2303-2015-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2016",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2303-2017-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2017",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2303-2017-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2018",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2303-2019-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2019",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2303-2019-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2020",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2303-2021-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2021",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2303-2021-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2022",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2303-2023-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2023",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2303-2023-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2024",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2303-2025-Q4"
+          ]
+        },
+        {
+          "check": "Reported assets = reported liabilities + reported total equity",
+          "year": "2025",
+          "status": "pass",
+          "difference": 0,
+          "currency": "TWD",
+          "source_accessions": [
+            "MOPS-2303-2025-Q4"
+          ]
+        }
+      ],
+      "coverage": [
+        {
+          "year": "2012",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2013",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2014",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2015",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2016",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2017",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2018",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2019",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2020",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2021",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2022",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2023",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2024",
+          "missing_core_fields": []
+        },
+        {
+          "year": "2025",
+          "missing_core_fields": []
+        }
+      ],
+      "notes": [
+        "Cash-flow Other residuals are arithmetic constructions, so their reconciliation is not independent evidence of accuracy.",
+        "Coverage of CompanyFacts is not coverage of every custom, dimensional or untagged filing disclosure."
+      ]
+    },
+    "unmapped": 243,
+    "fx": {
+      "base": "USD",
+      "quote": "TWD",
+      "per_usd": 32.53,
+      "usd_per_unit": 0.03074085459575776,
+      "asOf": "2026-10-29T19:49:55.000Z",
+      "fetchedAt": "2026-10-29T19:49:57.128Z",
+      "kind": "market_quote",
+      "source": "Yahoo Finance FX",
+      "source_url": "https://finance.yahoo.com/quote/TWD%3DX/"
+    }
+  }
+]

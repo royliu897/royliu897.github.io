@@ -130,12 +130,12 @@ $('report-upload').onchange=async e=>{const ticker=symbol;try{const f=e.target.f
 root.classList.toggle('compact',Boolean(state.compact));$('density').setAttribute('aria-pressed',String(Boolean(state.compact)));width(Number(state.noteWidth)||400,false);$('workspace').classList.toggle('tools-hidden',state.notesVisible===false);$('notes-toggle').setAttribute('aria-expanded',String(state.notesVisible!==false));loadNote();loadModel();series();loadReport();if(blocked)status('Saved workspace could not be read. Existing storage has not been overwritten.',true);
 
 function reviewMode(view){state.view=view;document.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===view)));$('review-fields').hidden=view!=='detailed';$('research').hidden=view!=='detailed';document.dispatchEvent(new Event('research-view'));if(view==='detailed'){$('research').open=true;$('notes-panel').open=true;setNotes(true);}persist();}
-document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>reviewMode(b.dataset.view));reviewMode(state.view||'quick');
+document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>reviewMode(b.dataset.view));reviewMode(['quick','detailed'].includes(state.view)?state.view:'quick');
 
 
 let resizeTimer;window.addEventListener("resize",()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>width(Number(state.noteWidth)||400,false),150);});
 
-import("./research.mjs?v=company14").then(()=>import("./stages.mjs?v=company14")).catch(()=>status("Research library could not load. Reload to retry.",true));
+import("./research.mjs?v=company14").then(()=>import("./stages.mjs?v=standalone16")).catch(()=>status("Research library could not load. Reload to retry.",true));
 
 
 
