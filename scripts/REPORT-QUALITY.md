@@ -74,3 +74,27 @@ million at February 2, 2019 is captioned "Domestic commercial paper and other"
 in the cash-and-cash-equivalents footnote of the 2020 10-K, not as borrowing.
 The primary-statement debt total excludes that cash investment. A raw concept
 name alone is insufficient evidence of a liability in this filing.
+
+
+Automatic CAGR validation
+-------------------------
+Run `node scripts/report-frontend/audit-statistics.mjs PAYLOAD_DIRECTORY --output
+review.json --strict` after installing the frontend build dependencies. It
+executes the statistics functions extracted from the actual compiled frontend
+and compares each displayed CAGR with independently calculated endpoint
+eligibility and growth. Positive eligible endpoints with a blank result, an
+incorrect percentage, or a displayed rate with invalid endpoints produce a
+nonzero exit in strict mode. Missing, unresolved and nonpositive inputs remain
+separate categories. The audit uses saved payloads and makes no provider calls.
+
+The default report UI retains the dash; clicking a missing CAGR shows the exact
+start/end values and a short reason. Gap's five-year EPS and FCF start from
+negative values in the period ending 2021, so both are mathematically ineligible
+under the existing CAGR convention. Their ten-year bases are positive.
+
+`.github/workflows/report-checks.yml` runs the frozen source and calculation
+regressions automatically on report-related pushes and pull requests. It does
+not fetch the full stock universe, and the existing Pages deployment remains
+separate. The saved-payload sweep supplements these regression tests; neither
+is a claim of complete filing coverage. Missing source endpoints still require
+retrieval/mapping work, rather than assigning zero or shifting the lookback.

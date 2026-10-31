@@ -1,10 +1,11 @@
-import {createShareBasisView} from './share-basis-view.mjs?v=162d5e719d39';
-import {valuationKeys} from './native-valuation.mjs?v=162d5e719d39';
-import {missingValueDefinition} from './value-availability.mjs?v=162d5e719d39';
-import {createCurrencyDisplay} from './usd-display.mjs?v=162d5e719d39';
-import {createUnmappedView} from './unmapped-view.mjs?v=162d5e719d39';
-import {resolveDefinition,definitionById,definitionTokens} from './definition-graph.mjs?v=162d5e719d39';
-export {statisticFormula} from './definition-graph.mjs?v=162d5e719d39';
+import {cagrAssessment,cagrEndpointText,cagrBlankDefinition} from './cagr-availability.mjs?v=9e2620bf675f';
+import {createShareBasisView} from './share-basis-view.mjs?v=9e2620bf675f';
+import {valuationKeys} from './native-valuation.mjs?v=9e2620bf675f';
+import {missingValueDefinition} from './value-availability.mjs?v=9e2620bf675f';
+import {createCurrencyDisplay} from './usd-display.mjs?v=9e2620bf675f';
+import {createUnmappedView} from './unmapped-view.mjs?v=9e2620bf675f';
+import {resolveDefinition,definitionById,definitionTokens} from './definition-graph.mjs?v=9e2620bf675f';
+export {statisticFormula} from './definition-graph.mjs?v=9e2620bf675f';
 export function createReportFeatures(React){
  const h=React.createElement,ShareBasis=createShareBasisView(React);
  const chain=[];
@@ -59,7 +60,13 @@ export function createReportFeatures(React){
  function MetricLabel({label,group='',metricKey,data,valuation,basis}){
   const valuationKey=valuationKeys[label],valuationBasis=valuation?.bases?.[valuationKey];if(group==='Valuation'&&valuationBasis)group+=' · '+valuationBasis;
 
-  return h('button',{type:'button',className:'report-stat-label','data-definition-label':label,'data-definition-group':group,'data-definition-key':metricKey,'data-definition-reason':valuation?.reasons?.[valuationKey]||basis,'data-company-type':data?.company_type,'data-definition-period':data?.columns?.some(c=>c.includes('Q'))?'quarterly':'annual','aria-haspopup':'dialog','aria-expanded':false,title:`Definition: ${label}`},label);
+  const cagr=cagrAssessment(data,label,group),cagrReason=cagr&&cagr.status!=='available'?[cagr.reason,cagrEndpointText(cagr)].filter(Boolean).join(' '):null;
+  return h('button',{type:'button',className:'report-stat-label','data-definition-label':label,'data-definition-group':group,'data-definition-key':metricKey,'data-definition-reason':valuation?.reasons?.[valuationKey]||cagrReason||basis,'data-company-type':data?.company_type,'data-definition-period':data?.columns?.some(c=>c.includes('Q'))?'quarterly':'annual','aria-haspopup':'dialog','aria-expanded':false,title:`Definition: ${label}`},label);
+ }
+ function StatisticValue({item,group,data}){
+  const info=item.value==='—'?cagrAssessment(data,item.label,group):null;
+  if(!info)return item.value;
+  return h('button',{type:'button',className:'report-missing-value','aria-haspopup':'dialog','aria-expanded':false,'aria-label':item.label+' '+group+': why this value is blank',title:'Why this value is blank',onClick:event=>{const anchor=event.currentTarget;if(chain[0]?.anchor===anchor){closeFrom(0,true);return;}spawn(cagrBlankDefinition(info),anchor);}},'—');
  }
  function MissingValue({row,period}){return h('button',{type:'button',className:'report-missing-value','aria-label':row.label+' '+period+': why this value is blank',title:'Why this value is blank',onClick:event=>{const anchor=event.currentTarget;if(chain[0]?.anchor===anchor){closeFrom(0,true);return;}spawn(missingValueDefinition(row,period),anchor);}},'—');}
  function ThemeToggle(){
@@ -81,5 +88,5 @@ export function createReportFeatures(React){
    h('span',{className:'font-semibold'},'Company Notes: '),h('button',{type:'button',className:'report-notes-toggle',onClick:()=>setOpen(!open),'aria-expanded':open},open?'Hide ▴':'Show ▾'),
    open&&h('div',null,h('textarea',{'aria-label':'Company notes',className:'report-notes-input',value,onChange:update,placeholder:'Write your business description or research notes…',rows:4}),h('p',{className:'report-notes-status',role:'status'},failed?'Could not save in this browser. Copy your notes before leaving.':'Saved in this browser only.')));
  }
- return {MetricLabel,MissingValue,ThemeToggle,CompanyNotes,UnmappedView:createUnmappedView(React),useCurrencyDisplay:createCurrencyDisplay(React)};
+ return {StatisticValue,MetricLabel,MissingValue,ThemeToggle,CompanyNotes,UnmappedView:createUnmappedView(React),useCurrencyDisplay:createCurrencyDisplay(React)};
 }

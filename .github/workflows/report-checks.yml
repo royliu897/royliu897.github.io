@@ -1,0 +1,27 @@
+name: Report regression checks
+
+on:
+  push:
+    branches: [main]
+    paths: ['assets/report/**', 'report.html', 'scripts/**', 'tests/**', '.github/workflows/report-checks.yml']
+  pull_request:
+    paths: ['assets/report/**', 'report.html', 'scripts/**', 'tests/**', '.github/workflows/report-checks.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  report-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: scripts/report-frontend/package-lock.json
+      - run: npm ci --prefix scripts/report-frontend
+      - run: npm run build --prefix scripts/report-frontend
+      - run: git diff --exit-code -- assets/report docs/report-frontend-provenance.json report.html
+      - run: node --test tests/*.mjs

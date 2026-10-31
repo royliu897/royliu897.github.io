@@ -1,4 +1,4 @@
-import {validReportDate} from './report-dates.mjs?v=162d5e719d39';
+import {validReportDate} from './report-dates.mjs?v=9e2620bf675f';
 const patterns={TWSE:/^TWSE:\d{4,6}$/,KRX:/^KRX:\d{6}$/};
 function identity(symbol,entry,data){
  const [exchange,ticker]=String(symbol).split(':');
