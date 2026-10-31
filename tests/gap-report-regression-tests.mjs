@@ -11,6 +11,9 @@ assert.equal(reportValuation(price.price,unfilled).ev,null,'Reproduce the missin
 assert.equal(unfilled.roic_series.find(p=>p.year==='2026')?.roic,null,'Unresolved recent returns remain visible as gaps instead of truncating at 2020');
 const f=toReportPayload(mergePrimaryFilings(raw,primary,record),record,null,'annual','NYSE:GAP').financials,v=reportValuation(price.price,f),row=key=>[...f.income_statement,...f.balance_sheet,...f.cash_flow].find(r=>r.key===key);
 assert.equal(row('total_debt').values['2026'],1492);assert.equal(row('total_debt').values.TTM,1493);assert.equal(row('total_debt').provenance.TTM.end,'2026-08-01');
+assert.ok(raw.facts.CommercialPaper.units.USD.some(p=>p.end==='2019-02-02'&&p.val===6e6),'Gap reports cash-held commercial paper using this otherwise debt-like tag');
+assert.equal(row('total_debt').values['2019'],1249,'A cash-investment footnote must not be added to primary statement debt');
+assert.equal(row('short_term_debt').values['2019'],undefined,'Do not display cash-held paper as short-term borrowing');
 assert.equal(row('cash').values.TTM,2103);assert.equal(row('total_debt').provenance['2026'].source_url,'https://www.sec.gov/Archives/edgar/data/39911/000162828026059345/gap-20260801.htm');
 assert.ok(Math.abs(v.ev-(v.marketCap+1493-2103))<1e-8);
 for(const key of ['pe','pb','ps','evToSales','evToEbitda','evToEbit','evToPretax','evToFcf','fcfYield'])assert.ok(Number.isFinite(v[key]),'Gap '+key+' has supported inputs and must be displayed');

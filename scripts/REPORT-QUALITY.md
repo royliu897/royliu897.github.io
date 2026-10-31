@@ -68,3 +68,9 @@ complete coverage of all searchable companies.
 ROIC calendar tests also retain unresolved trailing years as null points, so an
 old last available value cannot silently appear to be the end of current history.
 Missing years are not interpolated or joined across.
+
+The Gap fixture also checks a source-scope trap: `CommercialPaper` of USD 6
+million at February 2, 2019 is captioned "Domestic commercial paper and other"
+in the cash-and-cash-equivalents footnote of the 2020 10-K, not as borrowing.
+The primary-statement debt total excludes that cash investment. A raw concept
+name alone is insufficient evidence of a liability in this filing.
