@@ -1,11 +1,11 @@
-import {cagrAssessment,cagrEndpointText,cagrBlankDefinition} from './cagr-availability.mjs?v=9e2620bf675f';
-import {createShareBasisView} from './share-basis-view.mjs?v=9e2620bf675f';
-import {valuationKeys} from './native-valuation.mjs?v=9e2620bf675f';
-import {missingValueDefinition} from './value-availability.mjs?v=9e2620bf675f';
-import {createCurrencyDisplay} from './usd-display.mjs?v=9e2620bf675f';
-import {createUnmappedView} from './unmapped-view.mjs?v=9e2620bf675f';
-import {resolveDefinition,definitionById,definitionTokens} from './definition-graph.mjs?v=9e2620bf675f';
-export {statisticFormula} from './definition-graph.mjs?v=9e2620bf675f';
+import {cagrAssessment,cagrEndpointText,cagrBlankDefinition} from './cagr-availability.mjs?v=fba1821c6123';
+import {createShareBasisView} from './share-basis-view.mjs?v=fba1821c6123';
+import {valuationKeys} from './native-valuation.mjs?v=fba1821c6123';
+import {missingValueDefinition} from './value-availability.mjs?v=fba1821c6123';
+import {createCurrencyDisplay} from './usd-display.mjs?v=fba1821c6123';
+import {createUnmappedView} from './unmapped-view.mjs?v=fba1821c6123';
+import {resolveDefinition,definitionById,definitionTokens} from './definition-graph.mjs?v=fba1821c6123';
+export {statisticFormula} from './definition-graph.mjs?v=fba1821c6123';
 export function createReportFeatures(React){
  const h=React.createElement,ShareBasis=createShareBasisView(React);
  const chain=[];

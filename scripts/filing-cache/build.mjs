@@ -1,3 +1,4 @@
+import {INGESTION_VERSION} from '../../sec-worker/primary-ingestion-version.mjs';
 import {readdir,readFile,mkdir,writeFile,rename,access} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {appendCriticalStatementFacts} from './critical-statements.mjs';
@@ -32,7 +33,7 @@ for(const cik of await readdir(cacheRoot)){
  }}catch(error){if(error.code==='ENOENT')report.push({cik,status:'review_not_applied',reason:'Registered legacy source evidence is absent from this partial offline cache'});else throw error;}
 
  inventories.sort((a,b)=>a.filing.date.localeCompare(b.filing.date));
- const result=compilePrimaryFilings(inventories,record);
+ const result=compilePrimaryFilings(inventories,record);result.ingestion_version=INGESTION_VERSION;
  appendCriticalStatementFacts(result,inventories);
 
  securityModels.sort((a,b)=>a.asOf.localeCompare(b.asOf));

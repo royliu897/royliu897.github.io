@@ -14,7 +14,7 @@ export function criticalStatementFacts(inv){
  }
  const groups=new Map();for(const p of monetary){const id=p.end+'|'+p.unit;if(!groups.has(id))groups.set(id,[]);groups.get(id).push(p);}
  for(const rawPoints of groups.values()){
-  const points=rawPoints.filter(p=>p.namespace==='us-gaap'&&/^https?:\/\/fasb.org\/us-gaap\//.test(p.namespace_uri||''));
+  const points=rawPoints.filter(p=>p.namespace==='us-gaap'&&/^https?:\/\/(?:fasb\.org|xbrl\.us)\/us-gaap\//.test(p.namespace_uri||''));
   if(points.some(p=>p.name==='DebtLongtermAndShorttermCombinedAmount'||p.name==='LongTermDebt'&&/^(?:total)?debt$/.test(clean(p.label))))continue;
   const current=unique(points.filter(p=>debtCurrent.has(p.name))),long=unique(points.filter(p=>debtLong.has(p.name))),whole=unique(points.filter(p=>debtWhole.has(p.name)));
   const borrowingPoints=points.filter(p=>p.name==='ShortTermBorrowings'||p.name==='OtherShortTermBorrowings'&&/^shorttermborrowings/.test(clean(p.label))||p.name==='NotesAndLoansPayable'&&p.balance_classification==='current_liabilities'&&/^(?:loansandnotespayable|notesandloanspayable)$/.test(clean(p.label)));

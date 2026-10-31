@@ -1,9 +1,9 @@
-import {mergeClassFacts} from './filing-supplement.mjs?v=9e2620bf675f';
+import {mergeClassFacts} from './filing-supplement.mjs?v=fba1821c6123';
 // Offline primary-statement compiler and browser-side cache loader. No ticker
 // exceptions, numerical overrides, network parsing, or automatic AI mappings.
-import {concepts} from './concept-registry.mjs?v=9e2620bf675f';
-import {companyTemplate,templateConcepts,preferConceptTotals} from './statement-source-policy.mjs?v=9e2620bf675f';
-import schema from './row-schema.mjs?v=9e2620bf675f';
+import {concepts} from './concept-registry.mjs?v=fba1821c6123';
+import {companyTemplate,templateConcepts,preferConceptTotals} from './statement-source-policy.mjs?v=fba1821c6123';
+import schema from './row-schema.mjs?v=fba1821c6123';
 const days=p=>(Date.parse(p.end)-Date.parse(p.start))/86400000;
 const standard=p=>p.namespace==='us-gaap'&&/^https?:\/\/(?:fasb\.org|xbrl\.us)\//.test(p.namespace_uri||'')||p.namespace==='ifrs-full'&&/^https?:\/\/xbrl\.(?:ifrs|iasb)\.org\/taxonomy\//.test(p.namespace_uri||'');
 const validDate=s=>/^\d{4}-\d{2}-\d{2}$/.test(s||'')&&Number.isFinite(Date.parse(s));
@@ -30,7 +30,7 @@ export function compilePrimaryFilings(inventories,record){
  for(const inv of inventories){
   if(String(Number(inv.cik))!==String(Number(record.cik)))throw Error('Primary inventory issuer mismatch.');
   const filing=inv.filing;
-  if(!/^\d{10}-\d{2}-\d{6}$/.test(filing.accession||'')||!validDate(filing.date)||!validDate(filing.period)||!/^https:\/\/www\.sec\.gov\/Archives\/edgar\/data\//.test(filing.url||'')||!/^10-[KQ](?:\/A)?$/.test(filing.form||''))throw Error('Invalid primary filing metadata.');
+  if(!/^\d{10}-\d{2}-\d{6}$/.test(filing.accession||'')||!validDate(filing.date)||!validDate(filing.period)||!/^https:\/\/www\.sec\.gov\/Archives\/edgar\/data\//.test(filing.url||'')||!/^(?:10-[KQ]|20-F|40-F)(?:\/A)?$/.test(filing.form||''))throw Error('Invalid primary filing metadata.');
   if(!filing.url.startsWith('https://www.sec.gov/Archives/edgar/data/'+Number(record.cik)+'/'+filing.accession.replaceAll('-','')+'/'))throw Error('Primary source URL issuer/accession mismatch.');
   sources.push({...filing,statement_evidence:inv.statement_evidence,source_sha256:inv.source_sha256,selected_statements:inv.selected_statements});
   for(const [key,table]of keys){

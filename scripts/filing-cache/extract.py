@@ -109,7 +109,7 @@ def extract(raw,metadata):
   elif {'EarningsPerShareBasic','EarningsPerShareDiluted'}&tags and {'NetIncomeLoss','ProfitLoss','NetIncomeLossAvailableToCommonStockholdersBasic'}&tags:table['kind']='income_statement'
   table['score']=companywide;table['current_facts']=len(current);table['current_tags']=tags
   caption_chunks=caption_for(table_nodes[table['index']]);table['caption']=' '.join(caption_chunks)
-  table['caption_verified']=bool(table['kind'] and (re.search(patterns[table['kind']],table['caption'],re.I) or any(re.sub(r'[^a-z]','',c.lower()) in {'income_statement':{'incomestatements','statementsofincome','statementsofoperations','statementsofearnings'},'balance_sheet':{'balancesheets','balancesheet','statementsoffinancialposition'},'cash_flow':{'cashflowsstatements','statementsofcashflows','statementofcashflows'}}[table['kind']] for c in caption_chunks)))
+  table['caption_verified']=bool(table['kind'] and not any(re.search(r'schedulei|condensedfinancialinformation|parentcompanyonly',re.sub(r'[^a-z]','',c.lower())) for c in caption_chunks) and (re.search(patterns[table['kind']],table['caption'],re.I) or any(re.sub(r'[^a-z]','',c.lower()) in {'income_statement':{'incomestatements','statementsofincome','statementsofoperations','statementsofearnings'},'balance_sheet':{'balancesheets','balancesheet','statementsoffinancialposition'},'cash_flow':{'cashflowsstatements','statementsofcashflows','statementofcashflows'}}[table['kind']] for c in caption_chunks)))
  # A printed balance sheet may span two adjacent HTML tables. Require an
  # independently captioned pair, complementary signatures, and matching
  # company-wide asset/liability totals for every disclosed balance date.

@@ -1,24 +1,25 @@
-import {alignRoicHistory} from './roic-series.mjs?v=9e2620bf675f';
-import {sourceNames} from './primary-bindings.mjs?v=9e2620bf675f';
-import {deriveDebt,investedCapital} from './debt-policy.mjs?v=9e2620bf675f';
-import {supplementIssuerHistory} from './issuer-lineage.mjs?v=9e2620bf675f';
-import {loadNativeFilingCache} from './native-filing-cache.mjs?v=9e2620bf675f';
-import {loadTaiwanMarket} from './native-market.mjs?v=9e2620bf675f';
-import {loadFundReport} from './fund-report.mjs?v=9e2620bf675f';
-import {outstandingShares,selectedSecurityKind} from './outstanding-shares.mjs?v=9e2620bf675f';
-import {prepareNativeFacts,nativeConcepts,nativeFactEligible,nativeRows,nativeDisplaySigns,nativeTemplateFor} from './native-template.mjs?v=9e2620bf675f';
-import {supplementPrimaryFilings} from './primary-filing-supplement.mjs?v=9e2620bf675f';
-import {attachValueAvailability} from './value-availability.mjs?v=9e2620bf675f';
-import {companyTemplate,selectStatementSources,templateConcepts} from './statement-source-policy.mjs?v=9e2620bf675f';
-import {nativeRedirect,isKoreanListing,isTaiwanListing} from './native-listings.mjs?v=9e2620bf675f';
-export {nativeRedirect} from './native-listings.mjs?v=9e2620bf675f';
-import {buildMappingAudit} from './mapping-audit.mjs?v=9e2620bf675f';
-import {validateSourceReport} from './validation-checks.mjs?v=9e2620bf675f';
-import {concepts} from './concept-registry.mjs?v=9e2620bf675f';
-export {concepts} from './concept-registry.mjs?v=9e2620bf675f';
-import {supplementClassFacts} from './filing-supplement.mjs?v=9e2620bf675f';
-import schema from './row-schema.mjs?v=9e2620bf675f';
-import {splitLedger,normalizeShareSeries,combineBasis} from './share-basis.mjs?v=9e2620bf675f';
+import {supplementAutomaticPrimary} from './automatic-primary.mjs?v=fba1821c6123';
+import {alignRoicHistory} from './roic-series.mjs?v=fba1821c6123';
+import {sourceNames} from './primary-bindings.mjs?v=fba1821c6123';
+import {deriveDebt,investedCapital} from './debt-policy.mjs?v=fba1821c6123';
+import {supplementIssuerHistory} from './issuer-lineage.mjs?v=fba1821c6123';
+import {loadNativeFilingCache} from './native-filing-cache.mjs?v=fba1821c6123';
+import {loadTaiwanMarket} from './native-market.mjs?v=fba1821c6123';
+import {loadFundReport} from './fund-report.mjs?v=fba1821c6123';
+import {outstandingShares,selectedSecurityKind} from './outstanding-shares.mjs?v=fba1821c6123';
+import {prepareNativeFacts,nativeConcepts,nativeFactEligible,nativeRows,nativeDisplaySigns,nativeTemplateFor} from './native-template.mjs?v=fba1821c6123';
+import {supplementPrimaryFilings} from './primary-filing-supplement.mjs?v=fba1821c6123';
+import {attachValueAvailability} from './value-availability.mjs?v=fba1821c6123';
+import {companyTemplate,selectStatementSources,templateConcepts} from './statement-source-policy.mjs?v=fba1821c6123';
+import {nativeRedirect,isKoreanListing,isTaiwanListing} from './native-listings.mjs?v=fba1821c6123';
+export {nativeRedirect} from './native-listings.mjs?v=fba1821c6123';
+import {buildMappingAudit} from './mapping-audit.mjs?v=fba1821c6123';
+import {validateSourceReport} from './validation-checks.mjs?v=fba1821c6123';
+import {concepts} from './concept-registry.mjs?v=fba1821c6123';
+export {concepts} from './concept-registry.mjs?v=fba1821c6123';
+import {supplementClassFacts} from './filing-supplement.mjs?v=fba1821c6123';
+import schema from './row-schema.mjs?v=fba1821c6123';
+import {splitLedger,normalizeShareSeries,combineBasis} from './share-basis.mjs?v=fba1821c6123';
 
 export function reportCurrencySymbol(currency){
  if(!currency)return null;return {USD:'$',EUR:'€',GBP:'£',JPY:'¥',KRW:'₩',CNY:'CN¥',INR:'₹',CAD:'C$',AUD:'A$',HKD:'HK$',SGD:'S$',TWD:'NT$'}[currency]||currency+' ';
@@ -72,9 +73,10 @@ async function companyData(symbol){const hit=companyCache.get(symbol);if(hit&&Da
   boundedSet(companyCache,symbol,{time:Date.now(),data},6);return data;
  }
  const record=await resolveCompany(symbol),[facts,profile,quote,splits]=await Promise.allSettled([request(`/company/CIK${record.cik}/facts`),request(`/company/CIK${record.cik}/filings?from=${new Date().getFullYear()-1}`),request(`/quote/${encodeURIComponent(record.ticker.replaceAll('.','-'))}`),request(`/company/CIK${record.cik}/splits`,86400000)]);if(facts.status==='rejected'){const fund=await loadFundReport(record,profile.status==='fulfilled'?profile.value:{},quote.status==='fulfilled'?quote.value:null);if(fund){const data={fund,record};boundedSet(companyCache,symbol,{time:Date.now(),data},6);return data;}throw facts.reason;}for(const result of [facts,profile,splits])if(result.status==='fulfilled'&&String(Number(result.value.cik))!==String(Number(record.cik)))throw Error('Company identity mismatch; data was not displayed.');if(profile.status==='fulfilled'&&profile.value.tickers?.length&&!profile.value.tickers.includes(record.ticker))throw Error('Ticker does not match SEC filer metadata.');const lineage=await supplementIssuerHistory(facts.value,record,profile.status==='fulfilled'?profile.value:{},request),primary=await supplementPrimaryFilings(lineage.facts,record),enriched=await supplementClassFacts(primary,record,lineage.profile,request);const data={record,facts:enriched,profile:lineage.profile,quote:quote.status==='fulfilled'?quote.value:null,splits:splits.status==='fulfilled'?splits.value:{status:'unavailable',events:[]}};boundedSet(companyCache,symbol,{time:Date.now(),data},6);return data;})();companyPending.set(symbol,task);try{return await task;}finally{companyPending.delete(symbol);}}
-export async function loadReportCompany(symbol,period='annual'){const redirected=nativeRedirect(symbol),resolved=redirected?.symbol||symbol,data=await companyData(resolved);if(data.fund)return data.fund;const payload=toReportPayload(data.facts,{...data.record,...data.profile,ticker:data.record.ticker,exchange:data.record.exchange},data.quote,period,resolved,{split_feed:data.splits});
+export async function loadReportCompany(symbol,period='annual'){const redirected=nativeRedirect(symbol),resolved=redirected?.symbol||symbol,data=await companyData(resolved);if(data.fund)return data.fund;const facts=data.profile.native?data.facts:await supplementAutomaticPrimary(data.facts,data.record,request),payload=toReportPayload(facts,{...data.record,...data.profile,ticker:data.record.ticker,exchange:data.record.exchange},data.quote,period,resolved,{split_feed:data.splits});
+ if(facts.primary_ingestion)payload.financials.primary_ingestion=facts.primary_ingestion;
  if(isTaiwanListing(resolved))payload.financials.official_valuation=await loadTaiwanMarket(data.record.ticker,data.facts.asOf);
- if(data.facts.primary_filing_supplement){payload.financials.primary_filing_supplement=data.facts.primary_filing_supplement;}
+ if(facts.primary_filing_supplement){payload.financials.primary_filing_supplement=facts.primary_filing_supplement;}
  if(data.profile.native){const provider=data.facts.provider||'OpenDART';payload.profile.source_summary=provider+' · consolidated '+payload.profile.currency+' · statements through '+payload.financials.period_dates.at(-1)+(data.facts.source_coverage.status==='partial'?' · partial coverage':'');payload.profile.source_notice='Source: '+provider+' consolidated statements, reported in '+payload.profile.currency+'. Latest loaded statement period: '+payload.financials.period_dates.at(-1)+'. '+data.facts.source_coverage.scope+(data.facts.source_coverage.status==='partial'?' Some source reports could not be retrieved or validated.':'');payload.profile.annual_filing=data.facts.source_coverage.sources.find(s=>/^(DART|MOPS) annual$/.test(s.form))?.url;payload.financials.source_coverage=data.facts.source_coverage;payload.financials.native_provider=provider;payload.financials.current_shares=data.facts.current_shares||payload.financials.current_shares||null;const shares=data.facts.current_shares;payload.profile.valuation_notice='Valuation uses the latest reported fiscal year when TTM EPS is unavailable. '+(shares?.status==='available'?'Common shares outstanding: '+new Intl.NumberFormat('en-US').format(shares.common_outstanding)+' as of '+shares.asOf+'. '+(shares.multiple_classes?'Total-company value multiples are withheld because other listed share classes are not priced.':'Market capitalization uses this period-end count, not weighted-average EPS shares.'):'Company-value multiples remain unavailable because a verified common share count net of treasury shares has not been loaded; issued capital alone is not used as outstanding shares.');}
  return payload;}
 

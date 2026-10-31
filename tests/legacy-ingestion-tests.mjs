@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {gunzipSync} from 'node:zlib';
+import {extractPrimaryLegacy} from '../sec-worker/primary-legacy.mjs';
+import {compileLegacyFiling} from '../sec-worker/primary-ingestion-core.mjs';
+const f=JSON.parse(gunzipSync(await readFile(new URL('./fixtures/automatic-legacy-source.json.gz',import.meta.url)))),before=JSON.stringify(f),record={...f.metadata.profile,...f.metadata.record},compiled=compileLegacyFiling(f.inputs,record,f.metadata.filing,'',f.source_sha256,f.source_inputs),{inventory,result}=compiled;
+assert.ok(Object.keys(inventory.selected_statements).length===3);assert.ok(inventory.statement_evidence.balance_sheet.role.includes('ConsolidatedBalanceSheets'));
+const at=(name,end='2019-05-31')=>result.facts[name]?.units.USD.find(p=>p.end===end&&(!p.start||p.start==='2018-06-01'));
+assert.equal(at('NetIncomeLoss').val,540e6);assert.equal(at('OperatingIncomeLoss').val,4466e6);assert.equal(at('CashAndCashEquivalentsAtCarryingValue').val,2319e6);assert.equal(at('StockholdersEquity').val,17757e6);assert.equal(at('report:PrimaryStatementDebt').val,17581e6);
+assert.ok(result.rejections.some(p=>p.key==='cogs'&&p.source_label==='Purchased transportation'),'Actual issuer label prevents an operating-cost component becoming total cost of sales');
+assert.equal(at('CostOfGoodsAndServicesSold').unresolved,true);assert.ok(inventory.facts.filter(p=>p.statement==='income_statement'&&p.start).every(p=>(Date.parse(p.end)-Date.parse(p.start))/86400000>=330),'Quarter footnotes do not inherit annual primary-face status');
+assert.throws(()=>extractPrimaryLegacy(f.inputs,{...f.metadata,record:{cik:'1',ticker:'OTHER'}}),/issuer/);
+assert.equal(result.sources[0].source_sha256,f.source_sha256);assert.equal(JSON.stringify(f),before);
+console.log('Legacy ingestion passes: complete real FedEx XBRL inputs, consolidated roles, preferred issuer captions, current debt/lease scope, annual context guard, source identity/hash and purchased-transportation exclusion.');
