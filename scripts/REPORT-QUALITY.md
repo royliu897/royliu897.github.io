@@ -46,3 +46,25 @@ debt-and-finance-lease scopes are preserved so ROIC does not add those leases
 twice. Issuer-specific leases retain the original QName and exact primary caption.
 Gross capital spending excludes asset-sale proceeds; FCF yield can be negative.
 Latest-FY valuation fallback remains labelled and is never presented as TTM.
+
+
+Gap regression (GAP, previously GPS)
+----------------------------------
+`tests/gap-report-regression-tests.mjs` reproduces the missing EV and truncated
+ROIC history using real source facts, then checks the generic primary-statement
+pipeline against the same issuer. The frozen source fixture verifies FY-end
+debt of USD 1,492 million, latest-quarter debt of USD 1,493 million and cash of
+USD 2,103 million. The latest 10-Q's annual comparative is retained as the newer
+source for the same FY-end balance. All nine general valuation card values must
+be finite, and the last ten annual ROIC observations must include the reported
+loss years. Nothing substitutes zero for an unreported current debt amount.
+
+The raw CompanyFacts feed alone does not establish the complete debt scope in
+this case. The versioned primary cache supplies that evidence using the existing
+generic compiler, with no ticker-specific calculation rule. Cache coverage is
+still a subset of issuers; a passing sampled audit must not be represented as
+complete coverage of all searchable companies.
+
+ROIC calendar tests also retain unresolved trailing years as null points, so an
+old last available value cannot silently appear to be the end of current history.
+Missing years are not interpolated or joined across.

@@ -1,23 +1,24 @@
-import {sourceNames} from './primary-bindings.mjs?v=ced40ecbac9d';
-import {deriveDebt,investedCapital} from './debt-policy.mjs?v=ced40ecbac9d';
-import {supplementIssuerHistory} from './issuer-lineage.mjs?v=ced40ecbac9d';
-import {loadNativeFilingCache} from './native-filing-cache.mjs?v=ced40ecbac9d';
-import {loadTaiwanMarket} from './native-market.mjs?v=ced40ecbac9d';
-import {loadFundReport} from './fund-report.mjs?v=ced40ecbac9d';
-import {outstandingShares,selectedSecurityKind} from './outstanding-shares.mjs?v=ced40ecbac9d';
-import {prepareNativeFacts,nativeConcepts,nativeFactEligible,nativeRows,nativeDisplaySigns,nativeTemplateFor} from './native-template.mjs?v=ced40ecbac9d';
-import {supplementPrimaryFilings} from './primary-filing-supplement.mjs?v=ced40ecbac9d';
-import {attachValueAvailability} from './value-availability.mjs?v=ced40ecbac9d';
-import {companyTemplate,selectStatementSources,templateConcepts} from './statement-source-policy.mjs?v=ced40ecbac9d';
-import {nativeRedirect,isKoreanListing,isTaiwanListing} from './native-listings.mjs?v=ced40ecbac9d';
-export {nativeRedirect} from './native-listings.mjs?v=ced40ecbac9d';
-import {buildMappingAudit} from './mapping-audit.mjs?v=ced40ecbac9d';
-import {validateSourceReport} from './validation-checks.mjs?v=ced40ecbac9d';
-import {concepts} from './concept-registry.mjs?v=ced40ecbac9d';
-export {concepts} from './concept-registry.mjs?v=ced40ecbac9d';
-import {supplementClassFacts} from './filing-supplement.mjs?v=ced40ecbac9d';
-import schema from './row-schema.mjs?v=ced40ecbac9d';
-import {splitLedger,normalizeShareSeries,combineBasis} from './share-basis.mjs?v=ced40ecbac9d';
+import {alignRoicHistory} from './roic-series.mjs?v=162d5e719d39';
+import {sourceNames} from './primary-bindings.mjs?v=162d5e719d39';
+import {deriveDebt,investedCapital} from './debt-policy.mjs?v=162d5e719d39';
+import {supplementIssuerHistory} from './issuer-lineage.mjs?v=162d5e719d39';
+import {loadNativeFilingCache} from './native-filing-cache.mjs?v=162d5e719d39';
+import {loadTaiwanMarket} from './native-market.mjs?v=162d5e719d39';
+import {loadFundReport} from './fund-report.mjs?v=162d5e719d39';
+import {outstandingShares,selectedSecurityKind} from './outstanding-shares.mjs?v=162d5e719d39';
+import {prepareNativeFacts,nativeConcepts,nativeFactEligible,nativeRows,nativeDisplaySigns,nativeTemplateFor} from './native-template.mjs?v=162d5e719d39';
+import {supplementPrimaryFilings} from './primary-filing-supplement.mjs?v=162d5e719d39';
+import {attachValueAvailability} from './value-availability.mjs?v=162d5e719d39';
+import {companyTemplate,selectStatementSources,templateConcepts} from './statement-source-policy.mjs?v=162d5e719d39';
+import {nativeRedirect,isKoreanListing,isTaiwanListing} from './native-listings.mjs?v=162d5e719d39';
+export {nativeRedirect} from './native-listings.mjs?v=162d5e719d39';
+import {buildMappingAudit} from './mapping-audit.mjs?v=162d5e719d39';
+import {validateSourceReport} from './validation-checks.mjs?v=162d5e719d39';
+import {concepts} from './concept-registry.mjs?v=162d5e719d39';
+export {concepts} from './concept-registry.mjs?v=162d5e719d39';
+import {supplementClassFacts} from './filing-supplement.mjs?v=162d5e719d39';
+import schema from './row-schema.mjs?v=162d5e719d39';
+import {splitLedger,normalizeShareSeries,combineBasis} from './share-basis.mjs?v=162d5e719d39';
 
 export function reportCurrencySymbol(currency){
  if(!currency)return null;return {USD:'$',EUR:'€',GBP:'£',JPY:'¥',KRW:'₩',CNY:'CN¥',INR:'₹',CAD:'C$',AUD:'A$',HKD:'HK$',SGD:'S$',TWD:'NT$'}[currency]||currency+' ';
@@ -341,7 +342,7 @@ export function toReportPayload(data,record={},quote=null,period='annual',symbol
  // total invested capital stays positive. Pretax and tax concepts are not needed.
  const capital=date=>{const debt=point(year.total_debt||[],date);return investedCapital(point(year.shareholders_equity,date)?.val,debt?.val,debt?.debt_scope,point(year.current_capital_leases||[],date)?.val,point(year.noncurrent_capital_leases||[],date)?.val,point(year.minority_interest||[],date)?.val);};
  financials.roic_series=annualDates.flatMap((date,i)=>{const equity=d=>point(year.shareholders_equity,d)?.val,ni=point(year.net_income,date),end=companyType?equity(date):capital(date),begin=i>0&&days(date,annualDates[i-1])>=330&&days(date,annualDates[i-1])<=400?(companyType?equity(annualDates[i-1]):capital(annualDates[i-1])):undefined,average=begin===undefined?end:(begin+end)/2;return ni&&average!==undefined&&average!==0&&(companyType||average>0)?[{year:date.slice(0,4),roic:Math.round(ni.val/average*1000)/10}]:[];});
- if(financials.roic_series.length>1){const available=new Map(financials.roic_series.map(p=>[p.year,p]));financials.roic_series=Array.from({length:Number(financials.roic_series.at(-1).year)-Number(financials.roic_series[0].year)+1},(_,i)=>{const year=String(Number(financials.roic_series[0].year)+i);return available.get(year)||{year,roic:null};});}
+ financials.roic_series=alignRoicHistory(financials.roic_series,annualDates);
  financials.source_selection={policy:'statement-first-v1',excluded_observations:sourceExclusions};
  financials.share_basis.source_class=data.share_class||null;financials.share_basis.filing_supplement=data.filing_supplement||null;
  financials.share_basis.observations=['eps_diluted','eps_basic','shares_diluted','shares_basic','_dividends_per_share'].flatMap(key=>{

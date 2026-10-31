@@ -1,10 +1,10 @@
-import {createShareBasisView} from './share-basis-view.mjs?v=ced40ecbac9d';
-import {valuationKeys} from './native-valuation.mjs?v=ced40ecbac9d';
-import {missingValueDefinition} from './value-availability.mjs?v=ced40ecbac9d';
-import {createCurrencyDisplay} from './usd-display.mjs?v=ced40ecbac9d';
-import {createUnmappedView} from './unmapped-view.mjs?v=ced40ecbac9d';
-import {resolveDefinition,definitionById,definitionTokens} from './definition-graph.mjs?v=ced40ecbac9d';
-export {statisticFormula} from './definition-graph.mjs?v=ced40ecbac9d';
+import {createShareBasisView} from './share-basis-view.mjs?v=162d5e719d39';
+import {valuationKeys} from './native-valuation.mjs?v=162d5e719d39';
+import {missingValueDefinition} from './value-availability.mjs?v=162d5e719d39';
+import {createCurrencyDisplay} from './usd-display.mjs?v=162d5e719d39';
+import {createUnmappedView} from './unmapped-view.mjs?v=162d5e719d39';
+import {resolveDefinition,definitionById,definitionTokens} from './definition-graph.mjs?v=162d5e719d39';
+export {statisticFormula} from './definition-graph.mjs?v=162d5e719d39';
 export function createReportFeatures(React){
  const h=React.createElement,ShareBasis=createShareBasisView(React);
  const chain=[];

@@ -1,6 +1,6 @@
-import {sourceNames} from './primary-bindings.mjs?v=ced40ecbac9d';
-import {templateConcepts} from './statement-source-policy.mjs?v=ced40ecbac9d';
-import {concepts} from './concept-registry.mjs?v=ced40ecbac9d';
+import {sourceNames} from './primary-bindings.mjs?v=162d5e719d39';
+import {templateConcepts} from './statement-source-policy.mjs?v=162d5e719d39';
+import {concepts} from './concept-registry.mjs?v=162d5e719d39';
 const derived=new Set(['total_debt','gross_profit','total_operating_expenses','gross_loans','short_term_debt','long_term_debt','total_noncurrent_liabilities','total_liabilities_equity','net_income_continuing','cf_capex','cf_acquisitions','cf_investments','cf_net_stock','cf_net_preferred','cf_debt_net','cf_working_capital','free_cash_flow','other_equity','cf_other_operating','cf_other_investing','cf_other_financing']);
 const reasons={
  missing_binding:'No reviewed mapping for this field.',
