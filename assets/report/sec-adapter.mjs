@@ -1,21 +1,21 @@
-import {supplementIssuerHistory} from './issuer-lineage.mjs?v=36daa9623894';
-import {loadNativeFilingCache} from './native-filing-cache.mjs?v=36daa9623894';
-import {loadTaiwanMarket} from './native-market.mjs?v=36daa9623894';
-import {loadFundReport} from './fund-report.mjs?v=36daa9623894';
-import {outstandingShares,selectedSecurityKind} from './outstanding-shares.mjs?v=36daa9623894';
-import {prepareNativeFacts,nativeConcepts,nativeFactEligible,nativeRows,nativeDisplaySigns,nativeTemplateFor} from './native-template.mjs?v=36daa9623894';
-import {supplementPrimaryFilings} from './primary-filing-supplement.mjs?v=36daa9623894';
-import {attachValueAvailability} from './value-availability.mjs?v=36daa9623894';
-import {companyTemplate,selectStatementSources,templateConcepts} from './statement-source-policy.mjs?v=36daa9623894';
-import {nativeRedirect,isKoreanListing,isTaiwanListing} from './native-listings.mjs?v=36daa9623894';
-export {nativeRedirect} from './native-listings.mjs?v=36daa9623894';
-import {buildMappingAudit} from './mapping-audit.mjs?v=36daa9623894';
-import {validateSourceReport} from './validation-checks.mjs?v=36daa9623894';
-import {concepts} from './concept-registry.mjs?v=36daa9623894';
-export {concepts} from './concept-registry.mjs?v=36daa9623894';
-import {supplementClassFacts} from './filing-supplement.mjs?v=36daa9623894';
-import schema from './row-schema.mjs?v=36daa9623894';
-import {splitLedger,normalizeShareSeries,combineBasis} from './share-basis.mjs?v=36daa9623894';
+import {supplementIssuerHistory} from './issuer-lineage.mjs?v=d4f1839989bb';
+import {loadNativeFilingCache} from './native-filing-cache.mjs?v=d4f1839989bb';
+import {loadTaiwanMarket} from './native-market.mjs?v=d4f1839989bb';
+import {loadFundReport} from './fund-report.mjs?v=d4f1839989bb';
+import {outstandingShares,selectedSecurityKind} from './outstanding-shares.mjs?v=d4f1839989bb';
+import {prepareNativeFacts,nativeConcepts,nativeFactEligible,nativeRows,nativeDisplaySigns,nativeTemplateFor} from './native-template.mjs?v=d4f1839989bb';
+import {supplementPrimaryFilings} from './primary-filing-supplement.mjs?v=d4f1839989bb';
+import {attachValueAvailability} from './value-availability.mjs?v=d4f1839989bb';
+import {companyTemplate,selectStatementSources,templateConcepts} from './statement-source-policy.mjs?v=d4f1839989bb';
+import {nativeRedirect,isKoreanListing,isTaiwanListing} from './native-listings.mjs?v=d4f1839989bb';
+export {nativeRedirect} from './native-listings.mjs?v=d4f1839989bb';
+import {buildMappingAudit} from './mapping-audit.mjs?v=d4f1839989bb';
+import {validateSourceReport} from './validation-checks.mjs?v=d4f1839989bb';
+import {concepts} from './concept-registry.mjs?v=d4f1839989bb';
+export {concepts} from './concept-registry.mjs?v=d4f1839989bb';
+import {supplementClassFacts} from './filing-supplement.mjs?v=d4f1839989bb';
+import schema from './row-schema.mjs?v=d4f1839989bb';
+import {splitLedger,normalizeShareSeries,combineBasis} from './share-basis.mjs?v=d4f1839989bb';
 
 export function reportCurrencySymbol(currency){
  if(!currency)return null;return {USD:'$',EUR:'€',GBP:'£',JPY:'¥',KRW:'₩',CNY:'CN¥',INR:'₹',CAD:'C$',AUD:'A$',HKD:'HK$',SGD:'S$',TWD:'NT$'}[currency]||currency+' ';
@@ -354,6 +354,7 @@ export function toReportPayload(data,record={},quote=null,period='annual',symbol
   historicalPrices=Object.fromEntries(Object.entries(feed.monthly_prices).filter(([month,value])=>month<=knowledge.slice(0,7)&&Number.isFinite(value)&&value>0));
  }
  const dividends=quarter._dividends_per_share.filter(p=>Number.isFinite(p.val)).map(p=>({date:p.end,amount:p.val,reported_amount:p.reported_value,share_basis:p.normalization}));
+ financials.review_sources={provider:data.provider||'SEC EDGAR',fetched_at:data.fetchedAt||null,quote_as_of:quote?.currency===currency?quote.asOf:null};
  financials.validation=validateSourceReport(data,{financials,profile:{currency}});
  financials.mapping_audit=buildMappingAudit(data,financials,period==='quarterly',activeConcepts);
  attachValueAvailability(data,financials,{currency,symbol,registry:activeConcepts,annualSource:record.filings?.find(f=>/^(10-K|20-F|40-F)$/.test(f.form)||/^(DART|MOPS) annual$/.test(f.form))?.url});

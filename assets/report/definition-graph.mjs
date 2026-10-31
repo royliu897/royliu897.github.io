@@ -1,5 +1,5 @@
-import {fundDefinition} from './fund-report.mjs?v=36daa9623894';
-import {nativeDefinition} from './native-template.mjs?v=36daa9623894';
+import {fundDefinition} from './fund-report.mjs?v=d4f1839989bb';
+import {nativeDefinition} from './native-template.mjs?v=d4f1839989bb';
 const balanceNote='Average balance = (current year-end + prior year-end) ÷ 2. The current balance is used when the prior balance is unavailable.';
 const valuationTerms={
  'P/E':['Latest price ÷ TTM diluted EPS','Latest reported FY EPS is used when TTM is missing; basic EPS is used when diluted EPS is unavailable.'],
@@ -55,7 +55,7 @@ export function statisticFormula(label,group,companyType=''){
 }
 
 
-import schema from './row-schema.mjs?v=36daa9623894';
+import schema from './row-schema.mjs?v=d4f1839989bb';
 const definitions=new Map();
 function add(id,title,formula,group='Definition',aliases=[]){definitions.set(id,{id,title,formula,group,aliases:[title,...aliases]});}
 const fields={

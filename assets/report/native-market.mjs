@@ -1,4 +1,4 @@
-import {validReportDate} from './report-dates.mjs?v=36daa9623894';
+import {validReportDate} from './report-dates.mjs?v=d4f1839989bb';
 // TWSE publishes dated closing P/E/P/B independently of our share-count feed.
 // Rounded ratios are never reverse-engineered into shares or market cap.
 export function selectTaiwanMarket(snapshot,ticker,knowledge){

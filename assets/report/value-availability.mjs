@@ -1,5 +1,5 @@
-import {templateConcepts} from './statement-source-policy.mjs?v=36daa9623894';
-import {concepts} from './concept-registry.mjs?v=36daa9623894';
+import {templateConcepts} from './statement-source-policy.mjs?v=d4f1839989bb';
+import {concepts} from './concept-registry.mjs?v=d4f1839989bb';
 const derived=new Set(['gross_profit','total_operating_expenses','gross_loans','short_term_debt','long_term_debt','total_noncurrent_liabilities','total_liabilities_equity','net_income_continuing','cf_capex','cf_acquisitions','cf_investments','cf_net_stock','cf_net_preferred','cf_debt_net','cf_working_capital','free_cash_flow','other_equity','cf_other_operating','cf_other_investing','cf_other_financing']);
 const reasons={
  missing_binding:'This template row has no configured source mapping or derivation. A filing may disclose a suitable value; it has not been mapped here.',

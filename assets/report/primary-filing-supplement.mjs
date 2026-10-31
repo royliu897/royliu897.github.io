@@ -1,9 +1,9 @@
-import {mergeClassFacts} from './filing-supplement.mjs?v=36daa9623894';
+import {mergeClassFacts} from './filing-supplement.mjs?v=d4f1839989bb';
 // Offline primary-statement compiler and browser-side cache loader. No ticker
 // exceptions, numerical overrides, network parsing, or automatic AI mappings.
-import {concepts} from './concept-registry.mjs?v=36daa9623894';
-import {companyTemplate,templateConcepts,preferConceptTotals} from './statement-source-policy.mjs?v=36daa9623894';
-import schema from './row-schema.mjs?v=36daa9623894';
+import {concepts} from './concept-registry.mjs?v=d4f1839989bb';
+import {companyTemplate,templateConcepts,preferConceptTotals} from './statement-source-policy.mjs?v=d4f1839989bb';
+import schema from './row-schema.mjs?v=d4f1839989bb';
 const days=p=>(Date.parse(p.end)-Date.parse(p.start))/86400000;
 const standard=p=>p.namespace==='us-gaap'&&/^https?:\/\/(?:fasb\.org|xbrl\.us)\//.test(p.namespace_uri||'')||p.namespace==='ifrs-full'&&/^https?:\/\/xbrl\.(?:ifrs|iasb)\.org\/taxonomy\//.test(p.namespace_uri||'');
 const validDate=s=>/^\d{4}-\d{2}-\d{2}$/.test(s||'')&&Number.isFinite(Date.parse(s));

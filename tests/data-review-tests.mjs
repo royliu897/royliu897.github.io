@@ -1,0 +1,22 @@
+import assert from 'node:assert/strict';
+import {buildDataReview,reviewPeriods,reviewSnapshot,compareReviewSnapshots,reviewStatusLabel} from '../assets/report/data-review.mjs';
+const row=(key,label,value,extra={})=>({key,label,values:{2025:value},...extra});
+const financials={cik:'1',ticker:'NYSE:TEST',columns:['2024','2025','TTM'],knowledge_as_of:'2026-10-30',income_statement:[row('revenue','Revenue',0,{provenance:{2025:{accn:'source-a',filed:'2026-02-01',end:'2025-12-31'}}}),row('gross_profit','Gross Profit',undefined,{availability:{2025:{status:'unavailable',code:'dependency_missing'}}}),row('eps_basic','EPS',undefined,{availability:{2025:{status:'unresolved',policy_reason:'Share basis conflict'}}})],balance_sheet:[row('total_assets','Assets',10,{provenance:{2025:{calculation:'Current + noncurrent assets'}}})],cash_flow:[row('_helper','Hidden helper',99)],validation:{checks:[{year:'2025',check:'Balance identity',status:'pass'},{year:'2024',check:'Earlier identity',status:'review'}]}};
+const original=JSON.stringify(financials),review=buildDataReview(financials,'2025');
+assert.deepEqual(reviewPeriods(financials),['2025','2024']);assert.equal(review.fields.length,4);assert.equal(review.shown,2);assert.equal(review.gaps,2);assert.equal(review.review_count,1);assert.equal(review.checks.length,1);
+assert.equal(review.fields[0].status,'reported');assert.equal(review.fields[0].value,0,'A genuine zero counts as present');assert.equal(review.fields[1].status,'unavailable');assert.match(review.fields[1].reason,/not evidence/);assert.equal(review.flagged[0].reason,'Share basis conflict');assert.equal(review.fields[3].status,'derived');assert.equal(reviewStatusLabel('ineligible'),'Different scope');
+assert.equal(JSON.stringify(financials),original,'Review never changes observations');
+const payload={financials,profile:{currency:'USD'}},before=reviewSnapshot(payload),after=structuredClone(before);
+after.periods[0].fields[0].value=2;after.periods[0].fields[3].value=null;after.periods.splice(1,1);
+assert.deepEqual(compareReviewSnapshots(before,after).map(c=>c.type),['value_changed','value_removed','period_removed']);
+assert.throws(()=>compareReviewSnapshots(before,{...after,symbol:'NYSE:OTHER'}),/different securities/);
+assert.throws(()=>reviewSnapshot({...payload,profile:{currency:'USD',reporting_currency:'KRW'}}),/native-currency/);
+assert.deepEqual(buildDataReview({columns:[],income_statement:[],balance_sheet:[],cash_flow:[]}).fields,[]);
+assert.equal(reviewSnapshot(payload).periods[0].fields.find(f=>f.key==='gross_profit').status,'unavailable','An absent observation never becomes a claim of nondisclosure');
+console.log('Data review passes: zero/missing/derived distinctions, period scoping, source provenance, immutable observations, revision/history/currency comparisons and native-currency snapshot guards.');
+
+const scope=structuredClone(financials);scope.period_dates=['2024-12-31','2025-12-31','2026-06-30'];scope.validation.checks.push({year:'2025-12-31',status:'pass',check:'Fund balance identity'},{year:'2025-06-30',status:'review',check:'Different interim'});
+scope.income_statement[1].source_context={source_url:'https://example.com/latest-2026-report'};
+scope.income_statement[0].provenance[2025]={accn:'0000000002-25-000001',source_cik:'2',factor:2};
+const scoped=buildDataReview(scope,'2025');assert.equal(scoped.checks.length,2,'Fund ISO dates match only the selected period end, not every check in the calendar year');assert.equal(scoped.fields[1].source_url,null,'An absent historical field cannot be attributed to the latest annual source');assert.equal(scoped.fields[0].source_url,'https://www.sec.gov/Archives/edgar/data/2/000000000225000001/');assert.equal(scoped.fields[0].status,'derived','Split-normalized observations are distinguished from unchanged reported values');
+assert.deepEqual(compareReviewSnapshots(before,{...before,currency:'EUR'}),[{type:'currency_changed',before:'USD',after:'EUR'}]);
