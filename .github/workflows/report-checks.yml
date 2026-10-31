@@ -21,6 +21,10 @@ jobs:
           node-version: '24'
           cache: npm
           cache-dependency-path: scripts/report-frontend/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 -m pip install lxml==5.3.0
       - run: npm ci --prefix scripts/report-frontend
       - run: npm run build --prefix scripts/report-frontend
       - run: git diff --exit-code -- assets/report docs/report-frontend-provenance.json report.html
