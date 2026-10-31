@@ -37,6 +37,19 @@ def extract(raw,metadata):
    if len(measures)==1:units[unit_id]=measures[0]
    elif len(measures)==2 and divide:units[node.get('id')]='/'.join(measures)
  table_nodes=[n for n in root.iter() if local(n)=='table'];table_ids={n:i for i,n in enumerate(table_nodes)};tables={i:{'index':i,'facts':[],'kind':None} for i in range(len(table_nodes))};facts=[];conflicts=[];seen={}
+ # Classify explicitly headed balance-sheet sections; never infer a
+ # current liability from a broad concept name such as NotesAndLoansPayable.
+ row_scopes={}
+ for table_node in table_nodes:
+  scope=None
+  for row_node in table_node.iterdescendants():
+   if local(row_node)!='tr' or next((n for n in row_node.iterancestors() if local(n)=='table'),None) is not table_node:continue
+   label=next((text(cell) for cell in row_node if re.search(r'[A-Za-z]',text(cell))), '')
+   clean_label=re.sub(r'[^a-z]','',label.lower())
+   if clean_label=='currentliabilities':scope='current_liabilities'
+   elif clean_label.startswith('totalliabilities') or (not any(local(n)=='nonfraction' for n in row_node.iterdescendants()) and clean_label.startswith(('noncurrentliabilities','longtermliabilities','longtermdebt','stockholder','shareholder'))):scope=None
+   row_scopes[row_node]=scope
+   if clean_label.startswith('totalcurrentliabilities'):scope=None
  # Inline prefixes are checked against the namespace declarations in source.
  ns=dict(re.findall(r'xmlns:([\w.-]+)\s*=\s*["\']([^"\']+)["\']',raw[:150000].decode('utf8',errors='replace')))
  for node in root.iter():
@@ -67,7 +80,7 @@ def extract(raw,metadata):
     t=text(cell)
     if re.search(r'[A-Za-z]',t):parts.append(t)
    label=' '.join(parts)
-  record={'qname':qname,'namespace':namespace,'namespace_uri':ns.get(namespace),'name':name,'unit':unit,'value':value,**ctx,'context_ref':a.get('contextref'),'scale':scale,'decimals':a.get('decimals'),'label':label,'table':table_ids.get(table),'fact_id':a.get('id'),'filed':filing['date'],'accession':filing['accession'],'source_url':filing['url'],'source_kind':'inline-XBRL'}
+  record={'qname':qname,'namespace':namespace,'namespace_uri':ns.get(namespace),'name':name,'unit':unit,'value':value,**ctx,'context_ref':a.get('contextref'),'scale':scale,'decimals':a.get('decimals'),'label':label,'table':table_ids.get(table),'fact_id':a.get('id'),'balance_classification':row_scopes.get(row),'filed':filing['date'],'accession':filing['accession'],'source_url':filing['url'],'source_kind':'inline-XBRL'}
   key=(qname,unit,ctx['start'],ctx['end'],json.dumps(ctx['dimensions'],sort_keys=True),ctx['typed']);old=seen.get(key)
   if old is not None and old['value']!=value:conflicts.append({'qname':qname,'context_ref':record['context_ref'],'values':[old['value'],value]})
   else:seen[key]=record

@@ -7,8 +7,7 @@ const row=(f,key)=>[...f.income_statement,...f.balance_sheet,...f.cash_flow].fin
 assert.equal(row(annual,'net_income').values['2025'],8563,'A full-year duration repeated in 10-Q remains an annual observation');
 assert.equal(row(annual,'shareholders_equity').values['2025'],-1791,'Latest comparative balance remains aligned to the fiscal year');
 assert.equal(row(annual,'shares_diluted').values['2025'],716.4,'MCD’s scaled source shares reconcile to income/EPS');
-assert.ok(annual.roic_series.some(p=>p.year==='2025'&&p.roic>20&&p.roic<30),'MCD negative equity does not remove positive-capital ROIC');
-assert.equal(annual.roic_series.at(-1).year,'2025');
+assert.ok(!annual.roic_series.some(p=>p.year==='2025'),'Unverified current-period debt must not produce a 2025 ROIC');
 assert.equal(row(annual,'pretax_income').values['2025'],10897,'Domestic and foreign tax-jurisdiction pretax facts combine');
 assert.ok(row(annual,'shares_basic'));assert.ok(row(annual,'net_income_continuing'));assert.ok(row(annual,'total_liabilities_equity'));
 assert.ok(row(annual,'eps_diluted').values.TTM>10&&row(annual,'eps_diluted').values.TTM<20,'TTM EPS cannot inherit a millionfold share-scale error');

@@ -1,4 +1,4 @@
-import {validReportDate} from './report-dates.mjs?v=d4f1839989bb';
+import {validReportDate} from './report-dates.mjs?v=ced40ecbac9d';
 // Shared valuation for all statement sources. Monetary rows are in millions;
 // EPS/price are per selected share, current_shares is an actual share count.
 const finite=Number.isFinite;
@@ -21,7 +21,7 @@ export function reportValuation(price,f){
   }
   return null;
  }
- const result={marketCap:null,ev:null,pe:null,pb:null,ps:null,evToSales:null,evToEbitda:null,evToEbit:null,evToPretax:null,evToFcf:null,pPretax:null,pPremiums:null,evToPremiums:null,bases,reasons};
+ const result={marketCap:null,ev:null,pe:null,pb:null,ps:null,evToSales:null,evToEbitda:null,evToEbit:null,evToPretax:null,evToFcf:null,fcfYield:null,pPretax:null,pPremiums:null,evToPremiums:null,bases,reasons};
  function ratio(key,numerator,selection,denominator=selection?.values?.[0]){
   if(!finite(numerator)){reasons[key]='A verified current company value is unavailable.';return;}
   if(!selection||!finite(denominator)){reasons[key]='Required TTM and latest reported fiscal-year inputs are unavailable.';return;}
@@ -41,8 +41,8 @@ export function reportValuation(price,f){
  const shares=f.current_shares,knowledge=f.knowledge_as_of||new Date().toISOString().slice(0,10),postEvent=(f.splits||[]).some(e=>(e.date||e.effective_date)>shares?.asOf&&(e.date||e.effective_date)<=knowledge);
  if(shares?.status==='available'&&finite(shares.common_outstanding)&&shares.common_outstanding>0&&dateOK(shares.asOf)&&shares.asOf<=knowledge&&!shares.multiple_classes&&!postEvent){result.marketCap=price*shares.common_outstanding/1e6;bases.marketCap='Outstanding shares '+shares.asOf;}
  else reasons.marketCap='A positive, dated outstanding-share count on the selected security basis is unavailable, or another share class/corporate action prevents company valuation.';
- const balance=pick('balance_sheet',['short_term_debt','long_term_debt','cash'],{instant:true});
- if(finite(result.marketCap)&&balance){const [short,long,cash]=balance.values;result.ev=result.marketCap+short+long-cash;bases.ev=balance.basis;}
+ const balance=f.debt_policy_version?pick('balance_sheet',['total_debt','cash'],{instant:true}):pick('balance_sheet',['short_term_debt','long_term_debt','cash'],{instant:true});
+ if(finite(result.marketCap)&&balance){const debt=f.debt_policy_version?balance.values[0]:balance.values[0]+balance.values[1],cash=balance.values.at(-1);result.ev=result.marketCap+debt-cash;bases.ev=balance.basis;}
  else reasons.ev=finite(result.marketCap)?'Matching cash and debt balances are unavailable; missing amounts are not assumed to be zero.':reasons.marketCap;
  ratio('pb',result.marketCap,pick('balance_sheet',['shareholders_equity'],{instant:true}));
  const revenue=pick('income_statement',['revenue'])||(()=>{const p=pick('income_statement',['net_interest_income','noninterest_revenue']);return p?{...p,values:[p.values[0]+p.values[1]]}:null;})();
@@ -53,6 +53,8 @@ export function reportValuation(price,f){
  ratio('evToEbit',result.ev,pick('income_statement',['operating_income']));
  ratio('evToPretax',result.ev,pick('income_statement',['pretax_income']));
  ratio('evToFcf',result.ev,pick('cash_flow',['free_cash_flow']));
+ const fcf=pick('cash_flow',['free_cash_flow']);
+ if(fcf&&finite(result.marketCap)&&result.marketCap>0){result.fcfYield=fcf.values[0]/result.marketCap*100;bases.fcfYield=fcf.basis;}else reasons.fcfYield='Free cash flow or verified market capitalization is unavailable.';
  ratio('evToPremiums',result.ev,pick('income_statement',['premiums_earned']));
  let ebitda;
  for(const period of ['TTM',year].filter(Boolean)){
@@ -80,14 +82,14 @@ export function reportValuation(price,f){
 }
 export const nativeValuation=reportValuation;
 
-export const valuationKeys=Object.freeze({'P/E':'pe','P/B':'pb','P/S':'ps','EV/S':'evToSales','EV/EBITDA':'evToEbitda','EV/EBIT':'evToEbit','EV/Pretax':'evToPretax','EV/FCF':'evToFcf','P/Pretax':'pPretax','P/Premiums':'pPremiums','EV/Premiums':'evToPremiums'});
+export const valuationKeys=Object.freeze({'P/E':'pe','P/B':'pb','P/S':'ps','EV/S':'evToSales','EV/EBITDA':'evToEbitda','EV/EBIT':'evToEbit','EV/Pretax':'evToPretax','EV/FCF':'evToFcf','FCF Yield':'fcfYield','P/Pretax':'pPretax','P/Premiums':'pPremiums','EV/Premiums':'evToPremiums'});
 export function valuationCard(v={},type,format=value=>Number.isFinite(value)?String(value):'—'){
  if(type==='fund'){
   const percent=x=>Number.isFinite(x)?format(x)+'%':'—';
   return {title:'Fund Valuation'+(v?.basis?' · '+v.basis:''),items:[{label:'P/NAV',value:Number.isFinite(v.priceToNav)?v.priceToNav.toFixed(2):'—'},{label:'Discount / Premium',value:percent(v.discountPremium)},{label:'Annualized Distribution Yield',value:percent(v.distributionYield)},{label:'Expense Ratio',value:percent(v.expenseRatio)+(v.fundAnnualBasis?' · '+v.fundAnnualBasis:'')},{label:'Net Investment Income / Net Assets',value:percent(v.netInvestmentIncomeRatio)+(v.fundAnnualBasis?' · '+v.fundAnnualBasis:'')}]};
  }
- const labels=type==='bank'?['P/E','P/B','P/S','P/Pretax']:type==='insurance'?['P/E','P/B','P/S','P/Premiums','EV/Premiums','EV/S','EV/EBITDA','EV/Pretax']:['P/E','P/B','P/S','EV/S','EV/EBITDA','EV/EBIT','EV/Pretax','EV/FCF'];
- return {title:'Valuation',items:labels.map(label=>{const key=valuationKeys[label],basis=v?.bases?.[key];return {label,value:format(v?.[key])+(Number.isFinite(v?.[key])&&basis?.startsWith('FY ')?' · '+basis.replace(' · basic EPS',''):Number.isFinite(v?.[key])&&basis?.startsWith('TWSE close ')?' · TWSE':'')};})};
+ const labels=type==='bank'?['P/E','P/B','P/S','P/Pretax']:type==='insurance'?['P/E','P/B','P/S','P/Premiums','EV/Premiums','EV/S','EV/EBITDA','EV/Pretax']:['P/E','P/B','P/S','EV/S','EV/EBITDA','EV/EBIT','EV/Pretax','EV/FCF','FCF Yield'];
+ return {title:'Valuation',items:labels.map(label=>{const key=valuationKeys[label],basis=v?.bases?.[key];return {label,value:format(v?.[key])+(key==='fcfYield'&&Number.isFinite(v?.[key])?'%':'')+(Number.isFinite(v?.[key])&&basis?.startsWith('FY ')?' · '+basis.replace(' · basic EPS',''):Number.isFinite(v?.[key])&&basis?.startsWith('TWSE close ')?' · TWSE':'')};})};
 }
 
 // Statistics windows use calendar years; gaps never become adjacent fiscal years.

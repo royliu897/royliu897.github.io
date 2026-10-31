@@ -1,5 +1,6 @@
 import {readdir,readFile,mkdir,writeFile,rename,access} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
+import {appendCriticalStatementFacts} from './critical-statements.mjs';
 import {reviewedScopeInventories} from './reviewed-scopes.mjs';
 import {extractSecurityContext,extractListedClassSupplement,combineListedClassSupplements,validateListedClassHistory} from './security-context.mjs';
 import {compilePrimaryFilings} from '../../assets/report/primary-filing-supplement.mjs';
@@ -32,6 +33,8 @@ for(const cik of await readdir(cacheRoot)){
 
  inventories.sort((a,b)=>a.filing.date.localeCompare(b.filing.date));
  const result=compilePrimaryFilings(inventories,record);
+ appendCriticalStatementFacts(result,inventories);
+
  securityModels.sort((a,b)=>a.asOf.localeCompare(b.asOf));
  result.security_models=securityModels;result.security_model=securityModels.at(-1)||null;
  result.listed_class_supplements=Object.fromEntries([...classSupplements].map(([ticker,values])=>[ticker,combineListedClassSupplements(values,{cik:record.cik,ticker})]));

@@ -1,4 +1,4 @@
-import {concepts,registryInfo} from './concept-registry.mjs?v=d4f1839989bb';
+import {concepts,registryInfo} from './concept-registry.mjs?v=ced40ecbac9d';
 
 const registered=new Set(Object.values(concepts).flatMap(([names])=>names));
 const DAY=86400000;
@@ -21,7 +21,7 @@ export function buildMappingAudit(data,financials,quarterly=false,activeConcepts
  const cutoff=data.asOf,labels=new Map(financials.columns.flatMap((label,i)=>label!=='TTM'&&financials.period_dates[i]?[[financials.period_dates[i],label]]:[]));
  const rows=[];let unmappedConcepts=0;
  for(const [name,fact]of Object.entries(data.facts||{})){
-  const mapped=registered.has(name)&&(!fact.namespace||['us-gaap','ifrs-full','dei'].includes(fact.namespace)||fact.mapping_approved);
+  const mapped=(registered.has(name)||fact.mapping_approved&&Object.values(fact.units||{}).some(ps=>ps.some(p=>activeConcepts[p.mapping_key])))&&(!fact.namespace||['us-gaap','ifrs-full','dei'].includes(fact.namespace)||fact.mapping_approved);
   const groups=new Map();
   for(const [unit,points]of Object.entries(fact.units||{}))for(const p of points){
    if(mapped&&!p.unresolved&&!p.excluded_from_mapping)continue;
@@ -35,7 +35,7 @@ export function buildMappingAudit(data,financials,quarterly=false,activeConcepts
   }
   if(!groups.size)continue;unmappedConcepts++;
   for(const group of groups.values()){
-   const namespace=fact.namespace||'unknown',tag=namespace+':'+(fact.source_name||name);
+   const namespace=fact.namespace||'unknown',tag=(fact.source_name||name).includes(':')?(fact.source_name||name):namespace+':'+(fact.source_name||name);
    rows.push({key:tag+':'+group.unit+':'+group.kind,tag,label:fact.label||labelFor(name),description:fact.description||'',original_label:fact.original_label,unit:group.unit,kind:group.kind,observations:Object.fromEntries([...group.observations].map(([label,p])=>[label,{start:p.start,end:p.end,value:p.val,filed:p.filed,accession:p.accn||null,source_url:p.source_url||filingURL(data.cik,p.accn),source_concept:p.source_concept||tag,...(p.unresolved?{unresolved:true,unresolved_reason:p.unresolved_reason,source_observations:p.source_observations}:{}),...(p.share_class?{share_class:p.share_class}:{}),...(p.conflicts.length?{conflicts:p.conflicts}:{} )}]))});
   }
  }

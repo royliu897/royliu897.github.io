@@ -1,9 +1,9 @@
-import {mergeClassFacts} from './filing-supplement.mjs?v=d4f1839989bb';
+import {mergeClassFacts} from './filing-supplement.mjs?v=ced40ecbac9d';
 // Offline primary-statement compiler and browser-side cache loader. No ticker
 // exceptions, numerical overrides, network parsing, or automatic AI mappings.
-import {concepts} from './concept-registry.mjs?v=d4f1839989bb';
-import {companyTemplate,templateConcepts,preferConceptTotals} from './statement-source-policy.mjs?v=d4f1839989bb';
-import schema from './row-schema.mjs?v=d4f1839989bb';
+import {concepts} from './concept-registry.mjs?v=ced40ecbac9d';
+import {companyTemplate,templateConcepts,preferConceptTotals} from './statement-source-policy.mjs?v=ced40ecbac9d';
+import schema from './row-schema.mjs?v=ced40ecbac9d';
 const days=p=>(Date.parse(p.end)-Date.parse(p.start))/86400000;
 const standard=p=>p.namespace==='us-gaap'&&/^https?:\/\/(?:fasb\.org|xbrl\.us)\//.test(p.namespace_uri||'')||p.namespace==='ifrs-full'&&/^https?:\/\/xbrl\.(?:ifrs|iasb)\.org\/taxonomy\//.test(p.namespace_uri||'');
 const validDate=s=>/^\d{4}-\d{2}-\d{2}$/.test(s||'')&&Number.isFinite(Date.parse(s));
@@ -21,8 +21,8 @@ function keysFor(template){
  for(const [table,rows]of [['income_statement',schema[template?template+'_income':'income_statement']],['balance_sheet',schema[template?template+'_balance':'balance_sheet']],['cash_flow',schema.cash_flow]])for(const row of rows)result.set(row.key,table);
  // Inputs for existing derivations must retain their statement scope too.
  for(const key of Object.keys(concepts))if(key.startsWith('_wc_')||key.startsWith('_cf')||key.startsWith('_tw_')||key==='_dividends_per_share')result.set(key,'cash_flow');
- for(const key of ['_equity_including_nci','_debt_current','_long_debt_total','_commercial_paper','_short_borrowings'])result.set(key,'balance_sheet');
- for(const key of ['_pretax_domestic','_pretax_foreign','shares_basic'])result.set(key,'income_statement');
+ for(const key of ['_equity_including_nci','_debt_current','_long_debt_total','_commercial_paper','_short_borrowings','total_debt','_debt_lease_current','_debt_lease_noncurrent','_debt_lease_total','operating_lease_liabilities_current','operating_lease_liabilities_noncurrent'])result.set(key,'balance_sheet');
+ for(const key of ['_pretax_domestic','_pretax_foreign','shares_basic','reported_costs_expenses'])result.set(key,'income_statement');
  return result;
 }
 export function compilePrimaryFilings(inventories,record){
@@ -40,6 +40,12 @@ export function compilePrimaryFilings(inventories,record){
    // the primary cash-and-equivalents line. Restricted-cash totals elsewhere
    // are not substituted, and the original concept remains in provenance.
    if(key==='cash'&&!points.length)points=inv.facts.filter(p=>p.statement==='balance_sheet'&&standard(p)&&p.name==='CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents'&&clean(p.label)==='cashandcashequivalents'&&!p.typed&&!p.dimensions?.length&&!p.start&&validDate(p.end)&&p.end<=filing.period&&p.accession===filing.accession&&p.filed===filing.date&&p.source_url===filing.url&&Number.isFinite(p.value)).map(p=>({...p,mapped_name:'CashAndCashEquivalentsAtCarryingValue',mapping_rule:'Primary balance-sheet cash-and-equivalents caption; original broader concept retained'}));
+   if(key==='total_debt')points=points.filter(p=>p.name!=='LongTermDebt'||/^(?:total)?debt$/.test(clean(p.label)));
+   if(key==='_short_borrowings'){
+    const fallback=inv.facts.filter(p=>p.statement==='balance_sheet'&&standard(p)&&!p.typed&&!p.dimensions?.length&&!p.start&&validDate(p.end)&&p.end<=filing.period&&p.accession===filing.accession&&p.filed===filing.date&&p.source_url===filing.url&&Number.isFinite(p.value)&&(
+     p.name==='OtherShortTermBorrowings'&&/^shorttermborrowings(?:included|includes|at|$)/.test(clean(p.label))||p.name==='NotesAndLoansPayable'&&p.balance_classification==='current_liabilities'&&/^(?:loansandnotespayable|notesandloanspayable)$/.test(clean(p.label))));
+    const ends=new Set(points.map(p=>p.end));points.push(...fallback.filter(p=>!ends.has(p.end)).map(p=>({...p,mapped_name:'ShortTermBorrowings',mapping_rule:'Primary balance-sheet short-term borrowing line; original source concept retained'})));
+   }
    if(template==='bank'&&key==='interest_income')points=points.filter(p=>['InterestIncomeOperating','InterestAndDividendIncomeOperating'].includes(p.name));
    if(key==='net_income'&&points.some(p=>['NetIncomeLoss','ProfitLossAttributableToOwnersOfParent'].includes(p.name)))points=points.filter(p=>['NetIncomeLoss','ProfitLossAttributableToOwnersOfParent'].includes(p.name));
    if(key==='cf_net_income'&&points.some(p=>p.name==='ProfitLoss'))points=points.filter(p=>p.name==='ProfitLoss');
@@ -91,7 +97,7 @@ export async function supplementPrimaryFilings(data,record,fetcher=fetch){
   // One small manifest per session. Immutable content-hashed data is cached
   // by the browser/host; extraction and SEC downloads never run on page load.
   if(Date.now()<manifestRetryAt)throw Error('Primary cache retry backoff');
-  manifestPromise??=fetcher(String(new URL('./data/filings/manifest.json',import.meta.url)),{signal:AbortSignal.timeout(5000)}).then(async r=>{if(!r.ok)throw Error('Primary cache unavailable');return r.json();}).catch(()=>{manifestPromise=undefined;manifestRetryAt=Date.now()+60000;return null;});
+  manifestPromise??=fetcher(String(new URL('./data/filings/manifest.json',import.meta.url)),{signal:AbortSignal.timeout(5000),cache:'no-cache'}).then(async r=>{if(!r.ok)throw Error('Primary cache unavailable');return r.json();}).catch(()=>{manifestPromise=undefined;manifestRetryAt=Date.now()+60000;return null;});
   const manifest=await manifestPromise,entry=manifest?.companies?.[String(Number(record.cik))];
   if(!entry)return {...data,primary_filing_supplement:{status:'unavailable',reason:'No prebuilt primary-statement cache for this issuer. The report uses its existing feeds.'}};
   if(!/^CIK\d+-[a-f0-9]{16}\.json$/.test(entry.file||''))throw Error('Invalid primary cache filename');

@@ -1,5 +1,5 @@
-import {fundDefinition} from './fund-report.mjs?v=d4f1839989bb';
-import {nativeDefinition} from './native-template.mjs?v=d4f1839989bb';
+import {fundDefinition} from './fund-report.mjs?v=ced40ecbac9d';
+import {nativeDefinition} from './native-template.mjs?v=ced40ecbac9d';
 const balanceNote='Average balance = (current year-end + prior year-end) ÷ 2. The current balance is used when the prior balance is unavailable.';
 const valuationTerms={
  'P/E':['Latest price ÷ TTM diluted EPS','Latest reported FY EPS is used when TTM is missing; basic EPS is used when diluted EPS is unavailable.'],
@@ -10,19 +10,20 @@ const valuationTerms={
  'Net Investment Income / Net Assets':['Reported annual net investment income ÷ average net assets × 100',''],
  'P/B':['Market capitalization ÷ latest shareholders’ equity','Market capitalization = latest price × verified common shares outstanding. Shown when equity is positive.'],
  'P/S':['Market capitalization ÷ TTM revenue','Market capitalization = latest price × verified common shares outstanding. For banks, revenue can be net interest income + noninterest revenue.'],
- 'EV/S':['Enterprise value ÷ TTM revenue','Enterprise value = market capitalization + short-term debt + long-term debt − cash.'],
- 'EV/EBITDA':['Enterprise value ÷ (TTM operating income + TTM depreciation & amortization)','Enterprise value = market capitalization + short-term debt + long-term debt − cash.'],
- 'EV/EBIT':['Enterprise value ÷ TTM operating income','Enterprise value = market capitalization + short-term debt + long-term debt − cash.'],
- 'EV/Pretax':['Enterprise value ÷ TTM pretax income','Enterprise value = market capitalization + short-term debt + long-term debt − cash.'],
+ 'EV/S':['Enterprise value ÷ TTM revenue','Enterprise value = market capitalization + total debt − cash.'],
+ 'EV/EBITDA':['Enterprise value ÷ (TTM operating income + TTM depreciation & amortization)','Enterprise value = market capitalization + total debt − cash.'],
+ 'EV/EBIT':['Enterprise value ÷ TTM operating income','Enterprise value = market capitalization + total debt − cash.'],
+ 'EV/Pretax':['Enterprise value ÷ TTM pretax income','Enterprise value = market capitalization + total debt − cash.'],
+ 'FCF Yield':['TTM free cash flow ÷ market capitalization × 100','Latest reported FY free cash flow is used when TTM is unavailable.'],
  'EV/FCF':['Enterprise value ÷ TTM free cash flow','Free cash flow = operating cash flow − capital expenditures.'],
  'P/Pretax':['Market capitalization ÷ TTM pretax income','Market capitalization = latest price × verified common shares outstanding.'],
  'P/Premiums':['Market capitalization ÷ TTM earned premiums','Market capitalization = latest price × verified common shares outstanding.'],
- 'EV/Premiums':['Enterprise value ÷ TTM earned premiums','Enterprise value = market capitalization + short-term debt + long-term debt − cash.'],
+ 'EV/Premiums':['Enterprise value ÷ TTM earned premiums','Enterprise value = market capitalization + total debt − cash.'],
 };
 const ratios={
  ROA:['Annual net income ÷ average total assets × 100',balanceNote],
  ROE:['Annual net income ÷ average shareholders’ equity × 100',balanceNote],
- ROIC:['Annual net income ÷ average invested capital × 100','Invested capital = shareholders’ equity + short-term debt + long-term debt + noncurrent capital leases + minority interest. '+balanceNote+' A positive average invested capital is required.'],
+ ROIC:['Annual net income ÷ average invested capital × 100','Invested capital = shareholders’ equity + total debt + lease liabilities excluded from debt + minority interest. '+balanceNote+' A positive average invested capital is required.'],
  NIM:['Annual net interest income ÷ average earning assets × 100',balanceNote],
  ROI:['Annual investment income ÷ average investment assets × 100','Investment assets = trading securities + equity investments + fixed-maturity investments. '+balanceNote],
  'Gross Profit':['Annual gross profit ÷ annual revenue × 100','Gross profit = revenue − cost of goods sold when derived from those reported inputs.'],
@@ -35,8 +36,8 @@ const ratios={
 };
 const capital={
  'Assets / Equity':['Latest annual total assets ÷ shareholders’ equity',''],
- 'Debt / Equity':['(Latest annual short-term debt + long-term debt) ÷ shareholders’ equity',''],
- 'Debt / Assets':['(Latest annual short-term debt + long-term debt) ÷ total assets',''],
+ 'Debt / Equity':['Latest annual total debt ÷ shareholders’ equity',''],
+ 'Debt / Assets':['Latest annual total debt ÷ total assets',''],
  'Equity / Assets':['Latest annual shareholders’ equity ÷ total assets × 100',''],
  'Erng Assets / Eq':['Latest annual earning assets ÷ shareholders’ equity',''],
  'LLR / Loans':['Absolute loan-loss reserve ÷ latest annual gross loans × 100',''],
@@ -55,7 +56,7 @@ export function statisticFormula(label,group,companyType=''){
 }
 
 
-import schema from './row-schema.mjs?v=d4f1839989bb';
+import schema from './row-schema.mjs?v=ced40ecbac9d';
 const definitions=new Map();
 function add(id,title,formula,group='Definition',aliases=[]){definitions.set(id,{id,title,formula,group,aliases:[title,...aliases]});}
 const fields={
@@ -66,6 +67,7 @@ const fields={
  rd:'Reported research and development expenses.',
  other_operating:'Reported operating expenses outside the separately identified categories.',
  total_operating_expenses:'Reported total operating expenses.',
+ reported_costs_expenses:'Reported costs and expenses; source statement scope retained.',
  operating_income:'Gross profit − total operating expenses',
  interest_income:'Interest earned on cash, securities or lending, when separately disclosed.',
  interest_expense:'− reported interest expense; expense reversals retain the opposite sign.',
@@ -102,6 +104,11 @@ const fields={
  tax_payable:'Reported current accrued income taxes payable.',
  current_accrued_liabilities:'Reported current expenses incurred but not yet paid.',
  short_term_debt:'Reported current debt, or current long-term debt + short-term borrowing + commercial paper.',
+ total_debt:'Reported total debt, or a source-supported sum of debt balances. Finance leases retain the reporting basis.',
+ reported_lease_liabilities_current:'Reported current lease liability; source netting retained.',
+ reported_lease_liabilities_noncurrent:'Reported noncurrent lease liability; source netting retained.',
+ operating_lease_liabilities_current:'Reported current operating-lease liabilities.',
+ operating_lease_liabilities_noncurrent:'Reported noncurrent operating-lease liabilities.',
  long_term_debt:'Reported noncurrent debt, or total long-term debt − current portion.',
  current_deferred_revenue:'Reported customer payments for obligations not yet satisfied, due within the operating cycle.',
  noncurrent_deferred_revenue:'Reported noncurrent contract liabilities or deferred revenue.',
@@ -177,12 +184,14 @@ for(const [table,rows]of Object.entries(schema))for(const row of rows)if(!defini
  const group=table.includes('income')?'Income Statement':table.includes('balance')?'Balance Sheet':'Cash Flow';
  add(row.key,row.label,fields[row.key]||`Reported ${row.label.toLowerCase()} in the company’s financial statements.`,group,extraAliases[row.key]||[]);
 }
-for(const [key,title]of [['free_cash_flow','Free Cash Flow'],['cf_capex','Capital Expenditures (Net / Reported)'],['cf_acquisitions','Net Acquisition Flows'],['cf_investments','Net Investment Flows'],['cf_net_stock','Net Stock Issuance'],['cf_debt_net','Net Debt Issuance'],['net_income_continuing','Net Income (Continuing)'],['_net_income_available','Net Income Available to Shareholders'],['shares_basic','Shares (Basic)']])if(!definitions.has(key))add(key,title,fields[key],'Financial Statements',extraAliases[key]||[]);
+for(const [key,title]of [['total_debt','Total Debt'],['reported_lease_liabilities_current','Lease Liabilities (Reported Current)'],['reported_lease_liabilities_noncurrent','Lease Liabilities (Reported Noncurrent)'],['operating_lease_liabilities_current','Operating Lease Liabilities (Current)'],['operating_lease_liabilities_noncurrent','Operating Lease Liabilities (Noncurrent)'],['reported_costs_expenses','Costs & Expenses (Reported)'],['free_cash_flow','Free Cash Flow'],['cf_capex','Capital Expenditures (Net / Reported)'],['cf_acquisitions','Net Acquisition Flows'],['cf_investments','Net Investment Flows'],['cf_net_stock','Net Stock Issuance'],['cf_debt_net','Net Debt Issuance'],['net_income_continuing','Net Income (Continuing)'],['_net_income_available','Net Income Available to Shareholders'],['shares_basic','Shares (Basic)']])if(!definitions.has(key))add(key,title,fields[key],'Financial Statements',extraAliases[key]||[]);
 add('identified_operating','Identified Operating Components','Sum of available reported components: net income + depreciation & amortization + change in working capital + deferred tax adjustment + stock-based compensation');
 add('identified_investing','Identified Investing Components','Sum of available reported components: net PPE flows + net acquisition flows + net investment flows');
 add('identified_financing','Identified Financing Components','Sum of available reported components: net stock issuance + net debt issuance + net preferred issuance + signed dividend cash flow');
 add('identified_equity','Identified Equity Components','Sum of available reported components: common stock + paid-in capital + retained earnings + accumulated other comprehensive income + preferred stock − treasury-stock cost');
-add('invested_capital','Invested Capital','Shareholders’ equity + short-term debt + long-term debt + noncurrent capital leases + minority interest');
+add('capital_expenditures','Capital Expenditures','Gross cash paid for PPE or the disclosed broader productive-asset scope; asset-sale proceeds excluded');
+add('fcf_yield','FCF Yield','Free cash flow ÷ market capitalization × 100');
+add('invested_capital','Invested Capital','Shareholders’ equity + total debt + lease liabilities excluded from debt + minority interest');
 add('average_invested_capital','Average Invested Capital','(Current invested capital + prior-year invested capital) ÷ 2');
 add('average_assets','Average Total Assets','(Current total assets + prior-year total assets) ÷ 2');
 add('average_equity','Average Shareholders’ Equity','(Current shareholders’ equity + prior-year shareholders’ equity) ÷ 2');
@@ -190,7 +199,7 @@ add('common_shares_outstanding','Common Shares Outstanding','Reported common sha
 add('twse_book_value_per_share','TWSE Book Value per Share','Book value per share posted on MOPS for the financial period used by the published TWSE ratio. It is not inferred from rounded P/B.');
 add('twse_eps','TWSE EPS','The trailing-four-quarter earnings-per-share basis used by TWSE for its published closing P/E.');
 add('market_cap','Market Capitalization','Latest price × verified common shares outstanding');
-add('enterprise_value','Enterprise Value','Market capitalization + short-term debt + long-term debt − cash');
+add('enterprise_value','Enterprise Value','Market capitalization + total debt − cash');
 add('latest_price','Latest Price','Most recent market price returned by the quote provider.');
 add('monthly_price','Month-End Price','Last available monthly close in the financial period’s calendar month, on the matching split basis.');
 add('capital_expenditures','Capital Expenditures','Reported cash payments to acquire property, plant and equipment.');

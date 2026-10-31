@@ -49,3 +49,13 @@ assert 'balance_sheet' not in split_result(b=contradictory_alias,prefix=aliased)
 print('Document identity guards pass: duplicate context/unit contradictions rejected; equal resources retained; aliased QName conflicts withheld.')
 
 assert split_result(prefix=instant.replace('xmlns:us-gaap=', 'xmlns:us-gaap = '))['statement_evidence']['balance_sheet']['tables']==[0,1],'Legal namespace declaration whitespace must preserve the same identity'
+
+# Current-liability classification depends on explicit headings and table scope.
+def labelled(name,value,label):return fact(name,value).replace('>'+name+'<','>'+label+'<')
+scope_table='<h2>Consolidated Balance Sheets</h2><table>'+labelled('NotesAndLoansPayable',1,'Loans and notes payable')+'<tr><td>Current liabilities</td></tr>'+labelled('LongTermDebtCurrent',2,'Long-term debt currently due')+labelled('NotesAndLoansPayable',3,'Loans and notes payable')+labelled('LiabilitiesCurrent',20,'Total current liabilities')+labelled('NotesAndLoansPayable',4,'Loans and notes payable')+'</table>'
+scoped=extract((instant+scope_table+'</body></html>').encode(),metadata)
+assert [(p['value'],p['balance_classification']) for p in scoped['facts'] if p['name']=='NotesAndLoansPayable']==[(1,None),(3,'current_liabilities'),(4,None)]
+scope_table=scope_table.replace(labelled('LiabilitiesCurrent',20,'Total current liabilities'),'<tr><td>Noncurrent liabilities</td></tr>')
+scoped=extract((instant+scope_table+'</body></html>').encode(),metadata)
+assert next(p for p in scoped['facts'] if p['value']==4)['balance_classification'] is None
+print('Critical balance-sheet scope checks pass: explicit headings, fact captions, current subtotal boundaries and noncurrent sections.')

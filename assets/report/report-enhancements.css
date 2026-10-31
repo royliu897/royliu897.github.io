@@ -45,14 +45,19 @@ html[data-theme=dark] .report-formula-popover{box-shadow:0 8px 28px #0006}
 
 .report-coverage-note{font-size:.875rem;line-height:1.5;margin:.5rem 0}
 
-.report-share-basis{font-size:.75rem;line-height:1.5;margin:.5rem 0;color:#737373}
-.report-share-basis summary{cursor:pointer;text-decoration:underline}
-.report-share-basis-body{border:1px solid #e5e5e5;border-radius:.375rem;padding:.75rem;margin:.5rem 0;max-height:24rem;overflow:auto}
-.report-share-basis-body p+p{margin-top:.375rem}
-.report-share-basis-body a{text-decoration:underline}
-.report-basis-observations{font-variant-numeric:tabular-nums}
-[data-theme="dark"] .report-share-basis{color:#a3a3a3}
-[data-theme="dark"] .report-share-basis-body{border-color:#404040}
+.report-share-basis{font-size:12px;line-height:1.5;margin:.5rem 0;color:var(--report-muted)}
+.report-share-basis summary{cursor:pointer;width:fit-content}
+.report-share-basis-body{border-block:1px solid var(--report-line);padding:.6rem 0;margin:.4rem 0;max-height:min(22rem,60dvh);overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
+.report-share-basis-toolbar{position:sticky;top:0;padding:.2rem 0 .5rem;background:var(--report-paper)}
+.report-share-basis-date{font-size:11px;margin:.25rem 0 .6rem}
+.report-share-events{list-style:none;margin:0;padding:0;font-variant-numeric:tabular-nums}
+.report-share-events li{display:flex;justify-content:space-between;gap:1rem;padding:.35rem 0;border-top:1px solid var(--report-line)}
+.report-share-basis-body a{color:var(--report-blue);text-decoration:underline;text-underline-offset:3px}
+.report-share-adjustments{border-collapse:collapse;width:100%;font-size:11px;font-variant-numeric:tabular-nums}
+.report-share-adjustments :is(td,th){padding:.35rem .5rem;text-align:left;border-top:1px solid var(--report-line);overflow-wrap:anywhere}
+.report-share-adjustments th{font-weight:500;color:var(--report-ink)}
+.report-share-basis :is(summary,button,a):focus-visible{outline:2px solid var(--report-blue);outline-offset:3px}
+
 
 .report-definition-term{display:inline;padding:0;border:0;background:none;font:inherit;color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;cursor:pointer;text-align:inherit}
 .report-definition-term:hover{text-decoration-style:solid;color:#2563eb}

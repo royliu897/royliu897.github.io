@@ -28,7 +28,7 @@ const empty={cik:'2120882',asOf:'2026-10-29',facts:{}};
 for(const ticker of ['SKHY','HXSCL']){
  const p=toReportPayload(empty,{ticker},null,'annual',ticker);
  assert.equal(p.profile.currency,null);assert.equal(p.financials.source_coverage.status,'unavailable');
- assert.match(p.profile.coverage,/untagged/);assert.equal(p.price,null);
+ assert.match(p.profile.coverage,/Structured financials unavailable/);assert.equal(p.price,null);
  assert.ok(p.financials.income_statement.every(r=>!Object.keys(r.values).length));
 }
 assert.equal(reportCurrencySymbol('KRW'),'₩');

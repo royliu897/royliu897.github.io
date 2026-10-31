@@ -1,16 +1,17 @@
-import {templateConcepts} from './statement-source-policy.mjs?v=d4f1839989bb';
-import {concepts} from './concept-registry.mjs?v=d4f1839989bb';
-const derived=new Set(['gross_profit','total_operating_expenses','gross_loans','short_term_debt','long_term_debt','total_noncurrent_liabilities','total_liabilities_equity','net_income_continuing','cf_capex','cf_acquisitions','cf_investments','cf_net_stock','cf_net_preferred','cf_debt_net','cf_working_capital','free_cash_flow','other_equity','cf_other_operating','cf_other_investing','cf_other_financing']);
+import {sourceNames} from './primary-bindings.mjs?v=ced40ecbac9d';
+import {templateConcepts} from './statement-source-policy.mjs?v=ced40ecbac9d';
+import {concepts} from './concept-registry.mjs?v=ced40ecbac9d';
+const derived=new Set(['total_debt','gross_profit','total_operating_expenses','gross_loans','short_term_debt','long_term_debt','total_noncurrent_liabilities','total_liabilities_equity','net_income_continuing','cf_capex','cf_acquisitions','cf_investments','cf_net_stock','cf_net_preferred','cf_debt_net','cf_working_capital','free_cash_flow','other_equity','cf_other_operating','cf_other_investing','cf_other_financing']);
 const reasons={
- missing_binding:'This template row has no configured source mapping or derivation. A filing may disclose a suitable value; it has not been mapped here.',
- not_in_loaded_feed:'No eligible mapped observation for this period was found in the loaded feed. This does not mean the company did not disclose it. A different tag, scoped observation or full-filing detail may be needed.',
- dependency_missing:'This value requires other inputs that are missing or have not been mapped from the loaded sources. It has not been filled by assuming those inputs are zero.',
- ttm_inputs_missing:'The loaded observations are insufficient to produce this trailing-twelve-month value. Reported annual EPS is preferred; quarterly diluted EPS is not simply added together.',
- share_basis_unresolved:'The reporting share basis could not be established confidently across corporate actions. The value is withheld; see Share basis details for the reported observation and evidence.',
- conflicting_source:'The source contains conflicting or explicitly excluded observations for this context. No supported value was selected.',
- ineligible_context:'A recognized tag exists, but its units, reporting duration, dimensions, approval or scope do not support this cell.',
- broader_cash:'Related cash observations exist, but they include restricted cash or represent only a component. They cannot automatically be substituted for this cash-and-equivalents row.',
- source_scope:'A source observation was excluded by the statement-selection or accounting-scope policy. A component or a differently scoped total cannot silently replace the requested value.'
+ missing_binding:'No reviewed mapping for this field.',
+ not_in_loaded_feed:'No matching value in the loaded sources.',
+ dependency_missing:'Required source inputs are missing.',
+ ttm_inputs_missing:'Not enough data to calculate TTM.',
+ share_basis_unresolved:'Share basis unresolved; value withheld.',
+ conflicting_source:'Conflicting or excluded source observations.',
+ ineligible_context:'Related data has a different unit, period or scope.',
+ broader_cash:'Related cash values include restricted cash or only a component.',
+ source_scope:'Related data has a different accounting scope.'
 };
 export function attachValueAvailability(data,financials,{currency,symbol,annualSource,registry:activeRegistry}={}){
  const registry=activeRegistry||templateConcepts(concepts,financials.company_type),basis=financials.share_basis?.observations||[],exclusions=financials.source_selection?.excluded_observations||[];
@@ -21,7 +22,7 @@ export function attachValueAvailability(data,financials,{currency,symbol,annualS
   return tagged.get(name).get(end)||[];
  }
  for(const table of ['income_statement','balance_sheet','cash_flow'])for(const row of financials[table]){
-  if(row.key.startsWith('_'))continue;const registryKey=financials.company_type==='insurance'&&row.key==='receivables'?'accounts_receivable':row.key,aliases=registry[registryKey]?.[0]||[],type=registry[registryKey]?.[1]||'duration';
+  if(row.key.startsWith('_'))continue;const registryKey=financials.company_type==='insurance'&&row.key==='receivables'?'accounts_receivable':row.key,aliases=sourceNames(data,registry[registryKey]?.[0]||[],registryKey),type=registry[registryKey]?.[1]||'duration';
   row.source_context={concepts:aliases,currency,source_url:annualSource||null,inspect_href:symbol?'#/company/'+symbol.replace(':','.')+'/unmapped':null};
   const missing={};
   for(let i=0;i<financials.columns.length;i++){

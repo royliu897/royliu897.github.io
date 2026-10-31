@@ -1,11 +1,12 @@
-import {valuationKeys} from './native-valuation.mjs?v=d4f1839989bb';
-import {missingValueDefinition} from './value-availability.mjs?v=d4f1839989bb';
-import {createCurrencyDisplay} from './usd-display.mjs?v=d4f1839989bb';
-import {createUnmappedView} from './unmapped-view.mjs?v=d4f1839989bb';
-import {resolveDefinition,definitionById,definitionTokens} from './definition-graph.mjs?v=d4f1839989bb';
-export {statisticFormula} from './definition-graph.mjs?v=d4f1839989bb';
+import {createShareBasisView} from './share-basis-view.mjs?v=ced40ecbac9d';
+import {valuationKeys} from './native-valuation.mjs?v=ced40ecbac9d';
+import {missingValueDefinition} from './value-availability.mjs?v=ced40ecbac9d';
+import {createCurrencyDisplay} from './usd-display.mjs?v=ced40ecbac9d';
+import {createUnmappedView} from './unmapped-view.mjs?v=ced40ecbac9d';
+import {resolveDefinition,definitionById,definitionTokens} from './definition-graph.mjs?v=ced40ecbac9d';
+export {statisticFormula} from './definition-graph.mjs?v=ced40ecbac9d';
 export function createReportFeatures(React){
- const h=React.createElement;
+ const h=React.createElement,ShareBasis=createShareBasisView(React);
  const chain=[];
  let sequence=0;
  function closeFrom(index=0,restore=false){
@@ -69,24 +70,14 @@ export function createReportFeatures(React){
   return h('button',{type:'button',className:'report-theme-toggle',onClick:toggle,'aria-label':dark?'Light mode':'Dark mode','aria-pressed':dark,title:dark?'Switch to light mode':'Switch to dark mode'},
    h('svg',{viewBox:'0 0 24 24',width:16,height:16,fill:'none',stroke:'currentColor',strokeWidth:1.7,'aria-hidden':true},dark?h(React.Fragment,null,h('circle',{cx:12,cy:12,r:4}),h('path',{d:'M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4'})):h('path',{d:'M20.8 13A8.7 8.7 0 0 1 11 3.2 8.8 8.8 0 1 0 20.8 13Z'})),h('span',null,dark?'Light mode':'Dark mode'));
  }
- function CompanyNotes({companyKey,coverage,annualFiling,basis,sourceNotice,sourceSummary,valuationNotice}){
+ function CompanyNotes({companyKey,coverage,annualFiling,basis,sourceNotice,sourceSummary}){
   const storageKey='roy-report-notes:'+companyKey;
   const [open,setOpen]=React.useState(false),[value,setValue]=React.useState(()=>{try{return localStorage.getItem(storageKey)||'';}catch{return '';}}),[failed,setFailed]=React.useState(false);
   if(!companyKey)return null;
   function update(event){const text=event.target.value;setValue(text);try{localStorage.setItem(storageKey,text);setFailed(false);}catch{setFailed(true);}}
-  return h('div',{className:'report-company-notes'},sourceNotice&&h('details',{className:'report-source-notice'},h('summary',null,sourceSummary||'Financial source details'),h('p',null,sourceNotice,' ',valuationNotice,' ',annualFiling&&h('a',{href:annualFiling,target:'_blank',rel:'noopener noreferrer',className:'underline'},'Open annual source'))),
+  return h('div',{className:'report-company-notes'},sourceNotice&&annualFiling&&h('details',{className:'report-source-notice'},h('summary',null,sourceSummary||'Financial source details'),annualFiling&&h('a',{href:annualFiling,target:'_blank',rel:'noopener noreferrer',className:'underline'},'Annual source')),
    coverage&&h('p',{className:'report-coverage-note'},coverage,' ',annualFiling&&h('a',{href:annualFiling,target:'_blank',rel:'noopener noreferrer',className:'underline'},'Open annual filing')),
-   basis&&h('details',{className:'report-share-basis'},
-    h('summary',null,`Share basis: ${basis.events.length} known event${basis.events.length===1?'':'s'}${basis.observations.some(o=>o.basis_status==='unresolved')?' · unresolved values omitted':''} · details`),
-    h('div',{className:'report-share-basis-body'},
-     h('p',null,`Knowledge cutoff: ${basis.policy.knowledge_as_of}. Target share basis: ${basis.policy.target_share_basis}. Mode: ${basis.policy.mode}.`),
-     h('p',null,'Confirmed = corroborated EPS/share observations or a source disclosure. Inferred = chronology or a single comparative observation. Unresolved = contradictory or insufficient evidence; affected values are omitted.'),
-     basis.source_class&&h('p',null,`Listed share class: ${basis.source_class.identity}. Additional statement sources: ${basis.filing_supplement?.sources?.length||0} filings.`),
-     basis.filing_supplement?.status==='partial'&&h('p',null,'Some historical class-specific source filings could not be retrieved or verified. Unavailable values remain blank.'),
-     basis.feed_status!=='available'&&h('p',null,'Yahoo event history is unavailable or ambiguous for this share class. Using available SEC event facts; event coverage may be incomplete.'),
-     ...basis.events.map(e=>h('p',{key:e.id},`${e.date}: ${e.ratio}-for-1 (${e.type.replaceAll('_',' ')}). `,...e.sources.map((source,i)=>h('a',{key:i,href:source.url,target:'_blank',rel:'noopener noreferrer'},source.source+(i<e.sources.length-1?' · ':''))))),
-     h('p',null,'Source share-basis observations below remain in the original reporting currency.'),h('p',null,'EPS uses reported annual values when available. Nonannual TTM EPS is an estimate from common income and time-weighted shares; quarterly diluted EPS is not summed. Cash dividends do not trigger share-basis changes; dividend/share history is displayed on the target basis, not as original declared cash amounts.'),
-     h('div',{className:'report-basis-observations'},...basis.observations.filter(o=>o.basis_status==='unresolved'||o.metric==='EPS (Diluted)'||o.metric==='Earnings Per Share (Diluted)'||/diluted/i.test(o.metric)).map((o,i)=>h('p',{key:i},`${o.metric} ${o.period}: ${o.value===undefined?'unavailable':Number(o.value).toFixed(o.metric.startsWith('Shares')?0:3)} · ${o.basis_status}${o.factor&&o.factor!==1?' · factor '+o.factor:''}${o.calculation?' · '+o.calculation:''}${o.metric.startsWith('EPS')&&o.reported_value!==undefined?' · reported '+o.reported_value:''}${o.filed?' · filed '+o.filed:''}`,o.accn&&h('a',{href:o.source_url||'https://www.sec.gov/Archives/edgar/data/'+Number(companyKey)+'/'+o.accn.replaceAll('-','')+'/',target:'_blank',rel:'noopener noreferrer'},' · filing')))))),
+   h(ShareBasis,{basis,companyKey}),
    h('span',{className:'font-semibold'},'Company Notes: '),h('button',{type:'button',className:'report-notes-toggle',onClick:()=>setOpen(!open),'aria-expanded':open},open?'Hide ▴':'Show ▾'),
    open&&h('div',null,h('textarea',{'aria-label':'Company notes',className:'report-notes-input',value,onChange:update,placeholder:'Write your business description or research notes…',rows:4}),h('p',{className:'report-notes-status',role:'status'},failed?'Could not save in this browser. Copy your notes before leaving.':'Saved in this browser only.')));
  }

@@ -1,4 +1,4 @@
-import {createDataReview} from './data-review.mjs?v=d4f1839989bb';
+import {createDataReview} from './data-review.mjs?v=ced40ecbac9d';
 export function createUnmappedView(React){
  const h=React.createElement,DataReview=createDataReview(React);
  function rawFormat(value,unit,scale){
@@ -41,7 +41,7 @@ export function createUnmappedView(React){
    h('tbody',null,...rows.slice(0,limit).map(sourceRow)))):
    h('p',{className:'report-unmapped-note'},search?'No tags match this filter.':'No unregistered concepts were found for these periods. This does not establish complete filing coverage.');
   return h('section',{className:'report-unmapped','aria-label':'Unmapped source concepts'},
-   h('p',{className:'report-unmapped-note'},'Unmapped accounts can include footnote details or components already included in totals. Values retain their source signs and share basis; no TTM is calculated.'),
+   h('p',{className:'report-unmapped-note'},'Raw source details, including footnotes and components. Original signs and share basis.'),
    quality,controls,table,
    rows.length>limit&&h('button',{type:'button',className:'report-unmapped-more',onClick:()=>setLimit(limit+100)},`Show more (${rows.length-limit} remaining)`));
  };

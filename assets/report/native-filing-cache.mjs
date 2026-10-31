@@ -1,4 +1,4 @@
-import {validReportDate} from './report-dates.mjs?v=d4f1839989bb';
+import {validReportDate} from './report-dates.mjs?v=ced40ecbac9d';
 const patterns={TWSE:/^TWSE:\d{4,6}$/,KRX:/^KRX:\d{6}$/};
 function identity(symbol,entry,data){
  const [exchange,ticker]=String(symbol).split(':');
@@ -30,7 +30,7 @@ const sha256=async text=>[...new Uint8Array(await crypto.subtle.digest('SHA-256'
 export async function loadNativeFilingCache(symbol,fetcher=fetch){
  if(!Object.values(patterns).some(re=>re.test(symbol))||Date.now()<retryAt)return null;
  try{
-  manifestPromise??=fetcher(String(new URL('./data/native-filings/manifest.json',import.meta.url)),{signal:AbortSignal.timeout(5000)}).then(async r=>{if(!r.ok)throw Error('Native statement cache unavailable');return r.json();}).catch(error=>{manifestPromise=undefined;retryAt=Date.now()+60000;throw error;});
+  manifestPromise??=fetcher(String(new URL('./data/native-filings/manifest.json',import.meta.url)),{signal:AbortSignal.timeout(5000),cache:'no-cache'}).then(async r=>{if(!r.ok)throw Error('Native statement cache unavailable');return r.json();}).catch(error=>{manifestPromise=undefined;retryAt=Date.now()+60000;throw error;});
   const manifest=await manifestPromise,entry=manifest?.companies?.[symbol];
   if(!entry||entry.symbol!==symbol||!/^(?:TWSE-\d{4,6}|KRX-\d{6})-[a-f0-9]{16}\.json$/.test(entry.file||'')||!/^[a-f0-9]{64}$/.test(entry.sha256||'')||Date.now()<(failedUntil.get(entry.file)||0))return null;
   if(!entry.file.startsWith(symbol.replace(':','-')+'-'))return null;

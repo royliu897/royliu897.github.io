@@ -18,7 +18,8 @@ const data={cik:'1403161',asOf:'2026-10-29',facts:{
  Assets:fact('Assets',[{...annual(1e9),start:undefined}]),
 }};
 const payload=toReportPayload(data,{ticker:'V'}),audit=payload.financials.mapping_audit;
-assert.ok(audit.rows.find(r=>r.tag==='us-gaap:CostsAndExpenses'));
+assert.ok(!audit.rows.some(r=>r.tag==='us-gaap:CostsAndExpenses'));
+assert.equal(payload.financials.income_statement.find(r=>r.key==='reported_costs_expenses').values['2025'],16006,'Reported broad costs have their own row, without becoming cost of revenue');
 assert.equal(audit.rows.find(r=>r.tag==='us-gaap:GeneralAndAdministrativeExpense').observations['2025'].value,1.926e9);
 assert.ok(!audit.rows.some(r=>r.tag.includes('RevenueFrom')||r.tag.endsWith(':Assets')),'Registered tags stay out of the inventory');
 assert.ok(!audit.rows.some(r=>/FutureConcept|WrongDuration/.test(r.tag)));
@@ -40,7 +41,7 @@ const q={cik:'1403161',asOf:'2026-10-29',facts:{Unregistered:fact('Raw',[
  annual(5,{start:undefined,end:'2026-06-30',filed:'2026-07-29'})])}};
 const qa=buildMappingAudit(q,{columns:['2026Q3'],period_dates:['2026-06-30']},true);
 assert.deepEqual(qa.rows.map(r=>r.kind).sort(),['YTD','instant','quarter']);
-const duplicate=structuredClone(data);duplicate.facts.CostsAndExpenses.units.USD.push(annual(1));
-assert.equal(buildMappingAudit(duplicate,payload.financials).rows.find(r=>r.tag==='us-gaap:CostsAndExpenses').observations['2025'].conflicts.length,1);
-assert.equal(data.facts.CostsAndExpenses.units.USD[0].conflicts,undefined,'Raw observations stay immutable');
+const duplicate=structuredClone(data);duplicate.facts.FootnoteDetail.units.USD.push(annual(1));
+assert.equal(buildMappingAudit(duplicate,payload.financials).rows.find(r=>r.tag==='us-gaap:FootnoteDetail').observations['2025'].conflicts.length,1);
+assert.equal(data.facts.FootnoteDetail.units.USD[0].conflicts,undefined,'Raw observations stay immutable');
 console.log('Mapping audit passes: explicit registry, period/cutoff/unit/classification isolation, source links, conflicts, zero/sign preservation and no invented gross profit.');
