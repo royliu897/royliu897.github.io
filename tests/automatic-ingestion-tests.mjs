@@ -37,14 +37,22 @@ try{
  body=await(await actor.fetch(request())).json();assert.equal(body.supplement.facts['report:PrimaryStatementDebt'].units.USD[0].val,200);assert.equal(body.ingestion.completed,1);
  const sourceCount=requests.filter(u=>u===filing.url).length;
  assert.equal((await(await actor.fetch(request(body.ingestion.revision))).json()).supplement,undefined,'Unchanged revisions do not retransfer the snapshot');
+ const storageGet=storage.get.bind(storage);storage.get=async key=>{assert.ok(!key.startsWith('document:'),'Requests must read the durable compiled snapshot, not reassemble filings');return storageGet(key);};
  actor=new FilingIngestionObject(ctx,env);body=await(await actor.fetch(request())).json();assert.ok(body.supplement);assert.equal(requests.filter(u=>u===filing.url).length,sourceCount,'A restarted object serves persistent processed data without re-fetching filings');
+ const statusOnly=await(await actor.fetch(new Request('https://internal/?cik=1&ticker=ONE&status=1'))).json();assert.equal(statusOnly.supplement,undefined);assert.equal(statusOnly.ingestion.revision,body.ingestion.revision);storage.get=storageGet;
  assert.equal((await actor.fetch(request(0,'OTHER'))).status,400);
- now+=300001;metadata.filings.recent.form.unshift('10-Q');metadata.filings.recent.accessionNumber.unshift('0000000001-26-000002');metadata.filings.recent.filingDate.unshift('2026-08-01');metadata.filings.recent.reportDate.unshift('2026-06-30');metadata.filings.recent.primaryDocument.unshift('quarter.htm');
+ now+=3600001;metadata.filings.recent.form.unshift('10-Q');metadata.filings.recent.accessionNumber.unshift('0000000001-26-000002');metadata.filings.recent.filingDate.unshift('2026-08-01');metadata.filings.recent.reportDate.unshift('2026-06-30');metadata.filings.recent.primaryDocument.unshift('quarter.htm');
  await actor.fetch(request());await actor.alarm();assert.equal(actor.meta.queue.length,1,'A new filing queues only the new accession');allowed=false;await actor.alarm();assert.equal(actor.meta.status,'retrying');assert.equal(actor.meta.queue.length,1);assert.ok((await(await actor.fetch(request())).json()).supplement,'Last-good data survives rate limiting');
  now=actor.meta.retry_at+1;allowed=true;await actor.alarm();assert.equal(actor.meta.status,'ready');assert.equal(actor.meta.completed,2);assert.equal(requests.filter(u=>u===filing.url).length,sourceCount);
+ // Publication batches processing updates; readers see a coherent durable revision.
+ const previous=actor.meta.snapshot;actor.meta.status='processing';actor.meta.revision++;
+ await actor.publishSnapshot();assert.equal(actor.meta.snapshot.revision,previous.revision,'Do not publish every completed filing');
+ const pendingStatus=await(await actor.fetch(new Request('https://internal/?cik=1&ticker=ONE&status=1'))).json();assert.equal(pendingStatus.ingestion.revision,previous.revision,'Status advertises only a published snapshot');
+ now+=15001;await actor.publishSnapshot();assert.equal(actor.meta.snapshot.revision,actor.meta.revision);assert.equal(storage.data.has('snapshot:'+previous.revision+':0'),false,'Superseded company snapshots are removed');actor.meta.status='ready';await actor.save();
  const raw={cik:'1',asOf:'2026-10-31',facts:{}},original=JSON.stringify(raw);let clientCalls=0;
  const api=async()=>{clientCalls++;return {cik:'1',ingestion:{status:'processing',revision:1,poll_after_ms:2500},supplement:compiled};};
- const [a,b]=await Promise.all([supplementAutomaticPrimary(raw,record,api),supplementAutomaticPrimary(raw,record,api)]);assert.equal(clientCalls,1);assert.ok(a.facts['report:PrimaryStatementDebt']);assert.ok(b.facts['report:PrimaryStatementDebt']);assert.equal(JSON.stringify(raw),original);
+ const [a,b]=await Promise.all([supplementAutomaticPrimary(raw,record,api),supplementAutomaticPrimary(raw,record,api)]);assert.equal(clientCalls,2,'Concurrent callers share one status check and one changed snapshot download');assert.ok(a.facts['report:PrimaryStatementDebt']);assert.ok(b.facts['report:PrimaryStatementDebt']);assert.equal(JSON.stringify(raw),original);
+ now+=3000;let unchangedCalls=0;const unchanged=await supplementAutomaticPrimary(raw,record,async()=>{unchangedCalls++;return {cik:'1',ingestion:{status:'processing',revision:1,poll_after_ms:10000}};});assert.equal(unchangedCalls,1);assert.strictEqual(unchanged.facts,a.facts,'Unchanged metadata must reuse the merged facts');
  now+=3000;const stale=await supplementAutomaticPrimary(raw,record,async()=>{throw Error('Transient network failure');});assert.ok(stale.facts['report:PrimaryStatementDebt']);assert.equal(stale.primary_ingestion.using_last_good,true);assert.equal(reportRefetchInterval({state:{data:{financials:stale}}}),15000);assert.equal(reportRefetchInterval({financials:{}}),false);
 }finally{globalThis.fetch=oldFetch;Date.now=oldNow;}
 

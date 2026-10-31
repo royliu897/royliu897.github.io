@@ -1,4 +1,4 @@
-import {verifiedNonShareAction} from './corporate-actions.mjs?v=fba1821c6123';
+import {verifiedNonShareAction} from './corporate-actions.mjs?v=e0a27133a6e6';
 const DAY=86400000;
 const lag=(a,b)=>(Date.parse(a)-Date.parse(b))/DAY;
 const finite=n=>Number.isFinite(n);

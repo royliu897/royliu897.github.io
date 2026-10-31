@@ -4,6 +4,7 @@ const json=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:
 const terminal=new Set(['ready','partial','unsupported','failed']);
 const fail=(message,status=502)=>Object.assign(Error(message),{status});
 const maxSourceBytes=16000000;
+const discoveryInterval=3600000,publishInterval=15000,snapshotChunkBytes=1000000;
 async function packed(value){return new Uint8Array(await new Response(new Blob([JSON.stringify(value)]).stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer());}
 async function unpacked(value){return value?JSON.parse(await new Response(new Blob([value]).stream().pipeThrough(new DecompressionStream('gzip'))).text()):null;}
 async function limitedText(response,limit){
@@ -33,16 +34,17 @@ export class FilingIngestionObject {
   if(this.meta.cik&&this.meta.cik!==String(Number(cik)))return json({error:'Ingestion issuer identity mismatch'},400);
   if(this.meta.profile&&!this.meta.profile.tickers.includes(ticker))return json({error:'Ticker does not match this SEC company'},400);
   this.meta.cik=String(Number(cik));this.meta.requested_ticker=ticker;
-  if(this.meta.version!==INGESTION_VERSION||!this.meta.phase||terminal.has(this.meta.status)&&Date.now()-this.meta.checked_at>=300000){
+  if(this.meta.version!==INGESTION_VERSION||!this.meta.phase||terminal.has(this.meta.status)&&Date.now()-this.meta.checked_at>=discoveryInterval){
    if(this.meta.version!==INGESTION_VERSION)this.meta.seed_checked=false;this.meta.discovery=null;this.meta.version=INGESTION_VERSION;this.meta.phase='plan';this.meta.status='queued';await this.save();await this.schedule();
   }else if(!terminal.has(this.meta.status))await this.schedule(Math.max(100,(this.meta.retry_at||0)-Date.now()));
+  if(this.meta.revision!==(this.meta.published_revision||0))await this.schedule();
   const body={cik:this.meta.cik,ingestion:this.status()};
-  if(this.meta.revision>since){const snapshot=await this.snapshot();if(snapshot)body.supplement=snapshot;}
+  if(!u.searchParams.has('status')&&(this.meta.published_revision||0)>since){const snapshot=await this.snapshot();if(snapshot)body.supplement=snapshot;}
   return json(body);
  }
  status(){
-  const m=this.meta,failures=(m.selected||[]).filter(a=>['unsupported','failed'].includes(m.documents[a]?.status)&&!m.queue?.some(f=>f.accession===a)).map(accession=>({accession,reason:m.documents[accession].reason})),status=terminal.has(m.status)&&!['unsupported','failed'].includes(m.status)&&failures.length?'partial':m.status,active=!terminal.has(status),retry=Math.max(0,(m.retry_at||0)-Date.now());
-  return {version:INGESTION_VERSION,status:status||'queued',revision:m.revision,completed:m.completed||0,total:m.total||0,failed:failures.length,retrieval_failures:failures.slice(0,24),checked_at:m.checked_at?new Date(m.checked_at).toISOString():null,latest_period:m.latest_period||null,poll_after_ms:active?Math.max(2500,Math.min(60000,retry)):300000,...(retry?{retry_at:new Date(m.retry_at).toISOString()}:{}),scope:'Automatic primary filings; unresolved mappings remain blank.'};
+  const m=this.meta,failures=(m.selected||[]).filter(a=>['unsupported','failed'].includes(m.documents[a]?.status)&&!m.queue?.some(f=>f.accession===a)).map(accession=>({accession,reason:m.documents[accession].reason})),status=terminal.has(m.status)&&!['unsupported','failed'].includes(m.status)&&failures.length?'partial':m.status,active=!terminal.has(status)||m.revision>(m.published_revision||0),retry=Math.max(0,(m.retry_at||0)-Date.now());
+  return {version:INGESTION_VERSION,status:status||'queued',revision:m.published_revision||0,completed:m.completed||0,total:m.total||0,failed:failures.length,retrieval_failures:failures.slice(0,24),checked_at:m.checked_at?new Date(m.checked_at).toISOString():null,latest_period:m.latest_period||null,poll_after_ms:active?Math.max(10000,Math.min(60000,retry)):300000,...(retry?{retry_at:new Date(m.retry_at).toISOString()}:{}),scope:'Automatic primary filings; unresolved mappings remain blank.'};
  }
  async bootstrap(){
   if(this.meta.seed_checked)return;
@@ -54,7 +56,7 @@ export class FilingIngestionObject {
    if(seed.ingestion_version!==INGESTION_VERSION)return;
    combinePrimarySupplements([seed],this.meta.cik);await this.ctx.storage.put('seed',await packed(seed));
    for(const s of seed.sources||[])if(Object.keys(s.selected_statements||s.statement_evidence||{}).length===3)this.meta.documents[s.accession]={status:'seeded',version:INGESTION_VERSION};
-   this.meta.revision++;this.cache=null;
+   this.meta.revision++;
   }catch{/* A prebuilt seed is an optimization, never required for discovery. */}
  }
  async plan(){
@@ -105,7 +107,7 @@ export class FilingIngestionObject {
    let compiled;try{compiled=compileInlineFiling(source,this.meta.profile,filing,hash).result;}catch(e){if((/Requested issuer\/period not found/.test(e.message)&&!/<(?:[\w.-]+:)?nonfraction\b/i.test(source))||/No unambiguous primary/.test(e.message))compiled=await this.legacy(filing,source,hash);else{e.permanent=true;throw e;}}
    const body=await packed(compiled);if(body.byteLength>1900000)throw Object.assign(fail('Compiled filing exceeds storage limit',413),{permanent:true});
    await this.ctx.storage.put('document:'+filing.accession,body);
-   this.meta.documents[filing.accession]={status:'ready',version:INGESTION_VERSION,source_sha256:hash};await this.clearParts(filing);this.meta.queue.shift();this.meta.completed++;this.meta.revision++;this.meta.retry_at=null;this.cache=null;
+   this.meta.documents[filing.accession]={status:'ready',version:INGESTION_VERSION,source_sha256:hash};await this.clearParts(filing);this.meta.queue.shift();this.meta.completed++;this.meta.revision++;this.meta.retry_at=null;
   }catch(e){
    if(e.status===429){this.meta.status='retrying';this.meta.retry_at=Date.now()+61000;await this.save();return;}
    filing.attempts=(filing.attempts||0)+1;
@@ -121,13 +123,30 @@ export class FilingIngestionObject {
    if(this.meta.phase==='plan'||this.meta.phase==='archives'){
     try{if(this.meta.phase==='plan')await this.plan();else await this.discoverArchive();}catch(e){this.meta.plan_attempts=(this.meta.plan_attempts||0)+(e.status===429?0:1);this.meta.status=e.status===400||this.meta.plan_attempts>=5?'failed':'retrying';this.meta.last_error=e.message;if(this.meta.status==='failed')this.meta.checked_at=Date.now();this.meta.retry_at=Date.now()+(e.status===429?61000:30000);await this.save();}
    }else if(this.meta.queue.length)await this.processDocument();
-  }finally{this.busy=false;if(!terminal.has(this.meta.status))await this.schedule(Math.max(300,(this.meta.retry_at||0)-Date.now()));}
+  }finally{try{await this.publishSnapshot();}finally{this.busy=false;}if(!terminal.has(this.meta.status))await this.schedule(Math.max(300,(this.meta.retry_at||0)-Date.now()));}
+ }
+ async publishSnapshot(){
+  const m=this.meta;
+  if(m.revision===(m.published_revision||0)||m.published_revision&&!terminal.has(m.status)&&Date.now()-(m.published_at||0)<publishInterval)return;
+  const parts=[],seed=await unpacked(await this.ctx.storage.get('seed'));if(seed)parts.push(seed);
+  for(const accession of m.selected||[]){const value=await this.ctx.storage.get('document:'+accession);if(value){const part=await unpacked(value);if(part)parts.push(part);}}
+  if(!parts.length)return;
+  const result=combinePrimarySupplements(parts,m.cik),body=await packed(result),old=m.snapshot,revision=m.revision,count=Math.ceil(body.byteLength/snapshotChunkBytes);
+  for(let i=0;i<count;i++)await this.ctx.storage.put('snapshot:'+revision+':'+i,body.slice(i*snapshotChunkBytes,(i+1)*snapshotChunkBytes));
+  m.snapshot={revision,count};m.published_revision=revision;m.published_at=Date.now();await this.save();this.cache={revision,result};
+  if(old&&old.revision!==revision)for(let i=0;i<old.count;i++)await this.ctx.storage.delete('snapshot:'+old.revision+':'+i);
+  // Drop observations outside the bounded selected accession set only after
+  // the replacement snapshot has been committed. Historical selected filings stay.
+  const selected=new Set(m.selected||[]);
+  for(const accession of Object.keys(m.documents))if(!selected.has(accession)){await this.ctx.storage.delete('document:'+accession);delete m.documents[accession];}
+  await this.save();
  }
  async snapshot(){
-  if(this.cache?.revision===this.meta.revision)return this.cache.result;
-  const parts=[],seed=await unpacked(await this.ctx.storage.get('seed'));if(seed)parts.push(seed);
-  for(const accession of this.meta.selected||[]){const value=await this.ctx.storage.get('document:'+accession);if(value){const part=await unpacked(value);if(part)parts.push(part);}}
-  if(!parts.length)return null;
-  const result=combinePrimarySupplements(parts,this.meta.cik);this.cache={revision:this.meta.revision,result};return result;
+  const saved=this.meta.snapshot;if(!saved)return null;
+  if(this.cache?.revision===saved.revision)return this.cache.result;
+  const chunks=[];let size=0;
+  for(let i=0;i<saved.count;i++){const chunk=await this.ctx.storage.get('snapshot:'+saved.revision+':'+i);if(!chunk)throw Error('Stored snapshot incomplete');chunks.push(chunk);size+=chunk.byteLength;}
+  const body=new Uint8Array(size);let offset=0;for(const chunk of chunks){body.set(chunk,offset);offset+=chunk.byteLength;}
+  const result=await unpacked(body);this.cache={revision:saved.revision,result};return result;
  }
 }

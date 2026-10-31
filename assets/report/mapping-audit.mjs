@@ -1,4 +1,4 @@
-import {concepts,registryInfo} from './concept-registry.mjs?v=fba1821c6123';
+import {concepts,registryInfo} from './concept-registry.mjs?v=e0a27133a6e6';
 
 const registered=new Set(Object.values(concepts).flatMap(([names])=>names));
 const DAY=86400000;

@@ -1,4 +1,4 @@
-import {createDataReview} from './data-review.mjs?v=fba1821c6123';
+import {createDataReview} from './data-review.mjs?v=e0a27133a6e6';
 export function createUnmappedView(React){
  const h=React.createElement,DataReview=createDataReview(React);
  function rawFormat(value,unit,scale){
