@@ -273,6 +273,28 @@ def eligible(reference, profile, config):
     return reasons
 
 
+def _peer_samples(groups):
+    samples = {}
+    for name, pool in groups.items():
+        buckets = defaultdict(list)
+        for item in pool:
+            if item.get("stale"):
+                continue
+            for horizon in HORIZONS:
+                value = item.get("return_" + horizon)
+                if value is not None:
+                    buckets[
+                        (name, item.get("as_of"), item.get("price_provider"), horizon)
+                    ].append((value, item["cik"]))
+        for key, pairs in buckets.items():
+            pairs.sort(key=lambda pair: (pair[0], str(pair[1])))
+            samples[key] = (
+                [value for value, _ in pairs],
+                {cik: i for i, (_, cik) in enumerate(pairs)},
+            )
+    return samples
+
+
 def peers_and_scores(rows, min_peers=5, fallback=False, benchmark=None):
     canonical = {}
     for r in rows:
@@ -293,33 +315,40 @@ def peers_and_scores(rows, min_peers=5, fallback=False, benchmark=None):
             industries[r["industry"]].append(r)
         if r.get("sector"):
             sectors[r["sector"]].append(r)
+    indices = {"industry": _peer_samples(industries), "sector": _peer_samples(sectors)}
     for r in rows:
-        for field, label in [("industry", "industry"), ("sector", "sector")]:
-            pool = (industries if field == "industry" else sectors).get(
-                r.get(field), []
-            )
+        for field in ["industry", "sector"]:
             for h in HORIZONS:
-                valid = [
-                    p["return_" + h]
-                    for p in pool
-                    if p["cik"] != r["cik"]
-                    and p.get("return_" + h) is not None
-                    and p.get("as_of") == r.get("as_of")
-                    and not p.get("stale")
-                    and p.get("price_provider") == r.get("price_provider")
-                ]
-                key = label + "_" + h
-                r[key + "_peers"] = len(valid)
-                r[key + "_median"] = median(valid) if len(valid) >= min_peers else None
+                values, positions = indices[field].get(
+                    (r.get(field), r.get("as_of"), r.get("price_provider"), h), ([], {})
+                )
+                removed = positions.get(r["cik"])
+                count = len(values) - (removed is not None)
+                key = field + "_" + h
+                r[key + "_peers"] = count
+                if count >= min_peers:
+                    low = (count - 1) // 2
+                    high = count // 2
+                    if removed is not None:
+                        low += removed <= low
+                        high += removed <= high
+                    center = (
+                        values[low] if low == high else (values[low] + values[high]) / 2
+                    )
+                else:
+                    center = None
+                r[key + "_median"] = center
                 own = r.get("return_" + h)
                 r[key + "_excess"] = (
-                    own - r[key + "_median"]
-                    if own is not None and r[key + "_median"] is not None
-                    else None
+                    own - center if own is not None and center is not None else None
                 )
                 r[key + "_percentile"] = (
-                    sum(v <= own for v in valid) / len(valid)
-                    if valid and len(valid) >= min_peers and own is not None
+                    (
+                        bisect.bisect_right(values, own)
+                        - int(removed is not None and values[removed] <= own)
+                    )
+                    / count
+                    if count >= min_peers and own is not None
                     else None
                 )
         r["peer_basis"] = "Industry"

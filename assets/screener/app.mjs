@@ -7,7 +7,7 @@ import {
   pct,
   reason,
   csv,
-} from "./core.mjs?v=90ca7edcfec1";
+} from "./core.mjs?v=c28bb9ec2b08";
 const $ = (id) => document.getElementById(id),
   el = (tag, text, cls) => {
     const n = document.createElement(tag);
@@ -163,7 +163,10 @@ async function refresh(quiet = false) {
     );
     if (!statusResponse.ok) throw Error("Local updater is not available");
     const status = await statusResponse.json();
-    if (snapshot?.generated_at === status.generated_at) {
+    if (
+      (snapshot?.revision || snapshot?.generated_at) ===
+      (status.revision || status.generated_at)
+    ) {
       if (!quiet) message("");
       return;
     }
@@ -175,7 +178,10 @@ async function refresh(quiet = false) {
     const text = await response.text();
     if (text.length > 40e6) throw Error("Snapshot is too large");
     const value = validateSnapshot(JSON.parse(text));
-    if (snapshot?.generated_at !== value.generated_at) {
+    if (
+      (snapshot?.revision || snapshot?.generated_at) !==
+      (value.revision || value.generated_at)
+    ) {
       load(value);
       await cacheSnapshot(value);
     }

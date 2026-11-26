@@ -106,7 +106,8 @@ class Store:
             )
 
     def save_screen(self, as_of, rows):
-        # Daily event history needs metrics and signals, not duplicate chart arrays.
+        import pandas as pd
+
         values = [
             (
                 as_of,
@@ -119,13 +120,20 @@ class Store:
             )
             for r in rows
         ]
-        self.db.execute("BEGIN TRANSACTION")
+        frame = pd.DataFrame(values, columns=["as_of", "ticker", "result"])
+        self.db.register("_screen_batch", frame)
         try:
-            self.db.executemany("INSERT OR REPLACE INTO screens VALUES (?,?,?)", values)
-            self.db.execute("COMMIT")
-        except BaseException:
-            self.db.execute("ROLLBACK")
-            raise
+            self.db.execute("BEGIN TRANSACTION")
+            try:
+                self.db.execute(
+                    "INSERT OR REPLACE INTO screens SELECT as_of,ticker,result::JSON FROM _screen_batch"
+                )
+                self.db.execute("COMMIT")
+            except BaseException:
+                self.db.execute("ROLLBACK")
+                raise
+        finally:
+            self.db.unregister("_screen_batch")
 
     def close(self):
         self.db.close()

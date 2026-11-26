@@ -312,3 +312,42 @@ def test_analysis_cache_avoids_recomputation_and_invalidates_source(
     store.put_prices("AAA", rows)
     assert store.analyze("AAA", cal, cal[-1])["price"] == 123.0
     store.close()
+
+
+def test_indexed_peer_results_match_independent_naive_reference():
+    from statistics import median
+
+    rows = []
+    for i in range(30):
+        rows.append(
+            {
+                "ticker": str(i),
+                "cik": str(i),
+                "industry": "One",
+                "sector": "Tech",
+                "as_of": "2026-01-30" if i % 7 else "2026-01-29",
+                "price_provider": "A" if i % 3 else "B",
+                "return_126d": None if i % 5 == 0 else (i % 8 - 4) / 10,
+                "dollar_volume": 100 + i,
+                "stale": i % 11 == 0,
+            }
+        )
+    rows.append({**rows[1], "ticker": "1B", "return_126d": -0.9, "dollar_volume": 1})
+    canonical = {r["cik"]: r for r in rows[:-1]}
+    out, _ = peers_and_scores(rows)
+    for r in out:
+        valid = [
+            p["return_126d"]
+            for p in canonical.values()
+            if p["cik"] != r["cik"]
+            and not p["stale"]
+            and p["as_of"] == r["as_of"]
+            and p["price_provider"] == r["price_provider"]
+            and p["return_126d"] is not None
+        ]
+        assert r["industry_126d_peers"] == len(valid)
+        assert r["industry_126d_median"] == (median(valid) if len(valid) >= 5 else None)
+        if len(valid) >= 5 and r["return_126d"] is not None:
+            assert r["industry_126d_percentile"] == sum(
+                v <= r["return_126d"] for v in valid
+            ) / len(valid)

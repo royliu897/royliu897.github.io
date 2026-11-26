@@ -1,4 +1,5 @@
 from __future__ import annotations
+import hashlib
 import argparse, concurrent.futures, http.server, json, os, time, tomllib
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
@@ -122,8 +123,6 @@ def build(store, config):
             if old
             else []
         )
-    if rows:
-        store.save_screen(as_of, rows)
     coverage = {
         "listed_candidates": len(allrows) - 1,
         "loaded": len(rows),
@@ -152,12 +151,33 @@ def build(store, config):
         "industries": industries,
         "phase": 1,
     }
-    atomic_json(store.root / "website/latest.json", output)
+    content = {k: v for k, v in output.items() if k != "generated_at"}
+    output["revision"] = hashlib.sha256(
+        json.dumps(content, separators=(",", ":"), allow_nan=False).encode()
+    ).hexdigest()[:16]
+    status_path = store.root / "website/status.json"
+    try:
+        previous = json.loads(status_path.read_text())
+    except (OSError, ValueError):
+        previous = {}
+    if previous.get("revision") == output["revision"]:
+        output["generated_at"] = previous["generated_at"]
+    else:
+        if rows:
+            store.save_screen(as_of, rows)
+        atomic_json(store.root / "website/latest.json", output)
     atomic_json(
         store.root / "website/status.json",
         {
             k: output[k]
-            for k in ["schema_version", "as_of", "generated_at", "coverage", "provider"]
+            for k in [
+                "schema_version",
+                "as_of",
+                "generated_at",
+                "coverage",
+                "provider",
+                "revision",
+            ]
         },
     )
     audit = {k: v for k, v in output.items() if k not in ["rows", "industries"]}
