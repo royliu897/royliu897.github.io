@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#f5f3ec" />
+    <title>Stock screener — Roy Liu</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="assets/screener/screener.css?v=dfa30ff8b9d7" />
+    <script type="module" src="assets/screener/app.mjs?v=dfa30ff8b9d7"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <nav class="site-nav shell" aria-label="Main navigation">
+      <a class="brand" href="https://royrliu.com/index.html">Roy Liu</a>
+      <div class="nav-links">
+        <a href="https://royrliu.com/index.html#work">Work</a
+        ><a href="https://royrliu.com/blog.html">Writing</a
+        ><a href="https://royrliu.com/research-desk.html">Research desk</a
+        ><a href="screener.html" aria-current="page">Screener</a>
+      </div>
+    </nav>
+    <main id="main" class="screener shell">
+      <header class="screen-heading">
+        <div>
+          <p class="eyebrow">Research / US equities</p>
+          <h1>Stock screener</h1>
+          <p class="lede">
+            Price declines. Industry laggards. A place to start looking.
+          </p>
+        </div>
+        <button id="theme" type="button" aria-pressed="false">Dark mode</button>
+      </header>
+      <div class="list-toolbar">
+        <div class="screen-tabs" role="group" aria-label="Screen">
+          <button data-screen="all" aria-pressed="true">Dislocations</button
+          ><button data-screen="sudden" aria-pressed="false">Sudden</button
+          ><button data-screen="persistent" aria-pressed="false">
+            Persistent</button
+          ><button data-screen="laggard" aria-pressed="false">Laggards</button
+          ><button data-screen="industries" aria-pressed="false">
+            Industries</button
+          ><button data-screen="watchlist" aria-pressed="false">
+            Watchlist
+          </button>
+        </div>
+        <div class="list-actions">
+          <input
+            id="search"
+            type="search"
+            aria-label="Search stocks"
+            placeholder="Ticker, company, industry"
+          /><button
+            id="refine-button"
+            aria-expanded="false"
+            aria-controls="refine"
+          >
+            Refine
+          </button>
+        </div>
+      </div>
+      <section
+        id="refine"
+        class="refine"
+        hidden
+        aria-label="Screening controls"
+      >
+        <div class="filter-grid">
+          <label
+            >Industry<select id="industry">
+              <option value="">All industries</option>
+            </select></label
+          ><label
+            >Sector<select id="sector">
+              <option value="">All sectors</option>
+            </select></label
+          ><label
+            >Market cap minimum ($m)<input
+              id="min-cap"
+              type="number"
+              min="0"
+              value="50" /></label
+          ><label
+            >Daily liquidity minimum ($m)<input
+              id="min-liquidity"
+              type="number"
+              min="0"
+              step="0.1"
+              value="0" /></label
+          ><label
+            >Conditions<select id="rule-mode">
+              <option value="OR">Match any rule</option>
+              <option value="AND">Match all rules</option>
+            </select></label
+          ><label
+            >Saved screen<select id="saved">
+              <option value="">Choose…</option>
+            </select></label
+          >
+        </div>
+        <div id="rules"></div>
+        <div class="minor-actions">
+          <button id="add-rule">Add rule</button
+          ><button id="save-screen">Save screen</button
+          ><button id="reset">Reset</button
+          ><button id="export-csv">Export CSV</button>
+        </div>
+        <details>
+          <summary>Columns</summary>
+          <div id="columns" class="column-choices"></div>
+        </details>
+        <details>
+          <summary>Data &amp; research</summary>
+          <p id="coverage-detail"></p>
+          <p>
+            Screening uses total returns; drawdowns use split-adjusted closing
+            prices. A price decline is not a valuation-multiple discount.
+          </p>
+          <div class="minor-actions">
+            <button id="refresh">Refresh local data</button
+            ><label class="file-button"
+              >Import snapshot<input
+                id="snapshot-file"
+                type="file"
+                accept=".json,application/json" /></label
+            ><button id="export-notes">Export research</button
+            ><label class="file-button"
+              >Import research<input
+                id="research-file"
+                type="file"
+                accept=".json,application/json" /></label
+            ><a
+              id="audit"
+              href="http://127.0.0.1:8772/screener-data/audit.json"
+              target="_blank"
+              rel="noopener"
+              >Data audit ↗</a
+            >
+          </div>
+        </details>
+      </section>
+      <div class="list-meta">
+        <p id="data-status" role="status">Loading your stock list…</p>
+        <button id="clear-selection" hidden>Clear selection</button
+        ><button id="compare" hidden>Compare selected</button>
+      </div>
+      <p id="message" class="message" role="status" hidden></p>
+      <div
+        id="table-wrap"
+        class="table-wrap"
+        tabindex="0"
+        aria-label="Screening results"
+      >
+        <table id="stock-table">
+          <thead></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div id="empty" class="empty" hidden>
+        <h2>No matching companies</h2>
+        <p>Try another view or adjust the rules.</p>
+      </div>
+      <div class="pagination">
+        <span id="result-count"></span><button id="previous">← Previous</button
+        ><button id="next">Next →</button>
+      </div>
+      <p class="list-footnote">
+        Research candidates ranked by the most pronounced available decline
+        signal. Open a company to inspect the basis.
+      </p>
+    </main>
+    <dialog id="comparison">
+      <div class="dialog-heading">
+        <h2>Compare companies</h2>
+        <button id="close-compare" aria-label="Close comparison">Close</button>
+      </div>
+      <div id="compare-body"></div>
+    </dialog>
+  </body>
+</html>

@@ -1,0 +1,18 @@
+[screen]
+years = 10
+min_market_cap = 50000000
+min_dollar_volume = 0
+min_peers = 5
+peer_fallback = false
+country = "United States"
+exchanges = ["Nasdaq", "NYSE", "AMEX"]
+include_funds = false
+include_foreign = false
+include_preferred = false
+include_warrants = false
+include_spacs = false
+[provider]
+name = "yahoo"
+workers = 2
+requests_per_minute = 60
+profile_ttl_days = 7
