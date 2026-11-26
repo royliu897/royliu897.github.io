@@ -64,11 +64,10 @@ def build(store, config):
             excluded.append({"ticker": ticker, "reasons": reasons})
             continue
         try:
-            prices = store.prices(ticker)
-            if not prices:
+            result = store.analyze(ticker, calendar, as_of)
+            if result is None:
                 missing.append(ticker)
                 continue
-            result = analytics(prices, calendar, as_of)
         except Exception as e:
             errors.append(
                 {

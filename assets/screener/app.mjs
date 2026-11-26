@@ -7,7 +7,7 @@ import {
   pct,
   reason,
   csv,
-} from "./core.mjs?v=dfa30ff8b9d7";
+} from "./core.mjs?v=90ca7edcfec1";
 const $ = (id) => document.getElementById(id),
   el = (tag, text, cls) => {
     const n = document.createElement(tag);
@@ -196,7 +196,7 @@ async function refresh(quiet = false) {
       message(
         snapshot
           ? "Showing your saved list. Start the local updater or import a newer snapshot to refresh it."
-          : e.message,
+          : "Could not connect to the local updater. Import a snapshot or open the local workspace.",
       );
   }
 }

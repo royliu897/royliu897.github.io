@@ -53,6 +53,25 @@ class Store:
         path = self.path(ticker)
         return pl.read_parquet(path).to_dicts() if path.exists() else []
 
+    def analyze(self, ticker, calendar, as_of):
+        from .engine import analytics
+
+        path = self.path(ticker)
+        if not path.exists():
+            return None
+        stat = path.stat()
+        signature = f"2:{as_of}:{stat.st_size}:{stat.st_mtime_ns}"
+        target = self.root / "analytics" / f"{ticker}.json"
+        try:
+            cached = json.loads(target.read_text())
+            if cached.get("signature") == signature:
+                return cached["result"]
+        except (OSError, ValueError):
+            pass
+        result = analytics(self.prices(ticker), calendar, as_of)
+        atomic_json(target, {"signature": signature, "result": result})
+        return result
+
     def put_prices(self, ticker, rows, provenance=None):
         path = self.path(ticker)
         temp = path.with_suffix(".tmp")
@@ -87,10 +106,26 @@ class Store:
             )
 
     def save_screen(self, as_of, rows):
-        self.db.executemany(
-            "INSERT OR REPLACE INTO screens VALUES (?,?,?)",
-            [(as_of, r["ticker"], json.dumps(r, allow_nan=False)) for r in rows],
-        )
+        # Daily event history needs metrics and signals, not duplicate chart arrays.
+        values = [
+            (
+                as_of,
+                r["ticker"],
+                json.dumps(
+                    {k: v for k, v in r.items() if k != "chart"},
+                    allow_nan=False,
+                    separators=(",", ":"),
+                ),
+            )
+            for r in rows
+        ]
+        self.db.execute("BEGIN TRANSACTION")
+        try:
+            self.db.executemany("INSERT OR REPLACE INTO screens VALUES (?,?,?)", values)
+            self.db.execute("COMMIT")
+        except BaseException:
+            self.db.execute("ROLLBACK")
+            raise
 
     def close(self):
         self.db.close()

@@ -43,6 +43,7 @@ The frontend checks a compact status file and transfers a new snapshot only afte
 
 - research.duckdb: securities/reference/profile freshness and dated screening results.
 - prices/{ticker}.parquet: ordered daily adjusted closes, volumes and actions, compressed with Zstandard and replaced atomically.
+- analytics/{ticker}.json: derived metrics cached by session, source file revision and metric-policy version.
 - prices/{ticker}.meta.json: provider, retrieval time, adjustment basis and SHA-256 of canonical stored observations for newly refreshed files.
 - website/latest.json: validated browser snapshot; status.json: small freshness record.
 - website/audit.json: exclusions, pending tickers, stale results, weak peer coverage and provider failures.

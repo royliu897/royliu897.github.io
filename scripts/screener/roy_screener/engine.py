@@ -197,8 +197,8 @@ def analytics(rows, calendar, as_of):
     out["chart"] = [
         [
             p["date"],
-            round(p["split_close"] / start["split_close"] * 100, 3),
-            round(p["total_close"] / start["total_close"] * 100, 3),
+            float(format(p["split_close"] / start["split_close"] * 100, ".8g")),
+            float(format(p["total_close"] / start["total_close"] * 100, ".8g")),
         ]
         for p in sampled
     ]

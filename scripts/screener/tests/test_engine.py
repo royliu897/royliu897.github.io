@@ -280,3 +280,35 @@ def test_refresh_is_incremental_and_provider_failure_keeps_last_good(
     assert all(ticker != "AAA" for ticker, _ in calls)
     assert any(r["error"] for r in store.securities() if r["ticker"] == "BBB")
     store.close()
+
+
+def test_chart_preserves_tiny_positive_prices(data):
+    rows, cal = data
+    for point in rows:
+        if point["date"][:7] == rows[0]["date"][:7]:
+            point["split_close"] = 1e12
+            point["total_close"] = 1e12
+    out = analytics(rows, cal, cal[-1])
+    assert all(point[1] > 0 and point[2] > 0 for point in out["chart"])
+    assert out["chart"][-1][1] < 0.001
+
+
+def test_analysis_cache_avoids_recomputation_and_invalidates_source(
+    tmp_path, data, monkeypatch
+):
+    rows, cal = data
+    store = Store(tmp_path)
+    store.put_prices("AAA", rows)
+    first = store.analyze("AAA", cal, cal[-1])
+    original = store.prices
+
+    def forbidden(*args):
+        raise AssertionError("Unchanged source must not reread/recompute prices")
+
+    monkeypatch.setattr(store, "prices", forbidden)
+    assert store.analyze("AAA", cal, cal[-1]) == first
+    monkeypatch.setattr(store, "prices", original)
+    rows[-1]["split_close"] = 123.0
+    store.put_prices("AAA", rows)
+    assert store.analyze("AAA", cal, cal[-1])["price"] == 123.0
+    store.close()
